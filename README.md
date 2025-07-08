@@ -1,3 +1,38 @@
+# Dada-Typescript
+
+This is a new parser for the Dada Engine's PB format written entirely in TypeScript
+to be run on the browser.
+
+The reference implementation is:
+https://dev.null.org/dadaengine/manual-1.0/dada.html
+
+## Supported
+(in order of manual-1.0)
+
+* Comments (inline and multiline)
+* Identifiers
+* Literal Strings: Double quote, Newline, Tab
+* Atoms
+  - Literal Text
+  - Symbols
+* Variables (including "lazy &lt;&lt; assignment")
+* Parametric rules
+* Inline choices (anonymous rules)
+* Silenced atoms (?colour="green")
+* Text mappings: pattern style with slash
+
+## Not Supported
+* Literal Strings: Vertical tab, backspace, carriage return w/o newline, form feed, audible alert
+* Kleene star \* and + characters
+* Resource rules (%resource)
+* Indirection (@references)
+* Text mappings: source -> destination
+* Text mappings: reversible <-> mappings
+* Percent %trans mappings
+* Embedded Code
+* Standard Library
+* C-Processor User Parameters
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
