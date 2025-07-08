@@ -11,17 +11,31 @@ export type Token =
 export function tokenize(input: string): Token[] {
   const tokens: Token[] = [];
   let i = 0;
+  let line = 1;
+  let column = 1;
+
+  const advance = (n = 1) => {
+    for (let j = 0; j < n; j++) {
+      if (input[i] === '\n') {
+        line++;
+        column = 1;
+      } else {
+        column++;
+      }
+      i++;
+    }
+  };
 
   const skipWhitespace = () => {
     while (i < input.length && /\s/.test(input[i])) {
-      i++;
+      advance();
     }
   };
 
   const match = (regex: RegExp): string | null => {
     const matched = input.slice(i).match(regex);
     if (matched && matched.index === 0) {
-      i += matched[0].length;
+      advance(matched[0].length);
       return matched[0];
     }
     return null;
@@ -34,50 +48,50 @@ export function tokenize(input: string): Token[] {
 
     if (input.startsWith('//', i)) {
       while (i < input.length && input[i] !== '\n') {
-        i++;
+        advance();
       }
       continue;
     }
 
     if (input[i] === '"') {
       let str = '';
-      i++; // Skip opening quote
+      advance(); // Skip opening quote
       while (i < input.length && input[i] !== '"') {
         if (input[i] === '\\' && i + 1 < input.length) {
           if (input[i + 1] === '\\') {
             str += '\\';
-            i += 2;
+            advance(2);
           } else if (input[i + 1] === '"') {
             str += '"';
-            i += 2;
+            advance(2);
           } else {
             str += input[i];
-            i++;
+            advance();
           }
         } else {
           str += input[i];
-          i++;
+          advance();
         }
       }
-      i++; // Skip closing quote
+      advance(); // Skip closing quote
       tokens.push({ type: 'string', value: str });
       continue;
     }
 
     if (input.startsWith('->', i)) {
-      i += 2;
+      advance(2);
       tokens.push({ type: 'arrow', value: '->' });
       continue;
     }
 
     if (input[i] === '>') {
-      i++;
+      advance();
       tokens.push({ type: 'greater', value: '>' });
       continue;
     }
 
     if (input[i] === '/') {
-      i++;
+      advance();
       tokens.push({ type: 'slash', value: '/' });
       continue;
     }
@@ -88,19 +102,20 @@ export function tokenize(input: string): Token[] {
       continue;
     }
 
-    const identifier = match(/^\w+/);
+    const identifier = match(/^[a-zA-Z_][\w-]*/);
     if (identifier) {
       tokens.push({ type: 'identifier', value: identifier });
       continue;
     }
 
-    const symbol = match(/^[;:\|]/);
+    const symbol = match(/^[;:|()]/);
     if (symbol) {
       tokens.push({ type: 'symbol', value: symbol });
       continue;
     }
-
-    throw new Error(`Unexpected character at position ${i}: '${input[i]}'`);
+    throw new Error(
+      `Unexpected character at line ${line}, column ${column} (index ${i}): '${input[i]}'`
+    );
   }
 
   tokens.push({ type: 'eof', value: '<eof>' });
