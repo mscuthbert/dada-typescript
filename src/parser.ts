@@ -3,7 +3,8 @@ import type { Token } from './tokenizer.ts';
 interface Rule {
   type: 'rule';
   name: string;
-  options: (string | { ref: string; transforms?: string[] })[][];
+  parameters: string[];
+  options: Option[][];
 }
 
 interface Transform {
@@ -12,10 +13,19 @@ interface Transform {
   rules: { pattern: string; target: string; replacement: string }[];
 }
 
+interface Ref {
+  ref: string;
+  transforms: string[];
+  args?: Option[];
+}
+
+type Option = string | Ref;
+
 export type Statement = Rule | Transform;
 
 export function parse(tokens: Token[]): Statement[] {
   let i = 0;
+  let currentRuleName: string | null = null;
 
   function peek(): Token {
     return tokens[i];
@@ -28,16 +38,27 @@ export function parse(tokens: Token[]): Statement[] {
   function expect(type: Token['type'], value?: string): Token {
     const token = next();
     if (token.type !== type || (value !== undefined && token.value !== value)) {
-      throw new Error(`Expected ${type} ${value ?? ''}, got ${token.type} ${token.value}`);
+      throw new Error(`Expected ${type} ${value ?? ''}, got ${token.type} ${token.value}${currentRuleName ? ` (in rule: ${currentRuleName})` : ''}`);
     }
     return token;
   }
 
   function parseRule(): Rule {
     const name = expect('identifier').value;
+    currentRuleName = name;
+    let parameters: string[] = [];
+
+    if (peek().type === 'symbol' && peek().value === '(') {
+      next();
+      while (peek().type !== 'symbol' || peek().value !== ')') {
+        parameters.push(expect('identifier').value);
+      }
+      expect('symbol', ')');
+    }
+
     expect('symbol', ':');
-    const options: (string | { ref: string; transforms?: string[] })[][] = [];
-    let currentOption: (string | { ref: string; transforms?: string[] })[] = [];
+    const options: Option[][] = [];
+    let currentOption: Option[] = [];
 
     while (true) {
       const token = peek();
@@ -45,15 +66,22 @@ export function parse(tokens: Token[]): Statement[] {
         currentOption.push(token.value);
         next();
       } else if (token.type === 'identifier') {
-        let ref = token.value;
-        let transforms: string[] = [];
+        let ref: Ref = { ref: token.value, transforms: [] };
         next();
         while (peek().type === 'greater') {
           next();
-          const transformName = expect('identifier').value;
-          transforms.push(transformName);
+          ref.transforms.push(expect('identifier').value);
         }
-        currentOption.push({ ref, transforms: transforms.length > 0 ? transforms : undefined });
+        if (peek().type === 'symbol' && peek().value === '(') {
+          next();
+          const args: Option[] = [];
+          while (peek().type !== 'symbol' || peek().value !== ')') {
+            args.push({ ref: expect('identifier').value, transforms: [] });
+          }
+          expect('symbol', ')');
+          ref.args = args;
+        }
+        currentOption.push(ref);
       } else if (token.type === 'symbol' && token.value === '|') {
         next();
         options.push(currentOption);
@@ -63,15 +91,17 @@ export function parse(tokens: Token[]): Statement[] {
         options.push(currentOption);
         break;
       } else {
-        break;
+        throw new Error(`Unexpected token in rule: ${token.type} ${token.value}${currentRuleName ? ` (in rule: ${currentRuleName})` : ''}`);
       }
     }
 
-    return { type: 'rule', name, options };
+    currentRuleName = null;
+    return { type: 'rule', name, parameters, options };
   }
 
   function parseTransform(): Transform {
     const name = expect('identifier').value;
+    currentRuleName = name;
     expect('symbol', ':');
     const rules = [];
 
@@ -85,6 +115,7 @@ export function parse(tokens: Token[]): Statement[] {
       rules.push({ pattern, target, replacement });
     }
 
+    currentRuleName = null;
     return { type: 'transform', name, rules };
   }
 
