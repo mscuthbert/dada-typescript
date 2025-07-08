@@ -26,6 +26,8 @@ export type Statement = Rule | Transform;
 export function parse(tokens: Token[]): Statement[] {
   let i = 0;
   let currentRuleName: string | null = null;
+  let anonCounter = 1;
+  const statements: Statement[] = [];
 
   function peek(): Token {
     return tokens[i];
@@ -41,6 +43,68 @@ export function parse(tokens: Token[]): Statement[] {
       throw new Error(`Expected ${type} ${value ?? ''}, got ${token.type} ${token.value}${currentRuleName ? ` (in rule: ${currentRuleName})` : ''}`);
     }
     return token;
+  }
+
+  function parseOption(): Option {
+    const token = peek();
+    if (token.type === 'string') {
+      next();
+      return token.value;
+    } else if (token.type === 'identifier') {
+      let ref: Ref = { ref: token.value, transforms: [] };
+      next();
+      while (peek().type === 'greater') {
+        next();
+        ref.transforms.push(expect('identifier').value);
+      }
+      if (peek().type === 'symbol' && peek().value === '(') {
+        next();
+        const args: Option[] = [];
+        while (peek().type !== 'symbol' || peek().value !== ')') {
+          args.push(parseOption());
+        }
+        expect('symbol', ')');
+        ref.args = args;
+      }
+      return ref;
+    } else if (token.type === 'symbol' && token.value === '[') {
+      return parseAnonymousRule();
+    } else {
+      throw new Error(`Unexpected token in option: ${token.type} ${token.value}`);
+    }
+  }
+
+  function parseAnonymousRule(): Ref {
+    const anonName = `anonymous-${anonCounter.toString().padStart(4, '0')}`;
+    anonCounter++;
+    expect('symbol', '[');
+
+    const options: Option[][] = [];
+    let currentOption: Option[] = [];
+
+    while (true) {
+      const token = peek();
+      if (
+        token.type === 'string' ||
+        token.type === 'identifier' ||
+        (token.type === 'symbol' && token.value === '[')
+      ) {
+        currentOption.push(parseOption());
+      } else if (token.type === 'symbol' && token.value === '|') {
+        next();
+        options.push(currentOption);
+        currentOption = [];
+      } else if (token.type === 'symbol' && token.value === ']') {
+        next();
+        options.push(currentOption);
+        break;
+      } else {
+        throw new Error(`Unexpected token in anonymous rule: ${token.type} ${token.value}`);
+      }
+    }
+
+    statements.push({ type: 'rule', name: anonName, parameters: [], options });
+    return { ref: anonName, transforms: [] };
   }
 
   function parseRule(): Rule {
@@ -62,32 +126,12 @@ export function parse(tokens: Token[]): Statement[] {
 
     while (true) {
       const token = peek();
-      if (token.type === 'string') {
-        currentOption.push(token.value);
-        next();
-      } else if (token.type === 'identifier') {
-        let ref: Ref = { ref: token.value, transforms: [] };
-        next();
-        while (peek().type === 'greater') {
-          next();
-          ref.transforms.push(expect('identifier').value);
-        }
-        if (peek().type === 'symbol' && peek().value === '(') {
-          next();
-          const args: Option[] = [];
-          while (peek().type !== 'symbol' || peek().value !== ')') {
-            if (peek().type === 'string') {
-              args.push(expect('string').value);
-            } else if (peek().type === 'identifier') {
-              args.push({ ref: expect('identifier').value, transforms: [] });
-            } else {
-              throw new Error(`Expected identifier or string for argument, got ${peek().type} ${peek().value}`);
-            }
-          }
-          expect('symbol', ')');
-          ref.args = args;
-        }
-        currentOption.push(ref);
+      if (
+        token.type === 'string' ||
+        token.type === 'identifier' ||
+        (token.type === 'symbol' && token.value === '[')
+      ) {
+        currentOption.push(parseOption());
       } else if (token.type === 'symbol' && token.value === '|') {
         next();
         options.push(currentOption);
@@ -126,8 +170,6 @@ export function parse(tokens: Token[]): Statement[] {
   }
 
   function parseStatements(): Statement[] {
-    const statements: Statement[] = [];
-
     while (peek().type !== 'eof') {
       const token = peek();
       if (token.type === 'identifier') {
@@ -142,11 +184,10 @@ export function parse(tokens: Token[]): Statement[] {
           statements.push(parseRule());
         }
       } else if (token.type === 'directive') {
-        // skip %trans for now
         while (peek().type !== 'symbol' || peek().value !== ';') {
           next();
         }
-        next(); // consume ';'
+        next();
       } else {
         throw new Error(`Unexpected token: ${token.type} ${token.value}`);
       }

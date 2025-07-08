@@ -125,7 +125,7 @@ export function tokenize(input: string): Token[] {
       continue;
     }
 
-    const symbol = match(/^[;:|()]/);
+    const symbol = match(/^[;:|()\[\]]/);  // ← Updated this line to include [ and ]
     if (symbol) {
       tokens.push({ type: 'symbol', value: symbol });
       continue;
