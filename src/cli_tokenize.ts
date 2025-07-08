@@ -3,8 +3,8 @@ import { tokenize } from './tokenizer.ts';
 
 const filename = process.argv[2];
 if (!filename) {
-  console.error('Usage: npm start -- <filename>');
-  process.exit(1);
+    console.error('Usage: npm start -- <filename>');
+    process.exit(1);
 }
 
 const source = readFileSync(filename, 'utf-8');
