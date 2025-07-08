@@ -1,6 +1,6 @@
-##### automatic securities dealer names!
-#include <stdmap.pbi>
-#include <format.pbi>
+// ##### automatic securities dealer names!
+// #include <stdmap.pbi>
+// #include <format.pbi>
 
 main: company company company company company company company company
       company company company company company company company company
@@ -21,7 +21,7 @@ front_type: "" | initial_type | animal_type | animal_type |
 back: back_adjective back_noun back_gibberish;
 
 
-## hard to tell their adjectives from their nouns
+// ## hard to tell their adjectives from their nouns
 
 back_adjective: "" | "" | "" |"" | "" | "" | "Investment " | insurance | insurance |
         "International "| securities | securities | "Financial " | service |
@@ -64,8 +64,8 @@ initial: "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" |
          "U" | "V" | "W" | "X" | "Y" | "Z";
 
 
-## to make:
-##cat culinary_terms.txt | perl -pe 's/\s+$//; s/\b(\w)/uc($1)/ge; $_= "\"" . $_ . "\" | \n";' > ! flowers2.txt
+// to make:
+// cat culinary_terms.txt | perl -pe 's/\s+$//; s/\b(\w)/uc($1)/ge; $_= "\"" . $_ . "\" | \n";' > ! flowers2.txt
 
 animal_type:
 "Aardvark" | 

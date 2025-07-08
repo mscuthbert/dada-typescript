@@ -14,7 +14,7 @@ export function tokenize(input: string): Token[] {
   let line = 1;
   let column = 1;
 
-  const advance = (n = 1) => {
+  const advance = (n: number = 1) => {
     for (let j = 0; j < n; j++) {
       if (input[i] === '\n') {
         line++;
@@ -26,9 +26,23 @@ export function tokenize(input: string): Token[] {
     }
   };
 
-  const skipWhitespace = () => {
-    while (i < input.length && /\s/.test(input[i])) {
-      advance();
+  const skipWhitespaceAndComments = () => {
+    while (i < input.length) {
+      if (/\s/.test(input[i])) {
+        advance();
+      } else if (input[i] === '/' && input[i + 1] === '/') {
+        while (i < input.length && input[i] !== '\n') {
+          advance();
+        }
+      } else if (input[i] === '/' && input[i + 1] === '*') {
+        advance(2);
+        while (i < input.length && !(input[i] === '*' && input[i + 1] === '/')) {
+          advance();
+        }
+        if (i < input.length) advance(2); // consume '*/'
+      } else {
+        break;
+      }
     }
   };
 
@@ -42,27 +56,26 @@ export function tokenize(input: string): Token[] {
   };
 
   while (i < input.length) {
-    skipWhitespace();
+    skipWhitespaceAndComments();
 
     if (i >= input.length) break;
 
-    if (input.startsWith('//', i)) {
-      while (i < input.length && input[i] !== '\n') {
-        advance();
-      }
-      continue;
-    }
-
     if (input[i] === '"') {
       let str = '';
-      advance(); // Skip opening quote
+      advance();
       while (i < input.length && input[i] !== '"') {
-        if (input[i] === '\\' && i + 1 < input.length) {
-          if (input[i + 1] === '\\') {
+        if (input[i] === '\\') {
+          if (input[i + 1] === '"') {
+            str += '"';
+            advance(2);
+          } else if (input[i + 1] === '\\') {
             str += '\\';
             advance(2);
-          } else if (input[i + 1] === '"') {
-            str += '"';
+          } else if (input[i + 1] === 'n') {
+            str += '\n';
+            advance(2);
+          } else if (input[i + 1] === 't') {
+            str += '\t';
             advance(2);
           } else {
             str += input[i];
@@ -73,9 +86,13 @@ export function tokenize(input: string): Token[] {
           advance();
         }
       }
-      advance(); // Skip closing quote
-      tokens.push({ type: 'string', value: str });
-      continue;
+      if (input[i] === '"') {
+        advance();
+        tokens.push({ type: 'string', value: str });
+        continue;
+      } else {
+        throw new Error(`Unterminated string starting at line ${line}, column ${column}`);
+      }
     }
 
     if (input.startsWith('->', i)) {
@@ -113,9 +130,8 @@ export function tokenize(input: string): Token[] {
       tokens.push({ type: 'symbol', value: symbol });
       continue;
     }
-    throw new Error(
-      `Unexpected character at line ${line}, column ${column} (index ${i}): '${input[i]}'`
-    );
+
+    throw new Error(`Unexpected character at line ${line}, column ${column}: '${input[i]}'`);
   }
 
   tokens.push({ type: 'eof', value: '<eof>' });
