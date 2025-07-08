@@ -5,6 +5,7 @@ interface Rule {
   name: string;
   parameters: string[];
   options: Option[][];
+  lastIndex?: number; // NEW
 }
 
 interface Transform {
@@ -32,7 +33,7 @@ export function generate(statements: Statement[], start: string): string {
 
   for (const stmt of statements) {
     if (stmt.type === 'rule') {
-      rules[stmt.name] = stmt;
+      rules[stmt.name] = { ...stmt }; // retains optional lastIndex
     } else {
       transforms[stmt.name] = stmt;
     }
@@ -57,12 +58,10 @@ export function generate(statements: Statement[], start: string): string {
       return option;
     }
 
-    // First check if the option.ref is a parameter in the current context
     if (option.ref in context) {
       return applyTransforms(context[option.ref], option.transforms);
     }
 
-    // Otherwise, treat it as a rule name
     const rule = rules[option.ref];
     if (!rule) {
       throw new Error(`Unknown rule: ${option.ref}`);
@@ -74,13 +73,18 @@ export function generate(statements: Statement[], start: string): string {
       if (!option.args || option.args.length !== rule.parameters.length) {
         throw new Error(`Incorrect number of arguments to rule ${option.ref}`);
       }
-
       for (let j = 0; j < rule.parameters.length; j++) {
         localContext[rule.parameters[j]] = resolve(option.args[j], context);
       }
     }
 
-    const choice = rule.options[Math.floor(Math.random() * rule.options.length)];
+    let idx = Math.floor(Math.random() * rule.options.length);
+    if (rule.options.length > 1 && idx === rule.lastIndex) {
+      idx = (idx + 1 + Math.floor(Math.random() * (rule.options.length - 1))) % rule.options.length;
+    }
+    rule.lastIndex = idx;
+
+    const choice = rule.options[idx];
     let result = '';
     for (const part of choice) {
       result += resolve(part, localContext);
