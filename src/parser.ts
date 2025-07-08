@@ -76,10 +76,13 @@ export function parse(tokens: Token[]): Statement[] {
           next();
           const args: Option[] = [];
           while (peek().type !== 'symbol' || peek().value !== ')') {
-            if (peek().type !== 'identifier') {
-              throw new Error(`Expected identifier for argument, got ${peek().type} ${peek().value}`);
+            if (peek().type === 'string') {
+              args.push(expect('string').value);
+            } else if (peek().type === 'identifier') {
+              args.push({ ref: expect('identifier').value, transforms: [] });
+            } else {
+              throw new Error(`Expected identifier or string for argument, got ${peek().type} ${peek().value}`);
             }
-            args.push({ ref: expect('identifier').value, transforms: [] });
           }
           expect('symbol', ')');
           ref.args = args;
