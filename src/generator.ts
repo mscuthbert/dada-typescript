@@ -1,59 +1,85 @@
 import type { Statement } from './parser.ts';
 
-interface TransformRule {
-  pattern: string;
-  target: string;
-  replacement: string;
+interface Rule {
+  type: 'rule';
+  name: string;
+  parameters: string[];
+  options: Option[][];
+}
+
+interface Transform {
+  type: 'transform';
+  name: string;
+  rules: { pattern: string; target: string; replacement: string }[];
 }
 
 interface Ref {
   ref: string;
-  transforms?: string[];
+  transforms: string[];
+  args?: Option[];
 }
 
+type Option = string | Ref;
+
+type Scope = Record<string, Option[]>;
+
+type TransformMap = Record<string, Transform['rules']>;
+
+type RuleMap = Record<string, Rule>;
+
 export function generate(statements: Statement[], start: string): string {
-  const rules = new Map<string, (string | Ref)[][]>();
-  const transforms = new Map<string, TransformRule[]>();
+  const ruleMap: RuleMap = {};
+  const transformMap: TransformMap = {};
 
   for (const stmt of statements) {
     if (stmt.type === 'rule') {
-      rules.set(stmt.name, stmt.options);
-    } else if (stmt.type === 'transform') {
-      transforms.set(stmt.name, stmt.rules);
+      ruleMap[stmt.name] = stmt;
+    } else {
+      transformMap[stmt.name] = stmt.rules;
     }
   }
 
-  function applyTransforms(text: string, transformNames?: string[]): string {
-    if (!transformNames) return text;
-    for (const name of transformNames) {
-      const rules = transforms.get(name);
-      if (!rules) throw new Error(`Unknown transform: ${name}`);
-      for (const { target, replacement } of rules) {
-        const re = new RegExp(target, 'g');
-        text = text.replace(re, replacement);
+  function applyTransforms(text: string, transforms: string[]): string {
+    for (const t of transforms) {
+      const rules = transformMap[t];
+      if (!rules) continue;
+      for (const { pattern, target, replacement } of rules) {
+        const regex = new RegExp(pattern);
+        if (regex.test(text)) {
+          text = text.replace(new RegExp(target, 'g'), replacement);
+        }
       }
     }
     return text;
   }
 
-  function expand(ruleName: string): string {
-    const options = rules.get(ruleName);
-    if (!options) {
-      throw new Error(`Unknown rule: ${ruleName}`);
+  function evalOption(opt: Option, scope: Scope): string {
+    if (typeof opt === 'string') {
+      return opt;
     }
-
-    const chosen = options[Math.floor(Math.random() * options.length)];
-    return chosen
-      .map(part => {
-        if (typeof part === 'string') {
-          return part;
-        } else {
-          const result = expand(part.ref);
-          return applyTransforms(result, part.transforms);
-        }
-      })
-      .join('');
+    if (opt.args) {
+      const rule = ruleMap[opt.ref];
+      if (!rule) throw new Error(`Rule ${opt.ref} not found`);
+      if (rule.parameters.length !== opt.args.length) {
+        throw new Error(`Rule ${opt.ref} expects ${rule.parameters.length} args, got ${opt.args.length}`);
+      }
+      const newScope: Scope = { ...scope };
+      rule.parameters.forEach((param, i) => {
+        const arg = opt.args![i];
+        newScope[param] = [arg];
+      });
+      const choice = rule.options[Math.floor(Math.random() * rule.options.length)];
+      return choice.map(o => evalOption(o, newScope)).join('');
+    } else {
+      const resolved = scope[opt.ref] ?? ruleMap[opt.ref]?.options[Math.floor(Math.random() * ruleMap[opt.ref].options.length)];
+      if (!resolved) throw new Error(`Reference ${opt.ref} not found`);
+      const text = resolved.map(o => evalOption(o, scope)).join('');
+      return applyTransforms(text, opt.transforms);
+    }
   }
 
-  return expand(start);
+  const rule = ruleMap[start];
+  if (!rule) throw new Error(`Start rule ${start} not found`);
+  const chosen = rule.options[Math.floor(Math.random() * rule.options.length)];
+  return chosen.map(o => evalOption(o, {})).join('');
 }

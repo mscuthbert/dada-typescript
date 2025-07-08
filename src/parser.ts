@@ -76,6 +76,9 @@ export function parse(tokens: Token[]): Statement[] {
           next();
           const args: Option[] = [];
           while (peek().type !== 'symbol' || peek().value !== ')') {
+            if (peek().type !== 'identifier') {
+              throw new Error(`Expected identifier for argument, got ${peek().type} ${peek().value}`);
+            }
             args.push({ ref: expect('identifier').value, transforms: [] });
           }
           expect('symbol', ')');

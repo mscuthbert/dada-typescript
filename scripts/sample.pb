@@ -1,7 +1,8 @@
 story: title sentence sentence>strip_the;
 title: "My title. ";
-sentence: "The " animal " runs fast. ";
+sentence: "The " double(animal) " run fast. ";
 animal: "cat" | "dog" | "fish";
+double(wrd): wrd " and " wrd;
 
 trim_e:
         ".*e$" -> "e$"/""
