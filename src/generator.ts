@@ -21,65 +21,73 @@ interface Ref {
 
 type Option = string | Ref;
 
-type Scope = Record<string, Option[]>;
-
-type TransformMap = Record<string, Transform['rules']>;
+type Context = Record<string, string>;
 
 type RuleMap = Record<string, Rule>;
+type TransformMap = Record<string, Transform>;
 
 export function generate(statements: Statement[], start: string): string {
-  const ruleMap: RuleMap = {};
-  const transformMap: TransformMap = {};
+  const rules: RuleMap = {};
+  const transforms: TransformMap = {};
 
   for (const stmt of statements) {
     if (stmt.type === 'rule') {
-      ruleMap[stmt.name] = stmt;
+      rules[stmt.name] = stmt;
     } else {
-      transformMap[stmt.name] = stmt.rules;
+      transforms[stmt.name] = stmt;
     }
   }
 
-  function applyTransforms(text: string, transforms: string[]): string {
-    for (const t of transforms) {
-      const rules = transformMap[t];
-      if (!rules) continue;
-      for (const { pattern, target, replacement } of rules) {
-        const regex = new RegExp(pattern);
-        if (regex.test(text)) {
-          text = text.replace(new RegExp(target, 'g'), replacement);
+  function applyTransforms(value: string, names: string[]): string {
+    for (const name of names) {
+      const transform = transforms[name];
+      if (!transform) continue;
+      for (const rule of transform.rules) {
+        const targetRegex = new RegExp(rule.target, 'g');
+        if (new RegExp(rule.pattern).test(value)) {
+          value = value.replace(targetRegex, rule.replacement);
         }
       }
     }
-    return text;
+    return value;
   }
 
-  function evalOption(opt: Option, scope: Scope): string {
-    if (typeof opt === 'string') {
-      return opt;
+  function resolve(option: Option, context: Context): string {
+    if (typeof option === 'string') {
+      return option;
     }
-    if (opt.args) {
-      const rule = ruleMap[opt.ref];
-      if (!rule) throw new Error(`Rule ${opt.ref} not found`);
-      if (rule.parameters.length !== opt.args.length) {
-        throw new Error(`Rule ${opt.ref} expects ${rule.parameters.length} args, got ${opt.args.length}`);
+
+    // First check if the option.ref is a parameter in the current context
+    if (option.ref in context) {
+      return applyTransforms(context[option.ref], option.transforms);
+    }
+
+    // Otherwise, treat it as a rule name
+    const rule = rules[option.ref];
+    if (!rule) {
+      throw new Error(`Unknown rule: ${option.ref}`);
+    }
+
+    let localContext = { ...context };
+
+    if (rule.parameters.length > 0) {
+      if (!option.args || option.args.length !== rule.parameters.length) {
+        throw new Error(`Incorrect number of arguments to rule ${option.ref}`);
       }
-      const newScope: Scope = { ...scope };
-      rule.parameters.forEach((param, i) => {
-        const arg = opt.args![i];
-        newScope[param] = [arg];
-      });
-      const choice = rule.options[Math.floor(Math.random() * rule.options.length)];
-      return choice.map(o => evalOption(o, newScope)).join('');
-    } else {
-      const resolved = scope[opt.ref] ?? ruleMap[opt.ref]?.options[Math.floor(Math.random() * ruleMap[opt.ref].options.length)];
-      if (!resolved) throw new Error(`Reference ${opt.ref} not found`);
-      const text = resolved.map(o => evalOption(o, scope)).join('');
-      return applyTransforms(text, opt.transforms);
+
+      for (let j = 0; j < rule.parameters.length; j++) {
+        localContext[rule.parameters[j]] = resolve(option.args[j], context);
+      }
     }
+
+    const choice = rule.options[Math.floor(Math.random() * rule.options.length)];
+    let result = '';
+    for (const part of choice) {
+      result += resolve(part, localContext);
+    }
+
+    return applyTransforms(result, option.transforms);
   }
 
-  const rule = ruleMap[start];
-  if (!rule) throw new Error(`Start rule ${start} not found`);
-  const chosen = rule.options[Math.floor(Math.random() * rule.options.length)];
-  return chosen.map(o => evalOption(o, {})).join('');
+  return resolve({ ref: start, transforms: [] }, {});
 }
