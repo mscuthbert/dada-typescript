@@ -3,7 +3,11 @@
  */
 
 story: title introduction sentence "A " sentence>strip_the noise opposite-sentence conclusion;
-title: ?punct=punctuation "The " main-animal<<animal $punct "\n";  // testing silence and lazy set
+
+// testing silence and lazy set; note that main-animal<<animal>upcase-first is parsed as
+// main-animal<<(animal>upcase-first) which isn't what is wanted here.  Hence the silence
+// (this part of grammar isn't discussed in the spec nor included in any sample files.
+title: ?punct=punctuation "The " ?main-animal<<animal $main-animal>upcase-first $punct "\n";
 introduction: "A story about " main-animal<<animal "s.\n";  // testing main-animal not overwritten.
 sentence: "The " double(animal) " run " [ "fast" | "sl" ["o" | "oooo"] "w"] ". ";
 animal: "cat" | "dog" | "fish";

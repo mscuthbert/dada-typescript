@@ -11,27 +11,48 @@ type TransformMap = Record<string, Transform>;
 
 export function generate(statements: Statement[], start: string): string {
     const rules: RuleMap = {};
-    const transforms: TransformMap = {};
+    const transforms: TransformMap = {
+        "upcase-first": {
+            type: "transform",
+            name: "upcase-first",
+            rules: [{
+                pattern: '.*',
+                target: '^(.)',
+                replacement: (_m: any, g: string): string => g.toUpperCase(),
+            }]},
+        "upcase": {
+            type: "transform",
+            name: "upcase",
+            rules: [{
+                pattern: '.*',
+                target: '(.*)',
+                replacement: (_m: any, g: string): string => g.toUpperCase(),
+            }]},
+    };
     const globalVars: Record<string, string> = {};
 
     for (const stmt of statements) {
         if (stmt.type === 'rule') {
             rules[stmt.name] = { ...stmt, lastChoice: -1 };
-        } else {
+        } else if (stmt.type === 'transform') {
             transforms[stmt.name] = stmt;
-        }
+        } // no other possible
     }
 
     function applyTransforms(value: string, names: string[]): string {
         for (const name of names) {
             const transform = transforms[name];
             if (!transform) {
-                continue;
+                throw new Error(`Unrecognized transform "${name}" on generated value "${value}"`);
             }
             for (const rule of transform.rules) {
                 const targetRegex = new RegExp(rule.target, 'g');
                 if (new RegExp(rule.pattern).test(value)) {
-                    value = value.replace(targetRegex, rule.replacement);
+                    if (typeof rule.replacement === 'string') {
+                        value = value.replace(targetRegex, rule.replacement);
+                    } else {
+                        value = value.replace(targetRegex, rule.replacement);
+                    }
                     // only one rule applies per mapping.
                     break;
                 }

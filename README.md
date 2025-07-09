@@ -20,6 +20,7 @@ https://dev.null.org/dadaengine/manual-1.0/dada.html
 * Inline choices (anonymous rules)
 * Silenced atoms (?colour="green")
 * Text mappings: pattern style with slash
+* upcase and upcase-first -- provided transformations from old stdmap.pbi
 
 ## Not Supported
 * Literal Strings: Vertical tab, backspace, carriage return w/o newline, form feed, audible alert
@@ -28,10 +29,15 @@ https://dev.null.org/dadaengine/manual-1.0/dada.html
 * Indirection (@references)
 * Text mappings: source -> destination
 * Text mappings: reversible <-> mappings
-* Percent %trans mappings
+* Percent %trans mappings (however, upcase and upcase-first are provided by the system)
 * Embedded Code
 * Standard Library
-* C-Processor User Parameters
+* C-Processor User Parameters (-DNAME="Henry")
+* C-style #define statements
+* C-language #includes
+* HTML Formatting
+* Footnotes
+* TROFF Formatting (no plans to integrate)
 
 # React + TypeScript + Vite
 

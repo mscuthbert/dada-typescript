@@ -9,12 +9,6 @@ statement:
 [qualification ", " | ""] [condition | "" ] pronouncement [", " qualification | ""] "."
 ;
 
-// convert the first character of a string to its uppercase equivalent
-
-%trans upcase-first:
-".*": 0 u ;
-;
-
 thin:
 [thing | things]
 ;
@@ -61,7 +55,7 @@ section:
 "an amendment or repeal" |
 "an amendment to, or repeal of, a section or other provision" |
 "a section or other provision of the Communications Act of 1934 (47 U.S.C. 151 et seq.)" |
-"section 3 of the Communications Act of 1934 (47 U.S.C. 153)" 
+"section 3 of the Communications Act of 1934 (47 U.S.C. 153)"
 ;
 
 pronouncement:
@@ -124,9 +118,9 @@ amends:
 ;
 
 amend2:
-"in subsections (e) and (n), by redesignating clauses (1), (2), and (3), as clauses (A), (B), and (C), respectively" | 
+"in subsections (e) and (n), by redesignating clauses (1), (2), and (3), as clauses (A), (B), and (C), respectively" |
 "in subsection (w), by redesignating paragraphs (1) through (5) as subparagraphs (A) through (E), respectively" |
-"in subsections (y) and (z), by redesignating paragraphs (1) and (2) as subparagraphs (A) and (B), respectively" | 
+"in subsections (y) and (z), by redesignating paragraphs (1) and (2) as subparagraphs (A) and (B), respectively" |
 "by redesignating subsections (a) through (ff) as paragraphs (1) through (32)" |
 "by indenting paragraphs (1) through (32) 2 em spaces" |
 "by changing the first letter of each defined term in such paragraphs from a capital to a lower case letter (except for `United States', `State', `State commission', and `Great Lakes Agreement')" |
@@ -148,7 +142,7 @@ fashion:
 " on rates, terms, and conditions that are just, reasonable, and nondiscriminatory, in accordance with the terms and conditions of the agreement and the requirements of this section and section 252"
 ;
 
-act: 
+act:
 " provides common carrier service to any local exchange carrier study area that does not include either: " place "; or " place |
 " provides telephone exchange service, including exchange access, to fewer than 50,000 access lines" |
 " provides telephone exchange service to any local exchange carrier study area with fewer than 100,000 access lines" |
@@ -162,8 +156,8 @@ amend4: " A telecommunications carrier shall be treated
               fixed and mobile satellite service shall be treated as common
               carriage."
 ;
-            
-gen-duty: 
+
+gen-duty:
 "each telecommunications carrier has the duty: " duties
 ;
 
@@ -180,8 +174,8 @@ dutylist "; " [ ["not" | ""] duty | ["not" | "" ] duty fashion] |
 dutylist "; " [ ["not" | ""] duty | ["not" | "" ] duty fashion] |
 [ ["not" | ""] duty | ["not" | "" ] duty fashion]
 ;
-               
-duty: 
+
+duty:
 " to interconnect directly or indirectly with the facilities and equipment of other telecommunications carriers" |
 " to install network features, functions, or capabilities that do not comply with the guidelines and standards established pursuant to section 255 or 256" |
 " to prohibit, and not to impose unreasonable or discriminatory conditions or limitations on, the resale of its telecommunications services" |
@@ -189,7 +183,7 @@ duty:
 " to provide dialing parity to competing providers of telephone exchange service and telephone toll service" |
 " to permit all providers to have nondiscriminatory access to telephone numbers, operator services, directory assistance, and directory listing, with no unreasonable dialing delays" |
 " to negotiate in good faith in accordance with section 252 the particular terms and conditions of agreements to fulfill the duties described in paragraphs (1) through (5) of subsection (b) and this subsection" |
-" to provide, for the facilities and equipment of any requesting telecommunications carrier, interconnection with the local exchange carrier's network" 
+" to provide, for the facilities and equipment of any requesting telecommunications carrier, interconnection with the local exchange carrier's network"
 ;
-                
+
 

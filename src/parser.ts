@@ -11,7 +11,7 @@ export interface Rule {
 export interface Transform {
     type: 'transform';
     name: string;
-    rules: { pattern: string; target: string; replacement: string; }[];
+    rules: { pattern: string; target: string; replacement: (string|((...args: any[]) => string)); }[];
 }
 
 export interface Ref {
