@@ -20,8 +20,8 @@ const input = readFileSync(filename, 'utf8');
 const tokens = tokenize(input);
 const statements: Statement[] = parse(tokens);
 
-const entry = startRule ?? (() => {
-    const first = statements.find(s => s.type === 'rule');
+const entry: string = startRule ?? ((): string => {
+    const first = statements.find(s => s.type === 'rule' && !s.resource);
     if (!first || first.type !== 'rule') {
         console.error('No rules found in input.');
         process.exit(1);

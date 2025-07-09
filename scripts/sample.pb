@@ -2,6 +2,10 @@
  *  A sample file that uses every syntax we support.
  */
 
+// ensuring that resource rules are not before others.
+%resource animal: "cat" | "dog" | "fish";
+
+
 story: title introduction sentence "A " sentence>strip_the noise opposite-sentence conclusion;
 
 // testing silence and lazy set; note that main-animal<<animal>upcase-first is parsed as
@@ -10,7 +14,6 @@ story: title introduction sentence "A " sentence>strip_the noise opposite-senten
 title: ?punct=punctuation "The " ?main-animal<<animal $main-animal>upcase-first $punct "\n";
 introduction: "A story about " main-animal<<animal "s.\n";  // testing main-animal not overwritten.
 sentence: "The " double(animal) " run " [ "fast" | "sl" ["o" | "oooo"] "w"] ". ";
-animal: "cat" | "dog" | "fish";
 double(wrd): wrd " and " wrd;
 conclusion: "\nThat's my story about a " $main-animal ".";  // testing retrieval
 punctuation: "!" | "" | "?";

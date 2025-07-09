@@ -7,10 +7,10 @@ export type Token =
     | { type: 'greater'; value: '>' }
     | { type: 'silenced'; value: '?' }
     | { type: 'indirection'; value: '@' }
-    | { type: 'directive'; value: string }
     | { type: 'get-var'; value: string }
     | { type: 'set-var'; value: string }
     | { type: 'lazy-set-var'; value: string }
+    | { type: 'resource'; value: '%resource' }
     | { type: 'eof'; value: '<eof>' };
 
 export function tokenize(input: string): Token[] {
@@ -81,10 +81,25 @@ export function tokenize(input: string): Token[] {
                         str += '\\';
                         advance(2);
                     } else if (esc === 'n') {
-                        str += '\n';
+                        str += '\n'; // newline
                         advance(2);
                     } else if (esc === 't') {
-                        str += '\t';
+                        str += '\t'; // tab
+                        advance(2);
+                    } else if (esc === 'v') {
+                        str += '\v'; // vertical tab (don't use)
+                        advance(2);
+                    } else if (esc === 'b') {
+                        str += '\b'; // backspace (don't use)
+                        advance(2);
+                    } else if (esc === 'r') {
+                        str += '\r'; // Carriage return w/o newline (don't use)
+                        advance(2);
+                    } else if (esc === 'f') {
+                        str += '\f'; // form feed
+                        advance(2);
+                    } else if (esc === 'a') {
+                        str += '\u0007'; // Javascript does not support \a will not work.
                         advance(2);
                     } else {
                         str += input[i];
@@ -114,6 +129,12 @@ export function tokenize(input: string): Token[] {
         if (input.startsWith('<->', i)) {
             advance(3);
             tokens.push({ type: 'mapping', value: '<->' });
+            continue;
+        }
+
+        if (input.startsWith('%resource', i)) {
+            advance('%resource'.length);
+            tokens.push({ type: 'resource', value: '%resource' });
             continue;
         }
 
@@ -161,12 +182,6 @@ export function tokenize(input: string): Token[] {
                 type: setVar.endsWith('=') ? 'set-var' : 'lazy-set-var',
                 value: name
             });
-            continue;
-        }
-
-        const directive = match(/^%\w+/);
-        if (directive) {
-            tokens.push({ type: 'directive', value: directive });
             continue;
         }
 

@@ -11,21 +11,22 @@ https://dev.null.org/dadaengine/manual-1.0/dada.html
 
 * Comments (inline and multiline)
 * Identifiers
-* Literal Strings: Double quote, Newline, Tab
+* Literal Strings:
+  - Use these: Double quote, Newline, Tab,
+  - Don't use these: Vertical tab, backspace, carriage return w/o newline, form feed, audible alert (bell)
 * Atoms
   - Literal Text
   - Symbols
 * Variables (including "lazy &lt;&lt; assignment")
 * Parametric rules
 * Inline choices (anonymous rules)
+* Resource rules (%resource)
 * Silenced atoms (?colour="green")
 * Text mappings: pattern style with slash
 * upcase and upcase-first -- provided transformations from old stdmap.pbi
 
 ## Not Supported
-* Literal Strings: Vertical tab, backspace, carriage return w/o newline, form feed, audible alert
 * Kleene star \* and + characters
-* Resource rules (%resource)
 * Indirection (@references)
 * Text mappings: source -> destination
 * Text mappings: reversible <-> mappings

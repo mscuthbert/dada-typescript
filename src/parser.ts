@@ -6,6 +6,7 @@ export interface Rule {
     parameters: string[];
     options: Option[][];
     lastChoice?: number;
+    resource: boolean;
 }
 
 export interface Transform {
@@ -154,11 +155,11 @@ export function parse(tokens: Token[]): Statement[] {
             }
         }
 
-        statements.push({ type: 'rule', name: anonName, parameters: [], options });
+        statements.push({ type: 'rule', name: anonName, parameters: [], options, resource: true });
         return { ref: anonName, transforms: [] };
     }
 
-    function parseRule(): Rule {
+    function parseRule({resource_rule=false}: {resource_rule: boolean}): Rule {
         const name = expect('identifier').value;
         currentRuleName = name;
         const parameters: string[] = [];
@@ -201,7 +202,7 @@ export function parse(tokens: Token[]): Statement[] {
         }
 
         currentRuleName = null;
-        return { type: 'rule', name, parameters, options };
+        return { type: 'rule', name, parameters, options, resource: resource_rule };
     }
 
     function parseMapping(): Transform {
@@ -261,6 +262,7 @@ export function parse(tokens: Token[]): Statement[] {
     }
 
     function parseStatements(): Statement[] {
+        let next_rule_is_resource = false;
         while (peek().type !== 'eof') {
             const token = peek();
             if (token.type === 'identifier') {
@@ -272,12 +274,11 @@ export function parse(tokens: Token[]): Statement[] {
                 ) {
                     statements.push(parseMapping());
                 } else {
-                    statements.push(parseRule());
+                    statements.push(parseRule({resource_rule: next_rule_is_resource}));
+                    next_rule_is_resource = false;
                 }
-            } else if (token.type === 'directive') {
-                while (peek().type !== 'symbol' || peek().value !== ';') {
-                    next();
-                }
+            } else if (token.type === 'resource') {
+                next_rule_is_resource = true;
                 next();
             } else {
                 throw new Error(`Unexpected token: ${token.type} ${token.value}`);
