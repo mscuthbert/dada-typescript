@@ -24,12 +24,12 @@ https://dev.null.org/dadaengine/manual-1.0/dada.html
 * Silenced atoms (?colour="green")
 * Indirection (@references)
 * Text mappings: pattern style with slash
+* Text mappings: source -> destination
+* Text mappings: reversible <-> mappings
 * upcase and upcase-first -- provided transformations from old stdmap.pbi
 
 ## Not Supported
 * Kleene star \* and + characters
-* Text mappings: source -> destination
-* Text mappings: reversible <-> mappings
 * Percent %trans mappings (however, upcase and upcase-first are provided by the system)
 * Embedded Code
 * Standard Library
