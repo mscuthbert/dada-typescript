@@ -1,12 +1,6 @@
-// convert the first character of a string to its uppercase equivalent
-
-%trans upcase-first:
-".*": 0 u ;
-;
-
-brag: frag end | 
+brag: frag end |
 frag brag | frag brag | frag brag |
-frag brag | frag brag | frag brag 
+frag brag | frag brag | frag brag
 ;
 
 end: "Now give me some more of..." ;
@@ -94,10 +88,10 @@ number: "seven" | "23" | "13" | "666" | "273" | "42"
 
 entity:
 "a Crime Fighting Master Criminal" | "a "pet |
-"the bigfooted devil of Level 14" | 
+"the bigfooted devil of Level 14" |
 "the last remaining Homo Correctus" | "the " emphatic " Man of the Future"  |
 "a human being of the *first* " emphatic " water" |
-"the javalina humping junkie that jumped the " entities 
+"the javalina humping junkie that jumped the " entities
 ;
 
 pet: "pterodactyl" | "python" | "triceratops" | "giant lizard"
@@ -112,10 +106,10 @@ she-being: "Mother Nature" | "God"  | "the Anti-Virgin"
 he-being: "the Devil" | "Father Time" | "Jesus" | "the Wolf Man"
 ;
 
-entities: "bodiless fiends" | "alien jews" | "Men from Mars" | 
-"heathen *Hindoos*" | "space monsters" |
+entities: "bodiless fiends" | "alien Visigoths" | "Men from Mars" |
+"heathen *Hittites*" | "space monsters" |
 "sons of God and man" | "False Prophets" | "gods" | "dinosaurs" |
-"retarded space bastards" | "slabs o' wimp meat" | "dipshits"
+"dimwitted space bastards" | "slabs o' wimp meat" | "dipshits"
 ;
 
 body-part: "nose" | "gut" | "arm-vein" | "nether part" |
@@ -128,7 +122,7 @@ yell: "YEEE HAW! " | "YEE! YEEE! " | "*Yip, yip, YEEEEEEE!* "|
 
 slogan: "Fuck 'em if they can't take a joke!" | "Anything for a laugh!"  |
 "When the Rapture comes, I'll make 'em wait!"  |
-"They'll *never* clean *my* cage!" 
+"They'll *never* clean *my* cage!"
 ;
 
 act:
@@ -138,7 +132,7 @@ act:
 "wipe the *Pyramids* off my shoes before I enter *my* house" |
 "bend *crowbars* with my meat ax and a thought" |
 "bend my genes and whittle my DNA with the sheer force of my mighty *will*" |
-"steer my *own* " emphatic " evolution" 
+"steer my *own* " emphatic " evolution"
 ;
 
 adjective:
