@@ -22,12 +22,12 @@ https://dev.null.org/dadaengine/manual-1.0/dada.html
 * Inline choices (anonymous rules)
 * Resource rules (%resource)
 * Silenced atoms (?colour="green")
+* Indirection (@references)
 * Text mappings: pattern style with slash
 * upcase and upcase-first -- provided transformations from old stdmap.pbi
 
 ## Not Supported
 * Kleene star \* and + characters
-* Indirection (@references)
 * Text mappings: source -> destination
 * Text mappings: reversible <-> mappings
 * Percent %trans mappings (however, upcase and upcase-first are provided by the system)

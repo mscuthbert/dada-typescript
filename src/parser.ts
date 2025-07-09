@@ -44,9 +44,15 @@ export interface SilencedOption {
     value: Option;
 }
 
-export type Option = string | Ref | SetVar | LazySetVar | GetVar | SilencedOption;
+export interface Indirection {
+    kind: 'indirection';
+    value: Option;
+}
+
+export type Option = string | Ref | SetVar | LazySetVar | GetVar | SilencedOption | Indirection;
 
 export type Statement = Rule | Transform;
+
 
 export function parse(tokens: Token[]): Statement[] {
     let i = 0;
@@ -83,6 +89,13 @@ export function parse(tokens: Token[]): Statement[] {
             const value = parseOption();
             return { kind: 'silenced', value: value };
         }
+
+        if (token.type === 'indirection') {
+            next();
+            const value = parseOption();
+            return { kind: 'indirection', value: value };
+        }
+
 
         if (token.type === 'get-var') {
             const getVar: GetVar = { kind: 'get', name: token.value, transforms: [] };
@@ -186,6 +199,7 @@ export function parse(tokens: Token[]): Statement[] {
                 || token.type === 'set-var'
                 || token.type === 'lazy-set-var'
                 || token.type === 'silenced'
+                || token.type === 'indirection'
             ) {
                 currentOption.push(parseOption());
             } else if (token.type === 'symbol' && token.value === '|') {
@@ -197,7 +211,10 @@ export function parse(tokens: Token[]): Statement[] {
                 options.push(currentOption);
                 break;
             } else {
-                throw new Error(`Unexpected token in rule: ${token.type} ${token.value}${currentRuleName ? ` (in rule: ${currentRuleName})` : ''}`);
+                if (token.type === 'symbol' && token.value === ':') {
+                    throw new Error(`Unexpected second colon ${currentRuleName ? `in rule "${currentRuleName}"` : ''}: missing semicolon?`)
+                }
+                throw new Error(`Unexpected token ${token.type} ${token.value}${currentRuleName ? ` (in rule "${currentRuleName}")` : ''}`);
             }
         }
 

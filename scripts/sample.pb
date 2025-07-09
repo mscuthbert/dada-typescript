@@ -6,7 +6,7 @@
 %resource animal: "cat" | "dog" | "fish";
 
 
-story: title introduction sentence "A " sentence>strip_the noise opposite-sentence conclusion;
+story: title introduction named sentence "A " sentence>strip_the noise opposite-sentence conclusion;
 
 // testing silence and lazy set; note that main-animal<<animal>upcase-first is parsed as
 // main-animal<<(animal>upcase-first) which isn't what is wanted here.  Hence the silence
@@ -29,6 +29,16 @@ opposites:
     "night" <-> "day"
     "hot" <-> "cold"
 ;
+
+// indirection tests
+named: named1 "\n" named2 "\n";
+named1: "My " $main-animal>upcase " is named " @$main-animal ". ";
+named2: "Its friend, a " local-animal=animal ", is named " @$local-animal " (never " @animal "). ";
+
+dog: "Fido" | "Spot";
+cat: "Morris" | "Princess";
+fish: "Blubber" | "Flounder";
+
 
 trim_e:
         ".*e$" -> "e$"/""

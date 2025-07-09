@@ -2,9 +2,15 @@ import type {
     Statement,
     Rule,
     Transform,
-    Option
+    Option,
+    Ref,
 } from './parser.ts';
 
+function isRef(obj: Option): obj is Ref {
+    return typeof obj === 'object' && obj !== null && 'ref' in obj;
+}
+
+// Context are context variables -- global or parameter
 type Context = Record<string, string>;
 type RuleMap = Record<string, Rule>;
 type TransformMap = Record<string, Transform>;
@@ -87,6 +93,27 @@ export function generate(statements: Statement[], start: string): string {
                 resolve(option.value, context);
                 return '';
             }
+            if (option.kind === 'indirection') {
+                const localOption = option.value;
+                const refEval = resolve(localOption, context);
+                const rule: Rule = rules[refEval];
+                if (!rule) {
+                    throw new Error(`Indirection resolved to unknown rule: ${refEval}`);
+                }
+                // indirection with parameters currently not defined.
+                let localRef: Ref | null = null;
+                if (isRef(localOption)) {
+                    localRef = localOption;
+                } else {
+                    localRef = {
+                        ref: refEval,
+                        transforms: [],
+                        args: [],
+                    }
+                }
+
+                return resolveRule(rule, localRef, context);
+            }
         }
 
         // Handle references
@@ -94,19 +121,24 @@ export function generate(statements: Statement[], start: string): string {
             return applyTransforms(context[option.ref], option.transforms);
         }
 
-        const rule = rules[option.ref];
+        const rule: Rule = rules[option.ref];
         if (!rule) {
             throw new Error(`Unknown rule: ${option.ref}`);
         }
+        return resolveRule(rule, option, context);
+    }
 
+    return resolve({ ref: start, transforms: [] }, {});
+
+    function resolveRule(rule: Rule, ref: Ref, context: Context) : string {
         const localContext = { ...context };
 
         if (rule.parameters.length > 0) {
-            if (!option.args || option.args.length !== rule.parameters.length) {
-                throw new Error(`Incorrect number of arguments to rule ${option.ref}`);
+            if (!ref.args || ref.args.length !== rule.parameters.length) {
+                throw new Error(`Incorrect number of arguments to rule ${ref.ref}`);
             }
             for (let j = 0; j < rule.parameters.length; j++) {
-                localContext[rule.parameters[j]] = resolve(option.args[j], context);
+                localContext[rule.parameters[j]] = resolve(ref.args[j], context);
             }
         }
 
@@ -126,8 +158,6 @@ export function generate(statements: Statement[], start: string): string {
             result += resolve(part, localContext);
         }
 
-        return applyTransforms(result, option.transforms);
+        return applyTransforms(result, ref.transforms);
     }
-
-    return resolve({ ref: start, transforms: [] }, {});
 }

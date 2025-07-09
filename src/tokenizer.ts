@@ -138,7 +138,6 @@ export function tokenize(input: string): Token[] {
             continue;
         }
 
-
         if (input[i] === '>') {
             advance();
             tokens.push({ type: 'greater', value: '>' });
