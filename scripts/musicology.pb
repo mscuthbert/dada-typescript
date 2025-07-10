@@ -1,15 +1,20 @@
 // Run "bin/dada musicology.pb"
 
-// pomo.pb  acb  ??-09-24 AU
-// pb script for generating postmodern verbiage
+// PB script for generating New Musicology Essays -- based on the Pomo script
 // Updated, format-independent version
 // Copyright (C) 1995, 1996 Andrew C. Bulhak
-// Modifications (C) 2006, 2011, 2018 Michael Scott Cuthbert
+// Substantial modifications (C) 2006, 2011, 2018, 2025 Michael Scott Asato Cuthbert
+// A paper generated from this was accepted to one of those bogus journals in 2018.
 
+// The pomo.pb script includes this message:
+// "this script is property of acb. You are permitted to use, modify and
+//  distribute it as long as this notice is retained and any modifications
+//  in distributed copies are clearly denoted."
 
-// this script is property of acb. You are permitted to use, modify and
-// distribute it as long as this notice is retained and any modifications
-// in distributed copies are clearly denoted.
+// This version is therefore licensed under the same version: the modifications
+// are property of MSAC, but wouldn't be possible without the work of acb.  You can
+// continue to modify it as long as *this* notice is retained and any modifications
+// in distributed copies are clearly noted.  Have fun!
 
 // global variables used:
 //  v-citable      name of artist (composer or writer) who is cited throughout text
@@ -65,7 +70,7 @@ title2:
 
 // use often when you need someone
 person:
-    v-citable<<citeable-artist
+    v-citable<<citable-artist
     | v-composer<<composer
     | v-artist<<artist
     | v-person<<idea-source
@@ -2184,8 +2189,8 @@ intellectual:
   | "Brett" | "Solomon" | "Heidegger" | "Cheng" | "Straus" | "Cusick" | "Born"
 ;
 
-// authors of books; not major contributors to new musicology discourse but
-// good for rounding out the discussion
+// authors of books; not necessarily all major contributors to new musicology discourse but
+// good for rounding out the discussion.
 
 book-author: "Agawu" | "Lockwood" | "Cohn" | "Lewin" | "Babbitt" |
              "Rosen" | "Oja" | "Van Orden" | "Tick" |
@@ -2253,10 +2258,10 @@ initial:
 initials: initial | initial | initial | initial | initial initial | initial initial initial ;
 
 year: "19" recent-decade digit | "19" recent-decade digit |
-      "19" digit digit | "200" digit | "201" year-digit | "18" recent-decade digit;
+      "19" digit digit | "200" digit | "201" digit | "202" year-digit | "18" recent-decade digit;
 
 // digits of this decade
-year-digit: "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7";
+year-digit: "0" | "1" | "2" | "3" | "4" | "5";
 
 recent-decade: "7" | "8" | "9";
 
@@ -2399,12 +2404,15 @@ artist-gender-pronoun:
     "Shaw" -> "she"
     "Oliveros" -> "she"
     "Born" -> "she"
+//    "Maxwell" -> "she"
+//    "Zayaruznaya" -> "they"
 ;
 
 possessivify-pronoun:
     "she" -> "her"
     "he" -> "his"
     "it" -> "its"
+    "they" -> "their"
 ;
 
 // works of citable artists

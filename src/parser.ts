@@ -153,50 +153,16 @@ export function parse(tokens: Token[]): Statement[] {
         const anonName = `anonymous-${anonCounter.toString().padStart(4, '0')}`;
         anonCounter++;
         expect('symbol', '[');
-
-        const options: Option[][] = [];
-        let currentOption: Option[] = [];
-
-        while (true) {
-            const token = peek();
-            if (
-                token.type === 'string' ||
-                token.type === 'identifier' ||
-                (token.type === 'symbol' && token.value === '[')
-            ) {
-                currentOption.push(parseOption());
-            } else if (token.type === 'symbol' && token.value === '|') {
-                next();
-                options.push(currentOption);
-                currentOption = [];
-            } else if (token.type === 'symbol' && token.value === ']') {
-                next();
-                options.push(currentOption);
-                break;
-            } else {
-                throw new Error(`Unexpected token in anonymous rule ${currentRuleName ? `in ${currentRuleName}` : ''}: ${token.type} ${token.value}`);
-            }
-        }
-
+        const options = parseRuleOptions(true);
         statements.push({ type: 'rule', name: anonName, parameters: [], options, resource: true, lastChoice: -1 });
         return { ref: anonName, textMappings: [] };
     }
 
-    function parseRule({resource_rule=false}: {resource_rule: boolean}): Rule {
-        const name = expect('identifier').value;
-        currentRuleName = name;
-        const parameters: string[] = [];
-
-        if (peek().type === 'symbol' && peek().value === '(') {
-            resource_rule = true; // rules with parameters are resources.
-            next();
-            while (peek().type !== 'symbol' || peek().value !== ')') {
-                parameters.push(expect('identifier').value);
-            }
-            expect('symbol', ')');
+    function parseRuleOptions(isAnonymous: boolean): Option[][] {
+        let endSymbol: string = ';';
+        if (isAnonymous) {
+            endSymbol = ']';
         }
-
-        expect('symbol', ':');
         const options: Option[][] = [];
         let currentOption: Option[] = [];
 
@@ -218,17 +184,39 @@ export function parse(tokens: Token[]): Statement[] {
                 next();
                 options.push(currentOption);
                 currentOption = [];
-            } else if (token.type === 'symbol' && token.value === ';') {
+            } else if (token.type === 'symbol' && token.value === endSymbol) {
                 next();
                 options.push(currentOption);
                 break;
             } else {
-                if (token.type === 'symbol' && token.value === ':') {
+                if (!isAnonymous && token.type === 'symbol' && token.value === ':') {
                     throw new Error(`Unexpected second colon ${currentRuleName ? `in rule "${currentRuleName}"` : ''}: missing semicolon?`)
+                } else if (isAnonymous) {
+                    throw new Error(`Unexpected token in anonymous rule ${currentRuleName ? `in rule ${currentRuleName}` : ''}: ${token.type} ${token.value}`);
+                } else {
+                    throw new Error(`Unexpected token ${token.type} ${token.value}${currentRuleName ? ` (in rule "${currentRuleName}")` : ''}`);
                 }
-                throw new Error(`Unexpected token ${token.type} ${token.value}${currentRuleName ? ` (in rule "${currentRuleName}")` : ''}`);
             }
         }
+        return options;
+    }
+
+    function parseRule({resource_rule=false}: {resource_rule: boolean}): Rule {
+        const name = expect('identifier').value;
+        currentRuleName = name;
+        const parameters: string[] = [];
+
+        if (peek().type === 'symbol' && peek().value === '(') {
+            resource_rule = true; // rules with parameters are resources.
+            next();
+            while (peek().type !== 'symbol' || peek().value !== ')') {
+                parameters.push(expect('identifier').value);
+            }
+            expect('symbol', ')');
+        }
+
+        expect('symbol', ':');
+        const options: Option[][] = parseRuleOptions(false);
 
         currentRuleName = null;
         return { type: 'rule', name, parameters, options, resource: resource_rule, lastChoice: -1 };
