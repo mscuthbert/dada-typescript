@@ -2265,7 +2265,7 @@ non-zero-digit: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 non-zero-digit-or-space: "" | "" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 
 
-measure-range: { a=1..300; b=a+1..a+30 } $a "-" $b;
+measure-range: { a=1..300; c=1..30; b=a+c } $a "-" $b;
 
 
 // publishers

@@ -50,9 +50,24 @@ https://dev.null.org/dadaengine/manual-1.0/dada.html
     `BOLD(xxx)` was in format.pbi was not prefaced by `%resource`). This reading is retained here.
 * The original parser did not allow parameters in inline choices (`[ x | y ]` expressions). Since
     this was called a restriction "in the current release" and it just worked in the Typescript
-    interpreter, we're leaving it in.  The original parser also did not allow parameters to be
+    interpreter, we're leaving it in.
+
+### Embedded Code Expression Differences and Clarification
+Since Embedded Code in pb was designed to be evaluated by C, some differences were
+bound to arise with a Javascript parser.
+
+* The original parser did not allow parameters to be
     used as variables in inline code. (It could be gotten around by aliasing with silencing,
-    like `FOOTNOTE(text): ?tx=text { FOOTNOTE_TEXT=FOOTNOTE_TEXT + tx }`
+    like `FOOTNOTE(text): ?tx=text { FOOTNOTE_TEXT=FOOTNOTE_TEXT + tx }`)  They work in Javascript.
+* The use of the `a..b` expression wasn't fully documented in the original pb and allowed expressions
+    like `{a = 1..300; b=a+1..a+30 }` to assign `b` to a number between 1 and 30 above `a`.
+    I could not easily make the operator work this way in Javascript, so now only actual integers
+    (as described in the docs) work.  To do the above statement call `{a = 1..300; c=1..30; b=a+c}`
+* A return statement in this Javascript version must be the first statement in the embedded code
+    (the `{= ... }` expression is converted to a magic expression, but the `=` sign is
+    only searched for at the beginning of the expression, after optional whitespace.)  Any
+    other position of the leading `=` will probably result in syntax errors.
+
 
 ## License
 The software here is released under the BSD 3-clause license.  The pb scripts--
