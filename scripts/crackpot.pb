@@ -1,4 +1,4 @@
-/* make crackpottish rants   acb 29-6-1995 
+/* make crackpottish rants   acb 29-6-1995
  * Now requires the C preprocessor
  *
  * Copyright (C) 1995 Andrew C. Bulhak
@@ -13,20 +13,17 @@
 
 Start: S;
 
-#include <stdmap.pbi>
-#include <format.pbi>
-
 // rules
 
-S: PROLOGUE TITLE(title>upcase) 
-	BODY 
-	sentence-stream+ PBRK 
-	paranoid-sentence-stream+ PBRK 
+S: PROLOGUE TITLE(title>upcase)
+	BODY
+	sentence-stream+ PBRK
+	paranoid-sentence-stream+ PBRK
 //	secret-hist-sentence-stream PBRK
 	factoid-paragraph PBRK
 	exhortation EPILOGUE ;
 
-title: solution ": " 
+title: solution ": "
 	[ "the solution to all " problem-types " problems"
 	| "the end of " evils
 	]
@@ -43,14 +40,14 @@ secret-hist-sentence-stream:
 	"All human history was part of a struggle between "
 	benefactors " and " malefactors ". "
 	[
-		benefactors " came from " 
+		benefactors " came from "
 			["Sirius"|"the Pleiades"|"the stars"|"Arghata"] ", "
 		[
 			"bringing with them " [
 				"the key to " [
 					"ultimate "|"omniversal "|"cosmic "|""|
 					"universal "|"celestial "
-				] 
+				]
 				[
 					"awareness"|"harmony"|"enlightenment"|
 					"truth"
@@ -79,16 +76,16 @@ paranoid-sentence-stream:
 	they " destroyed " one-who-knew-too-much " because he knew too much. "
 	| one-who-knew-too-much " knew " ["too much"|"all"] " about "
 	solution ["; "|["; that"|". That"] " is why "] they " destroyed him. "
-	| "All " ["books"|"historical accounts"] " were " 
+	| "All " ["books"|"historical accounts"] " were "
 	["altered"|"rewritten"] " to " ulterior-purpose
 	| "They altered the Bible to " ulterior-purpose
 	| they " don't want anyone to know the " something-of-issue solution
-	 [""|" and are willing to "["destroy"|"exterminate"] 
-	" anyone who gets in their way as they did " one-who-knew-too-much 
+	 [""|" and are willing to "["destroy"|"exterminate"]
+	" anyone who gets in their way as they did " one-who-knew-too-much
 	] ". "
-	| "They " 
-	["moved the Great Pyramid"|"changed the Great Pyramid's height"] 
-	" to destroy its " 
+	| "They "
+	["moved the Great Pyramid"|"changed the Great Pyramid's height"]
+	" to destroy its "
 	["astronomical"|"astrological"|"geometric"|"harmonic"] " alignment. "
 
 	;
@@ -104,20 +101,20 @@ something-of-issue: cond-upcase([[""|"cosmic "]"truth"]) " about "
 
 they:	v-them<<new-they | new-they ;
 
-new-they: "THEY" | "they" | "the Illuminati" | "the Rosicrucians" 
+new-they: "THEY" | "they" | "the Illuminati" | "the Rosicrucians"
 	| "the Knights Templar" | "the Nine Unknown Men" | "the Black Lodge"
-	| "the Secret Masters" | "the Secret Overlords" | "they" 
-	| "the Secret Underground " [""|"World "] "Society" 
+	| "the Secret Masters" | "the Secret Overlords" | "they"
+	| "the Secret Underground " [""|"World "] "Society"
 	| "the Freemasons";
 
-one-who-knew-too-much: "Wilhelm Reich" | "Galileo" | "Giordano Bruno" 
+one-who-knew-too-much: "Wilhelm Reich" | "Galileo" | "Giordano Bruno"
 	| "Tesla" ;
 
-sentence-stream: simple-statement justification 
-	law " is encoded in " 
+sentence-stream: simple-statement justification
+	law " is encoded in "
 	["the Bible"|"the works of Shakespeare"|"the decimal expansion of pi"]
 	". "
-	| 
+	|
 	[""
 	  |["Great "["minds"|"men"|"scientists"]|"Eminent researchers"]
 	    " throughout history " "(" [eminent ", "]+ " etc.) "
@@ -125,20 +122,20 @@ sentence-stream: simple-statement justification
 	  |"The " ["Aztecs" | "Egyptians" | "Sumerians" | "Atlanteans"]
 	   " knew that "
 	]
-	  law " is the " 
+	  law " is the "
 		[ "guiding principle of" | "governing law of"
 		| trans-adj " principle behind" ] " "
 	["all creation" | "the stars" | "all nature" | "the Universe"]
 	[""|
 	  " and yet it is virtually " ["unknown"|"unheard of"] ". "
-	  [""|"Why is that? "] 
-	"This is because it has been " 
-	cond-upcase([[""|"ruthlessly "] "suppressed"]) 
+	  [""|"Why is that? "]
+	"This is because it has been "
+	cond-upcase([[""|"ruthlessly "] "suppressed"])
 	cond-upcase(" throughout history")
 	]
 	". "
-	| "ALL modern " ["evils"|"problems"|"social ills"] 
-	" stem from the failure to recognise " 
+	| "ALL modern " ["evils"|"problems"|"social ills"]
+	" stem from the failure to recognise "
 	[""|"and " ["live"|"be governed"] " by "]
 	law ". "
 ;
@@ -148,8 +145,8 @@ eminent: "Einstein" | "Newton" | "Tesla" | "Velikovsky" | "Larson"
 
 simple-statement: numeric-analogy(["three"|"four"|"five"|"twelve"]);
 
-numeric-analogy(number): "Just as there are " number " " 
-	@number>append-things ", there are " number " " 
+numeric-analogy(number): "Just as there are " number " "
+	@number>append-things ", there are " number " "
 	@number>append-things ". "
 ;
 
@@ -167,7 +164,7 @@ three-things: "entities in the Holy Trinity" | "dimensions"
 
 four-things: "seasons" | "cardinal directions" | "letters in the name of God"
 	| "gospels in the Bible" | "suits in a deck of cards"
-	| "corners of the Earth" | "races of " ["Man"|"humanity"] 
+	| "corners of the Earth" | "races of " ["Man"|"humanity"]
 	| "fundamental elements";
 
 five-things: "axioms of Euclid's Geometry" | "fingers on a human hand"
@@ -179,7 +176,7 @@ seven-things: "days in the week" | "cavities in the human body"
 	| "electrons in a nitrogen atom" | "deadly sins"
 ;
 
-twelve-things: "Apostles" | "hours on a clock" | "inches in a foot" 
+twelve-things: "Apostles" | "hours on a clock" | "inches in a foot"
 	| "months" | "signs of the Zodiac" | "eggs in a dozen" ;
 
 // concrete factoids
@@ -195,17 +192,17 @@ factoid-consequence:
 
 concrete-factoid: number-name " is " bogus-number ". "
 	| "the true " [""|"hidden "|"suppressed "] "value of pi is 3."
-	["0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"]+ 
+	["0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"]+
 	[""|"; all mathematics textbooks have been "
 	["altered"|"rewritten"|"changed"]" to "["hide"|"conceal"] " this"]
 	". "
 ;
 
-number-name: "the " 
+number-name: "the "
 	cond-upcase([["cosmic"|"universal"] " " law-adj " constant"]);
 
-bogus-number: ["1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"] 
-	["0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"]* 
+bogus-number: ["1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"]
+	["0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"]*
 	[""|"." [["0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"]+]+ ]
 ;
 
@@ -217,7 +214,7 @@ exhortation: cond-upcase([[
 	"End " evils
 	] " -- " imperative])
 	| "Achieve " achievements " " [ "now" | "today" ] "! "
-	"Just follow these " {num_steps=3..5; step=1} $num_steps 
+	"Just follow these " {num_steps=3..5; step=1} $num_steps
 	" easy steps.\n"
 	%repeat(step,num_steps)
 	["" | "IT'S THAT EASY!" | "NOTHING COULD BE SIMPLER!"]
@@ -229,7 +226,7 @@ step: $step ". "
 	[["Adopt"|"Accept"] " " solution " as"|
 	"Make " solution | "Let " solution " be"
 	]" your guide." |
-	"Reject the " cond-upcase(evil-adj) [""|" and " cond-upcase(evil-adj)] 
+	"Reject the " cond-upcase(evil-adj) [""|" and " cond-upcase(evil-adj)]
 		" doctrine of "
 		["evolution"|"the spherical Earth"|"Minimum Message Length"
 		|"Freudian psychology"|"relativity"|"capitalism"] "." |
@@ -262,7 +259,7 @@ achievement: ["immeasurable wealth" | "untold riches" ]
 	| [ "ultimate " | "" ] achievement-2;
 
 achievement-2:
-	"enlightenment" 
+	"enlightenment"
 	| "omniversal awareness" | "sexual attractiveness"
 	| "cosmic power" ;
 
