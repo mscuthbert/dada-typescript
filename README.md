@@ -52,6 +52,7 @@ https://dev.null.org/dadaengine/manual-1.0/dada.html
 * The original parser did not allow parameters in inline choices (`[ x | y ]` expressions). Since
     this was called a restriction "in the current release" and it just worked in the Typescript
     interpreter, we're leaving it in.
+* Spaces around ` = ` and ` << ` in set-var and get-var are currently not allowed.
 
 ### Embedded Code Expression Differences and Clarification
 Since Embedded Code in pb was designed to be evaluated by C, some differences were

@@ -5,7 +5,7 @@ export interface Rule {
     name: string;
     parameters: string[];
     options: Option[][];
-    lastChoice?: number;
+    lastChoice: number;
     resource: boolean;
 }
 
@@ -177,7 +177,7 @@ export function parse(tokens: Token[]): Statement[] {
             }
         }
 
-        statements.push({ type: 'rule', name: anonName, parameters: [], options, resource: true });
+        statements.push({ type: 'rule', name: anonName, parameters: [], options, resource: true, lastChoice: -1 });
         return { ref: anonName, transforms: [] };
     }
 
@@ -230,7 +230,7 @@ export function parse(tokens: Token[]): Statement[] {
         }
 
         currentRuleName = null;
-        return { type: 'rule', name, parameters, options, resource: resource_rule };
+        return { type: 'rule', name, parameters, options, resource: resource_rule, lastChoice: -1 };
     }
 
     function parseMapping(): Transform {

@@ -29,4 +29,4 @@ const entry: string = startRule ?? ((): string => {
     return first.name;
 })();
 
-console.log(generate(statements, entry));
+console.log(generate(statements, entry, 'html'));

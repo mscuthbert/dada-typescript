@@ -5,6 +5,7 @@ import type {
     Option,
     Ref,
 } from './parser.ts';
+import {plainRules, htmlRules} from "./formats.ts";
 
 import {scopedEval} from './helpers.ts';
 
@@ -17,8 +18,14 @@ type Context = Record<string, string>;
 type RuleMap = Record<string, Rule>;
 type TransformMap = Record<string, Transform>;
 
-export function generate(statements: Statement[], start: string): string {
-    const rules: RuleMap = {};
+export function generate(statements: Statement[], start: string, format: 'none'|'plain'|'html' = 'plain'): string {
+    let rules: RuleMap = {};
+    if (format === 'plain') {
+        rules = plainRules();
+    } else if (format === 'html') {
+        rules = htmlRules();
+    }
+
     const transforms: TransformMap = {
         "upcase-first": {
             type: "transform",
@@ -41,7 +48,7 @@ export function generate(statements: Statement[], start: string): string {
 
     for (const stmt of statements) {
         if (stmt.type === 'rule') {
-            rules[stmt.name] = { ...stmt, lastChoice: -1 };
+            rules[stmt.name] = {...stmt, lastChoice: -1};  // don't carry over lastChoice
         } else if (stmt.type === 'transform') {
             transforms[stmt.name] = stmt;
         } // no other possible

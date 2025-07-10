@@ -212,7 +212,7 @@ intro-sentence2: "\"" pseudo-quote>upcase-first ",\" says " intellectual ". "
 	| "the " main " theme of " work	" is " concept-desc ". "
 ;
 
-predominant-concept: "the distinction between " foo = dualisable-word " and " $foo>opposite
+predominant-concept: "the distinction between " foo=dualisable-word " and " $foo>opposite
 	| "the concept of " adj " " big-abst-thing
 ;
 
