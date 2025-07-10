@@ -2364,7 +2364,10 @@ citable-writer: "Adorno" | "Cage" | "McClary" | "Abbate" | "Solie" |
 
 uncitable-writer:
     "Puri" | "Beckerman" |
-    "Mockus" | "Attinello" | "Ta-Nehisi Coates"
+    "Mockus" |  // Pauline Oliveros and Lesbian Musicality
+    "Attinello" | "Ta-Nehisi Coates" |
+    // 2025 additions
+    "McWhorter"
 ;
 
 
