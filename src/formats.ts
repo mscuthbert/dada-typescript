@@ -1,3 +1,9 @@
+/*
+ * HTML and Plaintext formats for the TypeScript PB/Dada parser.
+ *
+ * Copyright (c) 2025 Michael Scott Asato Cuthbert
+ * BSD License: Some Rights Reserved
+ */
 import { tokenize } from './tokenizer.ts';
 import {parse, type Rule, type Statement} from './parser.ts';
 

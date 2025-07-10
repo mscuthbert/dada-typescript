@@ -1,3 +1,9 @@
+/*
+ * Tokenizer for the TypeScript PB/Dada parser.
+ *
+ * Copyright (c) 2025 Michael Scott Asato Cuthbert
+ * BSD License: Some Rights Reserved
+ */
 export type Token =
     | { type: 'identifier'; value: string }
     | { type: 'string'; value: string }

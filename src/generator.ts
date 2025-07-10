@@ -1,3 +1,9 @@
+/*
+ * Text Generator for the TypeScript PB/Dada parser.
+ *
+ * Copyright (c) 2025 Michael Scott Asato Cuthbert
+ * BSD License: Some Rights Reserved
+ */
 import type {
     Statement,
     Rule,

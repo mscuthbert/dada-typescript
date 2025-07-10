@@ -1,3 +1,9 @@
+/*
+ * Token to Rule (etc.) Parser for the TypeScript PB/Dada rewrite.
+ *
+ * Copyright (c) 2025 Michael Scott Asato Cuthbert
+ * BSD License: Some Rights Reserved
+ */
 import type { Token } from './tokenizer.ts';
 
 export interface Rule {

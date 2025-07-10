@@ -1,3 +1,9 @@
+/*
+ * Helpers for the TypeScript PB/Dada parser.
+ *
+ * Copyright (c) 2025 Michael Scott Asato Cuthbert
+ * BSD License: Some Rights Reserved
+ */
 export function scopedEval(code: string, context: Record<string, any>): string {
     const trimmed = code.trim();
     const isExpr = trimmed.startsWith('=');

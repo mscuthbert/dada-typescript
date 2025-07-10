@@ -1,3 +1,9 @@
+/*
+ * CLI running for the TypeScript PB/Dada tokenizer.
+ *
+ * Copyright (c) 2025 Michael Scott Asato Cuthbert
+ * BSD License: Some Rights Reserved
+ */
 import { readFileSync } from 'fs';
 import { tokenize } from './tokenizer.ts';
 
