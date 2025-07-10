@@ -1,7 +1,7 @@
 import type {
     Statement,
     Rule,
-    Transform,
+    TextMapping,
     Option,
     Ref,
 } from './parser.ts';
@@ -16,7 +16,7 @@ function isRef(obj: Option): obj is Ref {
 // Context are context variables -- global or parameter
 type Context = Record<string, string>;
 type RuleMap = Record<string, Rule>;
-type TransformMap = Record<string, Transform>;
+type TextMappingMap = Record<string, TextMapping>;
 
 export function generate(statements: Statement[], start: string, format: 'none'|'plain'|'html' = 'plain'): string {
     let rules: RuleMap = {};
@@ -26,9 +26,9 @@ export function generate(statements: Statement[], start: string, format: 'none'|
         rules = htmlRules();
     }
 
-    const transforms: TransformMap = {
+    const textMappings: TextMappingMap = {
         "upcase-first": {
-            type: "transform",
+            type: "textMapping",
             name: "upcase-first",
             rules: [{
                 pattern: '.*',
@@ -36,7 +36,7 @@ export function generate(statements: Statement[], start: string, format: 'none'|
                 replacement: (_m: any, g: string): string => g.toUpperCase(),
             }]},
         "upcase": {
-            type: "transform",
+            type: "textMapping",
             name: "upcase",
             rules: [{
                 pattern: '.*',
@@ -49,18 +49,18 @@ export function generate(statements: Statement[], start: string, format: 'none'|
     for (const stmt of statements) {
         if (stmt.type === 'rule') {
             rules[stmt.name] = {...stmt, lastChoice: -1};  // don't carry over lastChoice
-        } else if (stmt.type === 'transform') {
-            transforms[stmt.name] = stmt;
+        } else if (stmt.type === 'textMapping') {
+            textMappings[stmt.name] = stmt;
         } // no other possible
     }
 
-    function applyTransforms(value: string, names: string[]): string {
+    function applyTextmappings(value: string, names: string[]): string {
         for (const name of names) {
-            const transform = transforms[name];
-            if (!transform) {
-                throw new Error(`Unrecognized transform "${name}" on generated value "${value}"`);
+            const textMapping = textMappings[name];
+            if (!textMapping) {
+                throw new Error(`Unrecognized textMapping "${name}" on generated value "${value}"`);
             }
-            for (const rule of transform.rules) {
+            for (const rule of textMapping.rules) {
                 const targetRegex = new RegExp(rule.target, 'g');
                 if (new RegExp(rule.pattern).test(value)) {
                     if (typeof rule.replacement === 'string') {
@@ -84,7 +84,7 @@ export function generate(statements: Statement[], start: string, format: 'none'|
         if ('kind' in option) {
             if (option.kind === 'get') {
                 const result = globalVars[option.name] ?? '';
-                return applyTransforms(result, option.transforms);
+                return applyTextmappings(result, option.textMappings);
             }
             if (option.kind === 'set') {
                 const val = resolve(option.value, context);
@@ -118,7 +118,7 @@ export function generate(statements: Statement[], start: string, format: 'none'|
                 } else {
                     localRef = {
                         ref: refEval,
-                        transforms: [],
+                        textMappings: [],
                         args: [],
                     }
                 }
@@ -152,7 +152,7 @@ export function generate(statements: Statement[], start: string, format: 'none'|
 
         // Handle references
         if (option.ref in context) {
-            return applyTransforms(context[option.ref], option.transforms);
+            return applyTextmappings(context[option.ref], option.textMappings);
         }
 
         const rule: Rule = rules[option.ref];
@@ -162,7 +162,7 @@ export function generate(statements: Statement[], start: string, format: 'none'|
         return resolveRule(rule, option, context);
     }
 
-    return resolve({ ref: start, transforms: [] }, {});
+    return resolve({ ref: start, textMappings: [] }, {});
 
     function resolveRule(rule: Rule, ref: Ref, context: Context) : string {
         // console.log('in resolve rule', ref.ref, context, globalVars);
@@ -194,6 +194,6 @@ export function generate(statements: Statement[], start: string, format: 'none'|
         }
 
         // console.log('out resolve rule', ref.ref, localContext, globalVars);
-        return applyTransforms(result, ref.transforms);
+        return applyTextmappings(result, ref.textMappings);
     }
 }

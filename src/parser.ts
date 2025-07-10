@@ -9,15 +9,15 @@ export interface Rule {
     resource: boolean;
 }
 
-export interface Transform {
-    type: 'transform';
+export interface TextMapping {
+    type: 'textMapping';
     name: string;
     rules: { pattern: string; target: string; replacement: (string|((...args: any[]) => string)); }[];
 }
 
 export interface Ref {
     ref: string;
-    transforms: string[];
+    textMappings: string[];
     args?: Option[];
 }
 
@@ -36,7 +36,7 @@ export interface LazySetVar {
 export interface GetVar {
     kind: 'get';
     name: string;
-    transforms: string[];
+    textMappings: string[];
 }
 
 export interface SilencedOption {
@@ -56,7 +56,7 @@ export interface CodeBlock {
 
 export type Option = string | Ref | SetVar | LazySetVar | GetVar | SilencedOption | Indirection | CodeBlock;
 
-export type Statement = Rule | Transform;
+export type Statement = Rule | TextMapping;
 
 
 export function parse(tokens: Token[]): Statement[] {
@@ -107,11 +107,11 @@ export function parse(tokens: Token[]): Statement[] {
         }
 
         if (token.type === 'get-var') {
-            const getVar: GetVar = { kind: 'get', name: token.value, transforms: [] };
+            const getVar: GetVar = { kind: 'get', name: token.value, textMappings: [] };
             next();
             while (peek().type === 'greater') {
                 next();
-                getVar.transforms.push(expect('identifier').value);
+                getVar.textMappings.push(expect('identifier').value);
             }
             return getVar;
         }
@@ -125,11 +125,11 @@ export function parse(tokens: Token[]): Statement[] {
         }
 
         if (token.type === 'identifier') {
-            const ref: Ref = { ref: token.value, transforms: [] };
+            const ref: Ref = { ref: token.value, textMappings: [] };
             next();
             while (peek().type === 'greater') {
                 next();
-                ref.transforms.push(expect('identifier').value);
+                ref.textMappings.push(expect('identifier').value);
             }
             if (peek().type === 'symbol' && peek().value === '(') {
                 next();
@@ -178,7 +178,7 @@ export function parse(tokens: Token[]): Statement[] {
         }
 
         statements.push({ type: 'rule', name: anonName, parameters: [], options, resource: true, lastChoice: -1 });
-        return { ref: anonName, transforms: [] };
+        return { ref: anonName, textMappings: [] };
     }
 
     function parseRule({resource_rule=false}: {resource_rule: boolean}): Rule {
@@ -233,7 +233,7 @@ export function parse(tokens: Token[]): Statement[] {
         return { type: 'rule', name, parameters, options, resource: resource_rule, lastChoice: -1 };
     }
 
-    function parseMapping(): Transform {
+    function parseMapping(): TextMapping {
         const name = expect('identifier').value;
         currentRuleName = name;
         expect('symbol', ':');
@@ -286,7 +286,7 @@ export function parse(tokens: Token[]): Statement[] {
         }
         expect('symbol', ';');
         currentRuleName = null;
-        return { type: 'transform', name, rules };
+        return { type: 'textMapping', name, rules };
     }
 
     function parseStatements(): Statement[] {
