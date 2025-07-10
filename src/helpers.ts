@@ -1,5 +1,4 @@
 export function scopedEval(code: string, context: Record<string, any>): string {
-    // console.log('in', code, JSON.stringify(context));
     const trimmed = code.trim();
     const isExpr = trimmed.startsWith('=');
     let wrappedCode = isExpr
@@ -29,7 +28,11 @@ export function scopedEval(code: string, context: Record<string, any>): string {
     const proxy = new Proxy({}, handler);
 
     // Execute the constructed function body in the proxy context
-    Function('with (this) { ' + wrappedCode + ' }').call(proxy);
+    try {
+        Function('with (this) { ' + wrappedCode + ' }').call(proxy);
+    } catch (e) {
+        throw new Error(`Unexpected error occurred ${e} for ${wrappedCode}`);
+    }
 
     delete context.__Math;
     if ('__ERROR' in context) {

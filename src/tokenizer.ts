@@ -143,7 +143,7 @@ export function tokenize(input: string): Token[] {
                     }
                     advance();
                 } else if (input[i] === '"') {
-                    codeBlock += extractQuote(); // this way quotes can use { and } in them.
+                    codeBlock += '"' + extractQuote() + '"'; // this way quotes can use { and } in them.
                 } else {
                     codeBlock += input[i];
                     advance();

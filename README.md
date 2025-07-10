@@ -39,6 +39,7 @@ https://dev.null.org/dadaengine/manual-1.0/dada.html
 * HTML Formatting
 * Footnotes
 * TROFF Formatting (no plans to integrate)
+* `%repeat(token, times)` was undocumented (only in test/repeattest) and not ported.
 
 ## Differences with c Parser + Clarifications
 * Unknown rule errors are found only on generation, not parsing. A script may therefore
@@ -70,6 +71,8 @@ bound to arise with a Javascript parser.
 * Currently, if there is a parameter with the same name as a global variable but different values
     and a `{code block}` is run the global variable will be updated to the
     value of the local, even if the code block doesn't reference that name.
+* Because Javascript will be evaluated strings like `{res="\n"}` will cause errors since it will
+    put the whitespace on a new line.  Either write as `{res="\\n"}` or use backticks.
 * A return statement in this Javascript version must be the first statement in the embedded code
     (the `{= ... }` expression is converted to a magic expression, but the `=` sign is
     only searched for at the beginning of the expression, after optional whitespace.)  Any
