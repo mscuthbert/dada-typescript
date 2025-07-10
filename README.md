@@ -6,6 +6,14 @@ to be run on the browser.
 The reference implementation is:
 https://dev.null.org/dadaengine/manual-1.0/dada.html
 
+## Command-line
+
+After running `npm install` once, after this run
+
+`npm start PBNAME`
+
+for instance `npm start scripts/pomo.pb`.
+
 ## Supported
 (in order of manual-1.0)
 
