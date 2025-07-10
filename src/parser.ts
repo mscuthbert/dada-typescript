@@ -178,6 +178,7 @@ export function parse(tokens: Token[]): Statement[] {
         const parameters: string[] = [];
 
         if (peek().type === 'symbol' && peek().value === '(') {
+            resource_rule = true; // rules with parameters are resources.
             next();
             while (peek().type !== 'symbol' || peek().value !== ')') {
                 parameters.push(expect('identifier').value);
