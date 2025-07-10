@@ -39,7 +39,7 @@ https://dev.null.org/dadaengine/manual-1.0/dada.html
 * HTML Formatting
 * Footnotes
 * TROFF Formatting (no plans to integrate)
-* `%repeat(token, times)` was undocumented (only in test/repeattest) and not ported.
+* `%repeat(token, times)` was undocumented (only in test/repeattest) and not ported. (Other unused/unimplemented directives from lexer.x were also not ported)
 
 ## Differences with c Parser + Clarifications
 * Unknown rule errors are found only on generation, not parsing. A script may therefore
@@ -72,7 +72,7 @@ bound to arise with a Javascript parser.
     have low priority.  To do the above statement call `{a = 1..300; c=1..30; b=a+c}` or
     `{a = 1..300; b=(a+1)..(a+30) }` with parentheses.
 * Special operators cannot appear within parentheses in another special operator, so no
-    `{=(a<<b)..(a>>b)}`.  I don't know if this was allowed in the C version.
+    `{=(a<<b)..(a>>b)}`.  This does work in the C version.
     Assign a different variable instead: `{c=a<<b; d=a>>b; e=c..d} $e`.
 * Currently, if there is a parameter with the same name as a global variable but different values
     and a `{code block}` is run the global variable will be updated to the
