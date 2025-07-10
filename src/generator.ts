@@ -38,7 +38,7 @@ export function generate(statements: Statement[], start: string, format: 'none'|
             name: "upcase-first",
             rules: [{
                 pattern: '.*',
-                target: '^(.)',
+                target: '^("?.)',  // upcase after quotes
                 replacement: (_m: any, g: string): string => g.toUpperCase(),
             }]},
         "upcase": {
@@ -112,7 +112,8 @@ export function generate(statements: Statement[], start: string, format: 'none'|
             }
             if (option.kind === 'indirection') {
                 const localOption = option.value;
-                const refEval = resolve(localOption, context);
+                const refEval = resolve(localOption, context);  // will resolve textMappings
+                // console.log('refEval', refEval);
                 const rule: Rule = rules[refEval];
                 if (!rule) {
                     throw new Error(`Indirection resolved to unknown rule: ${refEval}`);
@@ -120,7 +121,7 @@ export function generate(statements: Statement[], start: string, format: 'none'|
                 // indirection with parameters currently not defined.
                 let localRef: Ref | null = null;
                 if (isRef(localOption)) {
-                    localRef = localOption;
+                    localRef = {...localOption, textMappings: []};  // textMappings already done.
                 } else {
                     localRef = {
                         ref: refEval,
@@ -129,7 +130,10 @@ export function generate(statements: Statement[], start: string, format: 'none'|
                     }
                 }
 
-                return resolveRule(rule, localRef, context);
+                // console.log('localRef', localRef);
+                const indirectionResolution = resolveRule(rule, localRef, context);
+                // console.log('indirectionResolution', indirectionResolution);
+                return indirectionResolution;
             }
             if (option.kind === 'code') {
                 const originalGlobalKeys = new Set(Object.keys(globalVars));
