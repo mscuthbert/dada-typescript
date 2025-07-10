@@ -21,6 +21,14 @@ export interface TextMapping {
     rules: { pattern: string; target: string; replacement: (string|((...args: any[]) => string)); }[];
 }
 
+
+// Options:
+
+export interface BareString {
+    kind: 'string';
+    value: string;
+}
+
 export interface Ref {
     ref: string;
     textMappings: string[];
@@ -60,7 +68,7 @@ export interface CodeBlock {
     value: string;
 }
 
-export type Option = string | Ref | SetVar | LazySetVar | GetVar | SilencedOption | Indirection | CodeBlock;
+export type Option = BareString | Ref | SetVar | LazySetVar | GetVar | SilencedOption | Indirection | CodeBlock;
 
 export type Statement = Rule | TextMapping;
 
@@ -92,7 +100,7 @@ export function parse(tokens: Token[]): Statement[] {
 
         if (token.type === 'string') {
             next();
-            return token.value;
+            return { kind: 'string', value: token.value };
         }
 
         if (token.type === 'silenced') {
@@ -262,7 +270,7 @@ export function parse(tokens: Token[]): Statement[] {
                 throw new Error(`Unexpected mapping ${mapping_type.value} in mapping ${name}`);
             }
 
-            // type one and type 3 mapping use the same mapping type, so need to look two ahead
+            // type one and type 3 mappings use the same mapping type, so need to look two ahead
             // for a slash.
             const target_or_replacement = expect('string').value;
             if (peek().type !== 'slash') {

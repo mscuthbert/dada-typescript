@@ -83,11 +83,10 @@ export function generate(statements: Statement[], start: string, format: 'none'|
     }
 
     function resolve(option: Option, context: Context): string {
-        if (typeof option === 'string') {
-            return option;
-        }
-
         if ('kind' in option) {
+            if (option.kind === 'string') {
+                return option.value;
+            }
             if (option.kind === 'get') {
                 const result = globalVars[option.name] ?? '';
                 return applyTextmappings(result, option.textMappings);
