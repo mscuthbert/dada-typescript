@@ -26,7 +26,7 @@ https://dev.null.org/dadaengine/manual-1.0/dada.html
 * Text mappings: pattern style with slash
 * Text mappings: source -> destination
 * Text mappings: reversible <-> mappings
-* upcase and upcase-first -- provided transformations from old stdmap.pbi
+* upcase and upcase-first -- these transformations from old stdmap.pbi are provided automatically
 
 ## Not Supported
 * Kleene star \* and + characters

@@ -109,7 +109,7 @@ export function parse(tokens: Token[]): Statement[] {
         if (token.type === 'get-var') {
             const getVar: GetVar = { kind: 'get', name: token.value, textMappings: [] };
             next();
-            while (peek().type === 'greater') {
+            while (peek().type === 'transform') {
                 next();
                 getVar.textMappings.push(expect('identifier').value);
             }
@@ -127,10 +127,6 @@ export function parse(tokens: Token[]): Statement[] {
         if (token.type === 'identifier') {
             const ref: Ref = { ref: token.value, textMappings: [] };
             next();
-            while (peek().type === 'greater') {
-                next();
-                ref.textMappings.push(expect('identifier').value);
-            }
             if (peek().type === 'symbol' && peek().value === '(') {
                 next();
                 const args: Option[] = [];
@@ -139,6 +135,11 @@ export function parse(tokens: Token[]): Statement[] {
                 }
                 expect('symbol', ')');
                 ref.args = args;
+            }
+            // transformations go after args.
+            while (peek().type === 'transform') {
+                next();
+                ref.textMappings.push(expect('identifier').value);
             }
             return ref;
         } else if (token.type === 'symbol' && token.value === '[') {
@@ -173,7 +174,7 @@ export function parse(tokens: Token[]): Statement[] {
                 options.push(currentOption);
                 break;
             } else {
-                throw new Error(`Unexpected token in anonymous rule: ${token.type} ${token.value}`);
+                throw new Error(`Unexpected token in anonymous rule ${currentRuleName ? `in ${currentRuleName}` : ''}: ${token.type} ${token.value}`);
             }
         }
 

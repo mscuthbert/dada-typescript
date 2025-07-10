@@ -5,7 +5,7 @@ export type Token =
     | { type: 'symbol'; value: string }
     | { type: 'mapping'; value: '->'|'<->' }
     | { type: 'slash'; value: '/' }
-    | { type: 'greater'; value: '>' }
+    | { type: 'transform'; value: '>' }
     | { type: 'silenced'; value: '?' }
     | { type: 'indirection'; value: '@' }
     | { type: 'get-var'; value: string }
@@ -175,7 +175,7 @@ export function tokenize(input: string): Token[] {
 
         if (input[i] === '>') {
             advance();
-            tokens.push({ type: 'greater', value: '>' });
+            tokens.push({ type: 'transform', value: '>' });
             continue;
         }
 

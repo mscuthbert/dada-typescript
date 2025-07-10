@@ -65,7 +65,7 @@ export function generate(statements: Statement[], start: string, format: 'none'|
                 if (new RegExp(rule.pattern).test(value)) {
                     if (typeof rule.replacement === 'string') {
                         value = value.replace(targetRegex, rule.replacement);
-                    } else {
+                    } else {  // not sure why the `if` is needed to get rid of errors here...
                         value = value.replace(targetRegex, rule.replacement);
                     }
                     // only one rule applies per mapping.
