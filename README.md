@@ -53,6 +53,11 @@ https://dev.null.org/dadaengine/manual-1.0/dada.html
     this was called a restriction "in the current release" and it just worked in the Typescript
     interpreter, we're leaving it in.
 * Spaces around ` = ` and ` << ` in set-var and get-var are currently not allowed.
+* I've attempted to retain the operator precedences seen in the C parser:
+    - `@param>trans` is parsed as `@(param>trans)` and not `(@param)>trans`.
+    - `$var>trans` is treated as `($var)>trans` and not `$(var>trans)`
+    - Because parentheses are not actually allowed, silenced temporary variables may be needed for cases where other operator precedence is desired.
+    - For instance, musicology.pb uses `?ac=@$cc>make_cite $ac>strip_the` to retrieve variable `$cc`, make a citation from it, then (with `@` indirection) call the rule.  That output is stored as the silenced variable `ac` which is then retrieved to have any `the` removed from the front.
 
 ### Embedded Code Expression Differences and Clarification
 Since Embedded Code in pb was designed to be evaluated by C, some differences were
