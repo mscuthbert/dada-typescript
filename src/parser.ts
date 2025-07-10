@@ -49,7 +49,12 @@ export interface Indirection {
     value: Option;
 }
 
-export type Option = string | Ref | SetVar | LazySetVar | GetVar | SilencedOption | Indirection;
+export interface CodeBlock {
+    kind: 'code';
+    value: string;
+}
+
+export type Option = string | Ref | SetVar | LazySetVar | GetVar | SilencedOption | Indirection | CodeBlock;
 
 export type Statement = Rule | Transform;
 
@@ -96,6 +101,10 @@ export function parse(tokens: Token[]): Statement[] {
             return { kind: 'indirection', value: value };
         }
 
+        if (token.type === 'code') {
+            next();
+            return { kind: 'code', value: token.value };
+        }
 
         if (token.type === 'get-var') {
             const getVar: GetVar = { kind: 'get', name: token.value, transforms: [] };
@@ -196,6 +205,7 @@ export function parse(tokens: Token[]): Statement[] {
                 token.type === 'string'
                 || token.type === 'identifier'
                 || (token.type === 'symbol' && token.value === '[')
+                || token.type === 'code'
                 || token.type === 'get-var'
                 || token.type === 'set-var'
                 || token.type === 'lazy-set-var'

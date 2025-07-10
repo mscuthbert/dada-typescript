@@ -1,12 +1,13 @@
 /*
- *  A sample file that uses every syntax we support.
+ *  A sample file that uses every syntax we support -- made by MSAC 2025 for typescript
  */
 
 // ensuring that resource rules are not before others.
 %resource animal: "cat" | "dog" | "fish";
 
 
-story: title introduction named sentence "A " sentence>strip_the noise opposite-sentence parametric-sentence conclusion;
+story: title introduction named sentence "A " sentence>strip_the
+       noise opposite-sentence parametric-sentence parade conclusion;
 
 // testing silence and lazy set; note that main-animal<<animal>upcase-first is parsed as
 // main-animal<<(animal>upcase-first) which isn't what is wanted here.  Hence the silence
@@ -30,7 +31,7 @@ opposites:
     "hot" <-> "cold"
 ;
 
-parametric-sentence: "\nAnother " parametric-sentence2(animal) punctuation;
+parametric-sentence: "\nAnother " parametric-sentence2(animal) punctuation "\n";
 parametric-sentence2(ani): ani | ani " and " [ ani | cat ];  // parameters in inline choices
 
 // indirection tests
@@ -42,6 +43,18 @@ dog: "Fido" | "Spot";
 cat: "Morris" | "Princess";
 fish: "Blubber" | "Flounder";
 
+other_animal: animal | animal | "horse" | "giraffe" | "boar" | "zebra" | "wombat";
+
+parade: "In the parade there were:\n" { i=1 } parade2 parade2;
+parade2: parade3 | parade3 parade2;
+parade3: $i ". " {=2..20} " " other_animal>pluralize ".\n" {i += 1};
+
+pluralize:
+    "fish$" -> "fish$"/"fishes"
+	".*y$" -> "y$"/"ies"
+	".*s$" -> "$"/"es"
+	".*" -> "$"/"s"
+;
 
 trim_e:
         ".*e$" -> "e$"/""

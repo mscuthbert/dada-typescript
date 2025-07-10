@@ -61,12 +61,22 @@ bound to arise with a Javascript parser.
     like `FOOTNOTE(text): ?tx=text { FOOTNOTE_TEXT=FOOTNOTE_TEXT + tx }`)  They work in Javascript.
 * The use of the `a..b` expression wasn't fully documented in the original pb and allowed expressions
     like `{a = 1..300; b=a+1..a+30 }` to assign `b` to a number between 1 and 30 above `a`.
-    I could not easily make the operator work this way in Javascript, so now only actual integers
-    (as described in the docs) work.  To do the above statement call `{a = 1..300; c=1..30; b=a+c}`
+    I could not easily make the operator work this way in Javascript, so now special operators
+    have low priority.  To do the above statement call `{a = 1..300; c=1..30; b=a+c}` or
+    `{a = 1..300; b=(a+1)..(a+30) }` with parentheses.
+* Special operators cannot appear within parentheses in another special operator, so no
+    `{=(a<<b)..(a>>b)}`.  I don't know if this was allowed in the C version.
+    Assign a different variable instead: `{c=a<<b; d=a>>b; e=c..d} $e`.
+* Currently, if there is a parameter with the same name as a global variable but different values
+    and a `{code block}` is run the global variable will be updated to the
+    value of the local, even if the code block doesn't reference that name.
 * A return statement in this Javascript version must be the first statement in the embedded code
     (the `{= ... }` expression is converted to a magic expression, but the `=` sign is
     only searched for at the beginning of the expression, after optional whitespace.)  Any
     other position of the leading `=` will probably result in syntax errors.
+* Variable names with hyphens in them cannot be used in code bocks (`the-word` will be
+    evaluated as the variable `the` subtracting the variable `word`).  I don't know if this worked
+    in the C version.
 
 
 ## License

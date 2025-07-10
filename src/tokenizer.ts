@@ -1,6 +1,7 @@
 export type Token =
     | { type: 'identifier'; value: string }
     | { type: 'string'; value: string }
+    | { type: 'code'; value: string }
     | { type: 'symbol'; value: string }
     | { type: 'mapping'; value: '->'|'<->' }
     | { type: 'slash'; value: '/' }
@@ -62,6 +63,56 @@ export function tokenize(input: string): Token[] {
         return null;
     }
 
+    function extractQuote(): string {
+        let str = '';
+        advance();
+        while (i < input.length && input[i] !== '"') {
+            if (input[i] === '\\') {
+                const esc = input[i + 1];
+                if (esc === '"') {
+                    str += '"';
+                    advance(2);
+                } else if (esc === '\\') {
+                    str += '\\';
+                    advance(2);
+                } else if (esc === 'n') {
+                    str += '\n'; // newline
+                    advance(2);
+                } else if (esc === 't') {
+                    str += '\t'; // tab
+                    advance(2);
+                } else if (esc === 'v') {
+                    str += '\v'; // vertical tab (don't use)
+                    advance(2);
+                } else if (esc === 'b') {
+                    str += '\b'; // backspace (don't use)
+                    advance(2);
+                } else if (esc === 'r') {
+                    str += '\r'; // Carriage return w/o newline (don't use)
+                    advance(2);
+                } else if (esc === 'f') {
+                    str += '\f'; // form feed
+                    advance(2);
+                } else if (esc === 'a') {
+                    str += '\u0007'; // Javascript does not support \a will not work.
+                    advance(2);
+                } else {
+                    str += input[i];
+                    advance();
+                }
+            } else {
+                str += input[i];
+                advance();
+            }
+        }
+        if (input[i] === '"') {
+            advance();
+            return str;
+        } else {
+            throw new Error(`Unterminated string at line ${line}, column ${column}`);
+        }
+    }
+
     while (i < input.length) {
         skipWhitespaceAndComments();
         if (i >= input.length) {
@@ -69,54 +120,38 @@ export function tokenize(input: string): Token[] {
         }
 
         if (input[i] === '"') {
-            let str = '';
+            const str = extractQuote();
+            tokens.push({ type: 'string', value: str });
+            continue;
+        }
+
+        if (input[i] === '{') {
+            // console.log('entered code block');
+            let codeBlock = '';
             advance();
-            while (i < input.length && input[i] !== '"') {
-                if (input[i] === '\\') {
-                    const esc = input[i + 1];
-                    if (esc === '"') {
-                        str += '"';
-                        advance(2);
-                    } else if (esc === '\\') {
-                        str += '\\';
-                        advance(2);
-                    } else if (esc === 'n') {
-                        str += '\n'; // newline
-                        advance(2);
-                    } else if (esc === 't') {
-                        str += '\t'; // tab
-                        advance(2);
-                    } else if (esc === 'v') {
-                        str += '\v'; // vertical tab (don't use)
-                        advance(2);
-                    } else if (esc === 'b') {
-                        str += '\b'; // backspace (don't use)
-                        advance(2);
-                    } else if (esc === 'r') {
-                        str += '\r'; // Carriage return w/o newline (don't use)
-                        advance(2);
-                    } else if (esc === 'f') {
-                        str += '\f'; // form feed
-                        advance(2);
-                    } else if (esc === 'a') {
-                        str += '\u0007'; // Javascript does not support \a will not work.
-                        advance(2);
-                    } else {
-                        str += input[i];
-                        advance();
+            let depth = 1;
+            while (i < input.length && depth) {
+                // console.log(i);
+                if (input[i] === '{') {
+                    depth++;
+                    codeBlock += '{';
+                    advance()
+                } else if (input[i] === '}') {
+                    depth--;
+                    if (depth) {
+                        codeBlock += '}'
                     }
+                    advance();
+                } else if (input[i] === '"') {
+                    codeBlock += extractQuote(); // this way quotes can use { and } in them.
                 } else {
-                    str += input[i];
+                    codeBlock += input[i];
                     advance();
                 }
             }
-            if (input[i] === '"') {
-                advance();
-                tokens.push({ type: 'string', value: str });
-                continue;
-            } else {
-                throw new Error(`Unterminated string at line ${line}, column ${column}`);
-            }
+            tokens.push({ type: 'code', value: codeBlock });
+            // console.log(`exited code block ${codeBlock}`);
+            continue;
         }
 
         // this use of startsWith means "continues after i with..."

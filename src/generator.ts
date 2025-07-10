@@ -6,6 +6,8 @@ import type {
     Ref,
 } from './parser.ts';
 
+import {scopedEval} from './helpers.ts';
+
 function isRef(obj: Option): obj is Ref {
     return typeof obj === 'object' && obj !== null && 'ref' in obj;
 }
@@ -80,12 +82,14 @@ export function generate(statements: Statement[], start: string): string {
             if (option.kind === 'set') {
                 const val = resolve(option.value, context);
                 globalVars[option.name] = val;
+                context[option.name] = val;
                 return val;
             }
             if (option.kind === 'lazy') {
                 if (!(option.name in globalVars)) {
                     const val = resolve(option.value, context);
                     globalVars[option.name] = val;
+                    context[option.name] = val;
                 }
                 return globalVars[option.name];
             }
@@ -114,6 +118,29 @@ export function generate(statements: Statement[], start: string): string {
 
                 return resolveRule(rule, localRef, context);
             }
+            if (option.kind === 'code') {
+                const originalGlobalKeys = new Set(Object.keys(globalVars));
+                const originalContextKeys = new Set(Object.keys(context));
+                const c2 = {...globalVars, ...context};
+                const out = scopedEval(option.value, c2);
+
+                // Update globalVars for existing keys
+                for (const key of originalGlobalKeys) {
+                    if (key in c2) {
+                        globalVars[key] = c2[key];
+                        // console.log(`Updated globalVars[${key}] to ${c2[key]}`);
+                    }
+                }
+
+                // Add new keys from context that weren't there before
+                for (const key of Object.keys(c2)) {
+                    if (!originalContextKeys.has(key) && !originalContextKeys.has(key)) {
+                        globalVars[key] = c2[key];
+                        // console.log(`Adding new globalVars[${key}] as ${c2[key]}`);
+                    }
+                }
+                return out;
+            }
         }
 
         // Handle references
@@ -131,6 +158,7 @@ export function generate(statements: Statement[], start: string): string {
     return resolve({ ref: start, transforms: [] }, {});
 
     function resolveRule(rule: Rule, ref: Ref, context: Context) : string {
+        // console.log('in resolve rule', ref.ref, context, globalVars);
         const localContext = { ...context };
 
         if (rule.parameters.length > 0) {
@@ -158,6 +186,7 @@ export function generate(statements: Statement[], start: string): string {
             result += resolve(part, localContext);
         }
 
+        // console.log('out resolve rule', ref.ref, localContext, globalVars);
         return applyTransforms(result, ref.transforms);
     }
 }
