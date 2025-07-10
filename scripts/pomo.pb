@@ -8,10 +8,10 @@
 
 // if we're using troff, we want two columns
 
-#define TROFF_2COLUMN
+// #define TROFF_2COLUMN
 
-#include <stdmap.pbi>
-#include <format.pbi>
+// #include <stdmap.pbi>
+// #include <format.pbi>
 
 // global variables used:
 //  v-citable			name of artist who is cited throughout text
@@ -54,17 +54,17 @@ past-tensify:
 
 // production rules start here
 //
-// rules with names preceded with p- are parametric versions of other rules; 
+// rules with names preceded with p- are parametric versions of other rules;
 // they accept parameters (usually for important elements)
 
 //test: p-sentence-about-concept("foo") ;
 
-output: PROLOGUE TITLE(title>upcase-first) formatted-authors 
+output: PROLOGUE TITLE(title>upcase-first) formatted-authors
   BODY sections EPILOGUE ;
 
 title: title2>upcase-first | candid-title ": " title2>upcase-first ;
 
-title2: 
+title2:
 	v-subject<<new-term " in the works of " v-citable=citable-artist
 	| v-subject<<new-term " in the works of " artist
 	| v-subject-2<<new-term " in the works of " v-citable=citable-artist
@@ -77,7 +77,7 @@ title2:
 // a "foo and bar" title
 p-two-term-title(foo bar): foo " and " bar | bar " and " foo ;
 
-p-three-term-title(foo bar baz): foo ", " bar " and " baz 
+p-three-term-title(foo bar baz): foo ", " bar " and " baz
 	| foo ", " baz " and " bar
 	| bar ", " foo " and " baz
 	| bar ", " baz " and " foo
@@ -119,7 +119,7 @@ author: AUTHOR_INST(name [department ", " acad-institution]);
 
 department: "Department of " dept-topic ;
 
-dept-topic:	
+dept-topic:
 	"English" | "Literature" | "Politics" | "Sociology" |
 	"English" | "Literature" | "Politics" | "Sociology" |
 // political correctness here
@@ -159,7 +159,7 @@ sections: sections section | sections section | section ;
 //section: "\n.NH\n" section-title>upcase-first "\n.PP\n" paragraphs ;
 section: SECTION(section-title) PBRK paragraphs ;
 
-section-title: term " and " v-subject-3=new-term 
+section-title: term " and " v-subject-3=new-term
 	| v-citable<<citable-artist " and " term
 	| big-nebulous-thing>pluralise " of " something-of-2
 ;
@@ -168,8 +168,8 @@ section-title: term " and " v-subject-3=new-term
 
 paragraphs: intro-paragraph PBRK paragraphs-2 ;
 
-paragraphs-2: paragraphs PBRK paragraph 
-	| paragraphs PBRK paragraph 
+paragraphs-2: paragraphs PBRK paragraph
+	| paragraphs PBRK paragraph
 	| paragraphs PBRK paragraph
 	| paragraph PBRK paragraph "\n\n" paragraph
 	| paragraph PBRK paragraph ;
@@ -180,13 +180,13 @@ paragraph: paragraph sentence | sentence ;
 
 sentence:	sentence2>upcase-first | preamble>upcase-first sentence2 ;
 
-sentence2 : 
+sentence2 :
 	assumption " " implies-that result ". "
 	| intellectual " uses the term '" term "' to denote " concept-desc ". "
 	| justifier "we have to choose between " term " and " term ". "
 	| "the " main " theme of " work	" is " concept-desc ". "
 	| intellectual " " promotes " the use of " term " to " imper-vp ". "
-	| plural-numeric-adj " " abst-noun>pluralise abst-description " " 
+	| plural-numeric-adj " " abst-noun>pluralise abst-description " "
 		exist ". "
 	| sentence-about-citable-artist(v-citable<<citable-artist)
 	| "the subject is " neut-verb>past-tensify " into a " term>strip_the " that includes " big-abst-thing " as a " big-singular-thing ". "
@@ -195,7 +195,7 @@ sentence2 :
 
 // sentences especially suited for introductions to paragraphs.
 
-p-intro-sent-thing-state(th st): "\"" th>upcase-first " is " st ",\" says " intellectual 
+p-intro-sent-thing-state(th st): "\"" th>upcase-first " is " st ",\" says " intellectual
 "; however, according to " foo=generic-surname footnote-cite($foo)
 ", it is not so much " th " that is " st ", but rather the " something-of " of "
 th ". "
@@ -207,7 +207,7 @@ intro-sentence2: "\"" pseudo-quote>upcase-first ",\" says " intellectual ". "
 	| p-intro-sent-thing-state(big-thing state-of-being)
 	| "If one examines " term ", one is faced with a choice: either "
 	accept-or-reject " " term " or conclude that " result ". "
-	| "In the works of " v-citable<<citable-artist 
+	| "In the works of " v-citable<<citable-artist
 	", a predominant concept is " predominant-concept ". "
 	| "the " main " theme of " work	" is " concept-desc ". "
 ;
@@ -223,16 +223,16 @@ pseudo-quote: big-thing " is " state-of-being
 // we'll be ontologically masturbating in relation to the works of various
 // artists and "artists" a lot.....
 
-sent-about-citable-and-dualism(artist dualism):  
+sent-about-citable-and-dualism(artist dualism):
 	@artist>make_cite " is about " dualism " where " @artist>make_cite
 	" is about " dualism>opposite
 ;
 
-sentence-about-citable-artist(artist): "the " feature-of " " @artist>make_cite 
+sentence-about-citable-artist(artist): "the " feature-of " " @artist>make_cite
 	" " is-also-evident-in " " @artist>make_cite adverb-postjustify ". "
 //	| sent-about-citable-and-dualism(artist dualism)
 	| "in " @artist>make_cite ", " artist " " says-something "; in "
-	@artist>make_cite however " " artist " " says-something-else(artist) 
+	@artist>make_cite however " " artist " " says-something-else(artist)
 	". "
 	| justifier "the works of " artist " are " works-state-of-being ". "
 ;
@@ -243,7 +243,7 @@ something-about-works: ""
 	| " the semiotics of"
 ;
 
-works-state-of-being: "postmodern" | "not postmodern" | "modernistic" 
+works-state-of-being: "postmodern" | "not postmodern" | "modernistic"
 	| "an example of " informal-adj " " ideology
 	| "reminiscent of " artist
 	| "empowering"
@@ -251,21 +251,21 @@ works-state-of-being: "postmodern" | "not postmodern" | "modernistic"
 
 says-something: makes-statement-about " " term ;
 
-says-something-else(artist): says-something 
+says-something-else(artist): says-something
 //	| "changes " artist>artist-gender-pronoun " opinion completely, instead concentrating on " term
 ;
 
 makes-statement-about: "affirms" | "denies" | "reiterates" | "deconstructs"
 	| "examines" | "analyses" ;
 
-feature-of: dualism-desc " distinction " in-term 
-	| "example of " term " " in-term 
+feature-of: dualism-desc " distinction " in-term
+	| "example of " term " " in-term
 	| something-of " of " term " " in-term
 ;
 
 is-also-evident-in: "emerges again in" | "is also evident in" ;
 
-in-term: "prevalent in" | "intrinsic to" | "depicted in" 
+in-term: "prevalent in" | "intrinsic to" | "depicted in"
 	| "which is a central theme of" ;
 
 adverb-postjustify: "" | ", although in a more " informal-adj " sense" ;
@@ -280,15 +280,15 @@ work: foo=generic-surname "'s" footnote-cite($foo) work-about " " term
 
 accept-or-reject: "accept" | "reject" ;
 
-p-abst-altern(conc): p-abst-altern-2(conc) | p-abst-altern-2(conc) 
+p-abst-altern(conc): p-abst-altern-2(conc) | p-abst-altern-2(conc)
 	" and consequently " accept-or-reject " that " result
 ;
 
-p-abst-altern-2(conc): accept-or-reject " " idea-source "'s " work-about 
+p-abst-altern-2(conc): accept-or-reject " " idea-source "'s " work-about
 	" " conc
 ;
 
-p-sentence-about-concept(conc): "the " role " has a choice: either " 
+p-sentence-about-concept(conc): "the " role " has a choice: either "
 	p-abst-altern(conc) " or, alternatively, " p-abst-altern(conc)
 	". "
 ;
@@ -372,7 +372,7 @@ something-between:	"difference" | "bridge" | "common ground" ;
 
 thus: "thus" | "hence" | "therefore" ;
 
-something-of: 	something-of-2 
+something-of: 	something-of-2
 	| something-of-2 ", and subsequent " something-of-2 ","
 	| something-of-2 ", and " thus " the " something-of-2 ","
 	| something-of-2 ", and eventually the " something-of-2 ","
@@ -381,7 +381,7 @@ something-of: 	something-of-2
 
 something-of-2:	"failure" | "futility" | "collapse" | "fatal flaw"
 	| "rubicon" | "stasis" | "meaninglessness" | "absurdity" | "paradigm"
-	| "genre" | "defining characteristic" | "dialectic" | "economy" 
+	| "genre" | "defining characteristic" | "dialectic" | "economy"
 ;
 
 // preamble; redundant preamble to sentence
@@ -416,7 +416,7 @@ result--1: result | "we can assume that " result
 	thus " " state-of-being
 ;
 
-// something that can be used as an assumption: "If * holds", 
+// something that can be used as an assumption: "If * holds",
 assumption:	term
 	| intellectual "'s " work-about " " term
 	| "the premise of " term
@@ -440,7 +440,7 @@ prim-condition:	assumption " is " value-adj
 // corollary: "...as long as foo is bar*"
 
 corollary: "; if that is not the case, " result--1
-	| "; otherwise, " result--1 
+	| "; otherwise, " result--1
 	| ""
 ;
 
@@ -454,11 +454,11 @@ abst-adverb: "fundamentally" | "intrinsically"
 
 // i.e., "language is *"
 state-of-being:	state-of-being-2 | abst-adverb " " state-of-being-2
-	| "part of the " something-of-2 " of " big-abst-thing 
+	| "part of the " something-of-2 " of " big-abst-thing
 ;
 
 state-of-being-2:	"impossible" | "meaningless" | "unattainable"
-	| "elitist" | "responsible for " bogeyman 
+	| "elitist" | "responsible for " bogeyman
 	| "used in the service of " bogeyman
 	| "a legal fiction" | "dead"
 ;
@@ -472,15 +472,15 @@ ends:	neg-verb " " victim
 	| pos-neg-verb " " bogeyman
 ;
 
-implies-that:	"implies that " | "states that " | "holds that " 
-	| "suggests that " 
+implies-that:	"implies that " | "states that " | "holds that "
+	| "suggests that "
 ;
 
 is-used-to:	" is used to " | " serves to " | " may be used to "
 ;
 
 comes-from:	" comes from " | " must come from " | " is a product of "
-	| " is created by " 
+	| " is created by "
 ;
 
 source:	"communication" | "the collective unconscious" | "the masses"
@@ -538,7 +538,7 @@ adj2:	"capitalist" | adj3 | adj3>trim_e "ist" | "cultural" | "dialectic"
 ;
 
 adj3:	"structural" | "semiotic" | "modern" | "constructive" | "semantic"
-	| "deconstructive" | "patriarchial" | "conceptual" | "material" 
+	| "deconstructive" | "patriarchial" | "conceptual" | "material"
 ;
 
 // adverbs
@@ -583,7 +583,7 @@ victim:	"minorities" | "the Other" | "the underprivileged" | "the proletariat"
 
 // bogeymen
 
-bogeyman:	"capitalism" | "hierarchy" | "the status quo" 
+bogeyman:	"capitalism" | "hierarchy" | "the status quo"
 	| "class divisions" | "sexism" | neg-adj " perceptions of " big-thing
 ;
 
@@ -597,7 +597,7 @@ work-about:	"critique of" | "essay on" | "analysis of" | "model of" ;
 
 big-thing:	"society" | "class" | big-abst-thing | "sexual identity" ;
 
-big-abst-thing:	"culture" | "language" | "art" | "reality" | "truth" 
+big-abst-thing:	"culture" | "language" | "art" | "reality" | "truth"
 	| "sexuality" | "narrativity" | "consciousness" ;
 
 institution:	"the Constitution" | "the media" | "academe" | "the law"
@@ -607,7 +607,7 @@ big-abst-or-institution: big-abst-thing | institution ;
 
 // nebulous things: "* is a product of communication"
 big-nebulous-thing:	"reality" | "discourse" | "concensus" | "expression"
-	| "narrative" | "context" 
+	| "narrative" | "context"
 ;
 
 // "narrativity as a *"
@@ -634,8 +634,8 @@ intent-variant: "intent" | "intention" | "intentionality" ;
 
 // dualities
 
-dualisable-word: "opening" | "closing" | "figure" | "ground" 
-	| "within" | "without" | "creation" | "destruction" 
+dualisable-word: "opening" | "closing" | "figure" | "ground"
+	| "within" | "without" | "creation" | "destruction"
 	| "masculine" | "feminine" ;
 
 opposite:
@@ -666,18 +666,18 @@ author: "Lodge" | "Huyssen" | "Cooke" | "Owens" | "Johnston" | "Olsen"
 
 // names, randomly generated
 
-name: first-name " " generic-surname 
-	| first-name " " initial generic-surname 
-	| first-name " " initial initial generic-surname 
+name: first-name " " generic-surname
+	| first-name " " initial generic-surname
+	| first-name " " initial initial generic-surname
 	| initial first-name " " generic-surname ;
 
 // first names, used for making names
 
-first-name: 
+first-name:
 // French names
 	"Jean-" jean-suffix | jean-suffix
 // Germanic names
-	| "Andreas" | "Hans" | "Rudolf" | "Wilhelm" | "Stefan" | "Helmut" 
+	| "Andreas" | "Hans" | "Rudolf" | "Wilhelm" | "Stefan" | "Helmut"
 	| "Ludwig"
 // generic or English-sounding names
 	| "David" | "John" | "Linda" | "Charles" | "Thomas"
@@ -690,18 +690,18 @@ jean-suffix: "Michel" | "Luc" | "Jacques" | "Jean" | "Francois"
 
 // the surnames of people I know (of), used for effect.
 
-generic-surname: 
+generic-surname:
 // random intellectuals ;-)
 "de Selby" | "Hanfkopf" | "la Fournier" | "la Tournier" | "Hamburger" |
 // Lovecraftean scholars
 "von Junz" | "d'Erlette" | "Geoffrey" | "Prinn" |
 // people from g09, monash.test or the AlphaLab
-"Bailey" | "Brophy" | "Cameron" | "Humphrey" | "Pickett" 
-| "Reicher" | "Sargeant" | "Scuglia" | "Werther" | "Wilson" 
+"Bailey" | "Brophy" | "Cameron" | "Humphrey" | "Pickett"
+| "Reicher" | "Sargeant" | "Scuglia" | "Werther" | "Wilson"
 // net.crackpots
 | "McElwaine" | "Abian" | "von Ludwig" // Plutonium's real name
 | "Parry" | "Drucker" | "Dahmus" | "Dietrich" // a Monash local
-| "Hubbard" 
+| "Hubbard"
 // People from flat-earth, particularly those who helped with the Dada Engine
 | "Porter" | "Buxton" | "Long" | "Tilton" | "Finnis"
 ;
@@ -765,10 +765,10 @@ hist-intel: "Plato" | "Voltaire" | "Nietzsche" | "Kant" | "Hegel"
 artist: citable-artist | uncitable-artist ;
 
 citable-artist: "Burroughs" | "Joyce" | "Gibson"
-	| "Stone" | "Pynchon" | "Spelling" | "Tarantino" | "Madonna" 
+	| "Stone" | "Pynchon" | "Spelling" | "Tarantino" | "Madonna"
 	| "Rushdie" | "Eco" ;
 
-uncitable-artist: "Koons" | "Mapplethorpe" | "Glass" | "Lynch" | "Fellini" 
+uncitable-artist: "Koons" | "Mapplethorpe" | "Glass" | "Lynch" | "Fellini"
 	| "Cage" | "McLaren" ;
 
 artist-gender-pronoun:
@@ -799,7 +799,7 @@ Stone-works: "JFK" | "Natural Born Killers" | "Heaven and Earth" | "Platoon" ;
 
 Tarantino-works: "Reservoir Dogs" | "Pulp Fiction" | "Clerks" ;
 
-Fellini-works: 
+Fellini-works:
 	"8 1/2" // I remembered this because the Plan 9 window system is named
 		// after it
 ;
@@ -809,10 +809,10 @@ Burroughs-works:	"The Naked Lunch"  | "The Soft Machine" | "Queer"
 	| "Nova Express" | "The Last Words of Dutch Schultz"
 ;
 
-Joyce-works:	"Ulysses" | "Finnegan's Wake" 
+Joyce-works:	"Ulysses" | "Finnegan's Wake"
 ;
 
-Gibson-works:	"Neuromancer" | "The Burning Chrome" | "Mona Lisa Overdrive" 
+Gibson-works:	"Neuromancer" | "The Burning Chrome" | "Mona Lisa Overdrive"
 	| "Virtual Light";
 
 Madonna-works:	"Erotica" | "Sex" | "Material Girl" ;

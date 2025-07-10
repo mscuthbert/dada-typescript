@@ -40,6 +40,31 @@ https://dev.null.org/dadaengine/manual-1.0/dada.html
 * Footnotes
 * TROFF Formatting (no plans to integrate)
 
+## Differences with c Parser + Clarifications
+* Unknown rule errors are found only on generation, not parsing. A script may therefore
+    pass sometimes but fail others depending on if the unknown rule is called.
+* The original parser treated `#` as a comment, despite not being in the spec. Found in test/maptest.pb,
+    test/test.pb.
+    Updated tests to not use them.
+* The original parser treated parametric rules as resource rules (for instance
+    `BOLD(xxx)` was in format.pbi was not prefaced by `%resource`). This reading is retained here.
+* The original parser did not allow parameters in inline choices (`[ x | y ]` expressions). Since
+    this was called a restriction "in the current release" and it just worked in the Typescript
+    interpreter, we're leaving it in.  The original parser also did not allow parameters to be
+    used as variables in inline code. (It could be gotten around by aliasing with silencing,
+    like `FOOTNOTE(text): ?tx=text { FOOTNOTE_TEXT=FOOTNOTE_TEXT + tx }`
+
+## License
+The software here is released under the BSD 3-clause license.  The pb scripts--
+with the exception of securities.pb and sample.pb are by Andrew C. Bulhak and
+therefore follow his original BSD Old (4-clause) license w/ his copyright.
+musicology.pb is a hybrid of his pomo.pb and substantial new work by MSAC.
+
+## Author
+
+Michael Scott Asato Cuthbert (w/ AI assistance -- a babbler writing a babbler!)
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

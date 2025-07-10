@@ -6,7 +6,7 @@
 %resource animal: "cat" | "dog" | "fish";
 
 
-story: title introduction named sentence "A " sentence>strip_the noise opposite-sentence conclusion;
+story: title introduction named sentence "A " sentence>strip_the noise opposite-sentence parametric-sentence conclusion;
 
 // testing silence and lazy set; note that main-animal<<animal>upcase-first is parsed as
 // main-animal<<(animal>upcase-first) which isn't what is wanted here.  Hence the silence
@@ -29,6 +29,9 @@ opposites:
     "night" <-> "day"
     "hot" <-> "cold"
 ;
+
+parametric-sentence: "\nAnother " parametric-sentence2(animal) punctuation;
+parametric-sentence2(ani): ani | ani " and " [ ani | cat ];  // parameters in inline choices
 
 // indirection tests
 named: named1 "\n" named2 "\n";
