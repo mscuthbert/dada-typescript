@@ -26,6 +26,7 @@ for instance `npm start scripts/pomo.pb`.
   - Literal Text
   - Symbols
 * Variables (including "lazy &lt;&lt; assignment")
+* Kleene star \* and + characters
 * Parametric rules
 * Inline choices (anonymous rules)
 * Resource rules (%resource)
@@ -35,17 +36,16 @@ for instance `npm start scripts/pomo.pb`.
 * Text mappings: source -> destination
 * Text mappings: reversible <-> mappings
 * upcase and upcase-first -- these transformations from old stdmap.pbi are provided automatically
+* Standard Library Functions (PROLOGUE, TITLE, etc.)
+* Embedded Code
+* Footnotes
+* HTML Formatting
 
 ## Not Supported
-* Kleene star \* and + characters
 * Percent %trans mappings (however, upcase and upcase-first are provided by the system)
-* Embedded Code
-* Standard Library
 * C-Processor User Parameters (-DNAME="Henry")
 * C-style #define statements
 * C-language #includes
-* HTML Formatting
-* Footnotes
 * TROFF Formatting (no plans to integrate)
 * `%repeat(token, times)` was undocumented (only in test/repeattest) and not ported. (Other unused/unimplemented directives from lexer.x were also not ported)
 

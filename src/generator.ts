@@ -11,6 +11,9 @@ import type {
     Option,
     Ref,
 } from './parser.ts';
+import {
+    Kleene,
+} from './parser.ts';
 import {plainRules, htmlRules} from "./formats.ts";
 
 import {scopedEval} from './helpers.ts';
@@ -83,6 +86,21 @@ export function generate(statements: Statement[], start: string, format: 'none'|
     }
 
     function resolve(option: Option, context: Context): string {
+        if ('kleene' in option && option.kleene !== Kleene.None) {
+            const oneTime = { ...option, kleene: Kleene.None };
+            if (option.kleene === Kleene.Plus) {
+                const newOption = { ...option, kleene: Kleene.Star };
+                return resolve(oneTime, context) + resolve(newOption, context);
+            } else {
+                // Kleene.Star
+                if (Math.random() > 0.5) {
+                    return resolve(oneTime, context) + resolve(option, context);
+                } else {
+                    return '';
+                }
+            }
+        }
+
         if ('kind' in option) {
             if (option.kind === 'string') {
                 return option.value;
@@ -126,6 +144,7 @@ export function generate(statements: Statement[], start: string, format: 'none'|
                         ref: refEval,
                         textMappings: [],
                         args: [],
+                        kleene: Kleene.None,
                     }
                 }
 
@@ -171,7 +190,8 @@ export function generate(statements: Statement[], start: string, format: 'none'|
         return resolveRule(rule, option, context);
     }
 
-    return resolve({ ref: start, textMappings: [] }, {});
+    // Here is the actual start of the program!
+    return resolve({ ref: start, textMappings: [], kleene: Kleene.None }, {});
 
     function resolveRule(rule: Rule, ref: Ref, context: Context) : string {
         // console.log('in resolve rule', ref.ref, context, globalVars);

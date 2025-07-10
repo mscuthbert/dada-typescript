@@ -9,6 +9,7 @@ export type Token =
     | { type: 'string'; value: string }
     | { type: 'code'; value: string }
     | { type: 'symbol'; value: string }
+    | { type: 'kleene'; value: '+'|'*' }
     | { type: 'mapping'; value: '->'|'<->' }
     | { type: 'slash'; value: '/' }
     | { type: 'transform'; value: '>' }
@@ -200,6 +201,17 @@ export function tokenize(input: string): Token[] {
         if (input[i] === '/') {
             advance();
             tokens.push({ type: 'slash', value: '/' });
+            continue;
+        }
+
+        if (input[i] === '+') {
+            advance();
+            tokens.push({ type: 'kleene', value: '+' });
+            continue;
+        }
+        if (input[i] === '*') {
+            advance();
+            tokens.push({ type: 'kleene', value: '*' });
             continue;
         }
 

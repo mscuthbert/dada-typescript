@@ -24,15 +24,26 @@ export interface TextMapping {
 
 // Options:
 
+// instead of enum so that tsc can run without a transpiler:
+export const Kleene = {
+    None: 0,
+    Star: 1,
+    Plus: 2,
+} as const;
+export type Kleene = (typeof Kleene)[keyof typeof Kleene];
+
 export interface BareString {
     kind: 'string';
     value: string;
+    kleene: Kleene;
 }
 
+// TODO: rename to RuleRef
 export interface Ref {
-    ref: string;
+    ref: string;  // rename to ruleName
     textMappings: string[];
     args?: Option[];
+    kleene: Kleene;
 }
 
 export interface SetVar {
@@ -51,6 +62,7 @@ export interface GetVar {
     kind: 'get';
     name: string;
     textMappings: string[];
+    kleene: Kleene;
 }
 
 export interface SilencedOption {
@@ -66,6 +78,7 @@ export interface Indirection {
 export interface CodeBlock {
     kind: 'code';
     value: string;
+    kleene: Kleene;
 }
 
 export type Option = BareString | Ref | SetVar | LazySetVar | GetVar | SilencedOption | Indirection | CodeBlock;
@@ -100,7 +113,7 @@ export function parse(tokens: Token[]): Statement[] {
 
         if (token.type === 'string') {
             next();
-            return { kind: 'string', value: token.value };
+            return { kind: 'string', value: token.value, kleene: Kleene.None };
         }
 
         if (token.type === 'silenced') {
@@ -117,11 +130,16 @@ export function parse(tokens: Token[]): Statement[] {
 
         if (token.type === 'code') {
             next();
-            return { kind: 'code', value: token.value };
+            return { kind: 'code', value: token.value, kleene: Kleene.None };
         }
 
         if (token.type === 'get-var') {
-            const getVar: GetVar = { kind: 'get', name: token.value, textMappings: [] };
+            const getVar: GetVar = {
+                kind: 'get',
+                name: token.value,
+                textMappings: [],
+                kleene: Kleene.None,
+            };
             next();
             while (peek().type === 'transform') {
                 next();
@@ -139,7 +157,7 @@ export function parse(tokens: Token[]): Statement[] {
         }
 
         if (token.type === 'identifier') {
-            const ref: Ref = { ref: token.value, textMappings: [] };
+            const ref: Ref = { ref: token.value, textMappings: [], kleene: Kleene.None };
             next();
             if (peek().type === 'symbol' && peek().value === '(') {
                 next();
@@ -168,8 +186,14 @@ export function parse(tokens: Token[]): Statement[] {
         anonCounter++;
         expect('symbol', '[');
         const options = parseRuleOptions(true);
-        statements.push({ type: 'rule', name: anonName, parameters: [], options, resource: true, lastChoice: -1 });
-        return { ref: anonName, textMappings: [] };
+        statements.push({
+            type: 'rule',
+            name: anonName,
+            parameters: [],
+            options, resource: true,
+            lastChoice: -1
+        });
+        return { ref: anonName, textMappings: [], kleene: Kleene.None };
     }
 
     function parseRuleOptions(isAnonymous: boolean): Option[][] {
@@ -179,6 +203,8 @@ export function parse(tokens: Token[]): Statement[] {
         }
         const options: Option[][] = [];
         let currentOption: Option[] = [];
+
+        const ruleError: () => string = () => currentRuleName ? ` in rule "${currentRuleName}"` : '';
 
         while (true) {
             const token = peek();
@@ -202,13 +228,26 @@ export function parse(tokens: Token[]): Statement[] {
                 next();
                 options.push(currentOption);
                 break;
+            } else if (token.type === 'kleene') {
+                if (!currentOption.length) {
+                    throw new Error(`Kleene token ${token.value} found at beginning of option${ruleError()}.`);
+                }
+                // .at(-1) after updating to Library to 2022
+                const lastOption = currentOption[currentOption.length - 1];
+                if (!("kleene" in lastOption)) {
+                    throw new Error(`Kleene token ${token.value} cannot be used in this position${ruleError()}.`);
+                } else {
+                    const kleeneType = (token.value === '+' ? Kleene.Plus : Kleene.Star);
+                    lastOption.kleene = kleeneType;
+                }
+                next()
             } else {
                 if (!isAnonymous && token.type === 'symbol' && token.value === ':') {
-                    throw new Error(`Unexpected second colon ${currentRuleName ? `in rule "${currentRuleName}"` : ''}: missing semicolon?`)
+                    throw new Error(`Unexpected second colon${ruleError()}: missing semicolon?`)
                 } else if (isAnonymous) {
-                    throw new Error(`Unexpected token in anonymous rule ${currentRuleName ? `in rule ${currentRuleName}` : ''}: ${token.type} ${token.value}`);
+                    throw new Error(`Unexpected token for anonymous rule${ruleError()}: ${token.type} ${token.value}`);
                 } else {
-                    throw new Error(`Unexpected token ${token.type} ${token.value}${currentRuleName ? ` (in rule "${currentRuleName}")` : ''}`);
+                    throw new Error(`Unexpected token ${token.type} ${token.value}${ruleError()}`);
                 }
             }
         }
@@ -318,6 +357,5 @@ export function parse(tokens: Token[]): Statement[] {
 
         return statements;
     }
-
     return parseStatements();
 }
