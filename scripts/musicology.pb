@@ -39,7 +39,7 @@
 // test: doing-something-to-movement;
 // test: sentence-about-self>upcase-first;
 // test: quick-model-sentence;
-test: post-introduction-transition-sentence;
+// test: post-introduction-transition-sentence;
 
 // production rules start here
 //
