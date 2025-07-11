@@ -128,7 +128,7 @@ concrete-adj: "sounding" | "circular" | "silent" | "forgotten" | "fragmented"
 concrete-noun-gets-you-there: "door" | "window" | "key" | "bridge";
 
 // from pomo mostly
-concrete-noun: "door" | "window" | "key" | "sky" | "fruit" | "sea" | "tool";
+concrete-noun: "door" | "window" | "key" | "sky" | "fruit" | "sea" | "tool" | "border" | "image";
 
 // MSAC
 ing-ing: doing-something-to | doing-something-to-movement | affective-verb>gerund;
@@ -1781,6 +1781,7 @@ adj2:
     | scare-quote(adj3)
     | "cultural"
     | "textual"
+    | "collective"
     | dualisable-adjective
     | social-movement>adjectivise-ism
     | ideology>adjectivise-ism
