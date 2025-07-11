@@ -240,7 +240,7 @@ export function tokenize(input: string): Token[] {
 
         if (input[i] === '$') {
             advance();
-            const name = match(/^[a-zA-Z_][\w-]*/);
+            const name = match(/^[\p{L}_][\p{L}0-9_-]*/u);
             if (!name) {
                 throw new Error(`Invalid variable name after $ at line ${line}, column ${column}`);
             }
@@ -248,7 +248,7 @@ export function tokenize(input: string): Token[] {
             continue;
         }
 
-        const setVar = match(/^[a-zA-Z_][\w-]*(=|<<)/);
+        const setVar = match(/^[\p{L}_][\p{L}0-9_-]*(=|<<)/u);
         if (setVar) {
             const name = setVar.endsWith('=')
                 ? setVar.slice(0, -1)
@@ -260,7 +260,7 @@ export function tokenize(input: string): Token[] {
             continue;
         }
 
-        const identifier = match(/^[a-zA-Z_][\w-]*/);
+        const identifier = match(/^[\p{L}_][\p{L}0-9_-]*/u);
         if (identifier) {
             tokens.push({ type: 'identifier', value: identifier });
             continue;

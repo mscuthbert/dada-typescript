@@ -117,9 +117,9 @@ function extractExprLeft(str: string, from: number): { expr: string, start: numb
         return { expr: str.slice(i + 1, end + 1), start: i + 1 };
     }
 
-    if (/[a-zA-Z_]/.test(str[i])) {
+    if (/[\p{L}_]/u.test(str[i])) {
         const end = i;
-        while (i >= 0 && /[a-zA-Z0-9_]/.test(str[i])) i--;
+        while (i >= 0 && /[\p{L}0-9_]/u.test(str[i])) i--;
         return { expr: str.slice(i + 1, end + 1), start: i + 1 };
     }
 
@@ -151,9 +151,9 @@ function extractExprRight(str: string, from: number): { expr: string, end: numbe
         return { expr: str.slice(start, i), end: i };
     }
 
-    if (/[a-zA-Z_]/.test(str[i])) {
+    if (/[\p{L}_]/u.test(str[i])) {
         const start = i;
-        while (i < str.length && /[a-zA-Z0-9_]/.test(str[i])) i++;
+        while (i < str.length && /[\p{L}0-9_]/u.test(str[i])) i++;
         return { expr: str.slice(start, i), end: i };
     }
 
