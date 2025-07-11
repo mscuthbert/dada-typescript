@@ -2,7 +2,7 @@
 // #include <stdmap.pbi>
 // #include <format.pbi>
 
-main: company company company company
+main: TITLE("Fake Securities Company Names") PBRK
       company company company company
       company company company company
       company company company company
@@ -11,13 +11,17 @@ main: company company company company
       company company company company
       company company company company
       company company company company
-      company company company company;
+      company company company company
+      company company company company
+      epilogue;
 
-company: front back "\n";
+company: front back BRK;
 
 front: article front_type;
 
 article: "The " | "" | "" | "" | "" | "";
+
+epilogue: "<hr><small>Made by Michael Scott Asato Cuthbert for a paper by Lisa D. Friedland et al. that could not use real firms' names.</small>";
 
 front_type:
      initial_type |

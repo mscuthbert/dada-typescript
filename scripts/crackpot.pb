@@ -27,7 +27,6 @@ title: solution ": "
 	[ "the solution to all " problem-types " problems"
 	| "the end of " evils
 	]
-	"\n"
 ;
 
 //
@@ -215,7 +214,7 @@ exhortation: cond-upcase([[
 	] " -- " imperative])
 	| "Achieve " achievements " " [ "now" | "today" ] "! "
 	"Just follow these " {num_steps=3..5; step=1} $num_steps
-	" easy steps.\n"
+	" easy steps." PBRK
 	%repeat(step,num_steps)
 	["" | "IT'S THAT EASY!" | "NOTHING COULD BE SIMPLER!"]
 ;
@@ -232,7 +231,7 @@ step: $step ". "
 		|"Freudian psychology"|"relativity"|"capitalism"] "." |
 	"Turn away from " ["the "|"Satan's "] "international "
 	["money power"|"media brainwashing " ["empire"|"cartel"]]"."
-	] "\n"
+	] BRK
 	{ step=step+1 }
 ;
 

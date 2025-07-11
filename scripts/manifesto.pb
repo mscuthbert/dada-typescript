@@ -11,10 +11,10 @@ body: title points ;
 
 epilogue: "" ;
 
-title: "The " movement " Manifesto:\n" ;
+title: "The " movement " Manifesto:" PBRK ;
 
-movement: movement-prefix movement-2 | movement-prefix movement 
-	| movement-prefix movement-2 | movement-prefix movement 
+movement: movement-prefix movement-2 | movement-prefix movement
+	| movement-prefix movement-2 | movement-prefix movement
 ;
 
 movement-prefix: "Neo" | "Sur" | "Para" | "Pata" | "Meta" | "Post" | "Anti"
@@ -25,13 +25,13 @@ movement-2: "Nihilist" | "Existentialist" |  "Realist" | "Objectivist"
 	| "Ismist" | "Positivist" | "Negativist"
 ;
 
-points: points points point 
-	| points point point 
-	| point point 
+points: points points point
+	| points point point
+	| point point
 ;
 
-point: $pointnum ". " statement "\n" 
-	{ 
+point: $pointnum ". " statement BRK
+	{
 	pointnum=pointnum+1
 	} ;
 
@@ -47,7 +47,7 @@ statement: big-thing " is dead."
 	| big-thing " is nothing more than " mere-thing "."
 ;
 
-mere-thing: "noise" | "the background noise of " big-thing 
+mere-thing: "noise" | "the background noise of " big-thing
 	| "a stupid game" | "an obscene jest" | "a bad joke"
 ;
 
@@ -101,14 +101,14 @@ endless-thing-2: "monotony" | "recursion" | "redundancy"
 thing-paradox-1(thing): thing " is the " maximum-adj " " opposite(thing) ". "
 ;
 
-maximum-adj: "greatest" | "first" | "biggest" | "original" 
+maximum-adj: "greatest" | "first" | "biggest" | "original"
 ;
 
 abstract-noun: "truth" ;
 
-attribute-paradox-1(attribute): 
+attribute-paradox-1(attribute):
 	"the most " attribute " thing is the " completely-synonym
-	" " opposite(attribute) 
+	" " opposite(attribute)
 	"."
 	| "there is nothing more " attribute " than that which is "
 	opposite(attribute) "."
@@ -127,7 +127,7 @@ opposite-map:
 ;
 
 append-synonyms:
-	".*" -> "$"/"-synonyms" 
+	".*" -> "$"/"-synonyms"
 ;
 
 true-synonyms: "true";
@@ -161,10 +161,10 @@ ideal-positive-attribute: "coherency" | "consistency" | "meaning" | "truth"
 ;
 
 
-// stuff culled from pomo 
+// stuff culled from pomo
 // and hacked over a bit
 
 big-thing: "society" | "class" | "civilisation"
-	| "culture" | "language" | "art" | "reality" | "truth" 
+	| "culture" | "language" | "art" | "reality" | "truth"
 	| "sexuality" | "consciousness" | "humanity" | "personhood"
 	| "individuality" | "history" | "technology" ;
