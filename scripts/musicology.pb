@@ -1122,9 +1122,13 @@ sentence-containing-measure-numbers-2:
    cc=citable-composer "’s "
    ?first-cite=@$cc>make_cite
    $first-cite>strip_the adverb-postjustify
-   optional-intensifier-pre-in " "
-   in-measure-range
+   optional-more-measures
    optional-earlier-works
+;
+
+optional-more-measures:
+    ""
+    | optional-intensifier-pre-in " " in-measure-range
 ;
 
 the-or-this: "the" | "this";
@@ -1176,6 +1180,8 @@ distorted-measure-range-prefix:
     | "hinted at in "
 ;
 
+optional-earlier-works: "" | "" | earlier-works;
+
 earlier-works:
       ", " earlier-works-2 | " (" earlier-works-2 ")"
 ;
@@ -1191,7 +1197,7 @@ and-also:
     "and" | "and" | "also"
 ;
 
-works-word: "works" | "works" | "pieces" | "compositions" | "oeuvre";
+works-word: "works" | "works" | "pieces" | "compositions";
 
 in-throughout: "in" | "throughout";
 
@@ -1200,8 +1206,6 @@ optional-earlier-phrase: "" | ", earlier," | " foreshadowed";
 optional-earlier-deintensifier:
    "" | "in embryonic form " | adv " " | ITALIC("passim ")
 ;
-
-optional-earlier-works: "" | "" | earlier-works;
 
 seen-word: "seen" | "observed" | "heard" | "felt";
 
