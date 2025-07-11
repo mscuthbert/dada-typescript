@@ -38,6 +38,7 @@
 // test: sent-about-citable-and-dualism-2double(citable-artist dualisable-noun dualisable-adjective);
 // test: doing-something-to-movement;
 // test: sentence-about-self>upcase-first;
+// test: conclusion-preamble;
 
 // production rules start here
 //
@@ -956,7 +957,7 @@ constraining-clause:
 set-off-interjection(phrase):
   " (" phrase ") "
   | ", " phrase ", "
-  | "--" phrase "--"
+  | "—" phrase "—"
 ;
 
 constraining-clause-2:
@@ -1581,6 +1582,13 @@ summary:
     abst-noun " will be the " concrete-noun-gets-you-there " to " goal "."
 ;
 
+conclusion-preamble-it-is:
+    conclusion-preamble " it is "
+    | conclusion-preamble " it is "
+    | conclusion-preamble " it is "
+    | "It is "
+;
+
 summary-digression:
     set-off-interjection(summary-digression-2)
 ;
@@ -1635,7 +1643,6 @@ conclusion-preamble:
     "In conclusion,"
     | "In sum,"
     | "At last,"
-    | ""
 ;
 
 reason-for-not-writing:
