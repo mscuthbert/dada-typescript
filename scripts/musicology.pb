@@ -53,10 +53,10 @@ title: title2>upcase-first | candid-title>upcase-first ": " title2>upcase-first 
 
 title2:
   v-subject<<new-term " in the works of " v-citable=citable-artist
-  | v-subject<<new-term " in the writings of " v-citable=citable-writer
   | v-subject<<new-term " in the works of " v-artist=artist
   | v-subject<<new-term " after " v-artist=artist
   | v-subject-2<<new-term " in the works of " v-citable=citable-artist
+  | v-subject<<new-term " in the writings of " v-citable=citable-writer
   | v-subject<<new-term " in the music of " v-citable=citable-composer
   | v-subject<<new-term " in the music of " v-composer=composer
   | v-subject-2<<new-term " in the music of " v-citable=citable-composer
@@ -108,7 +108,8 @@ candid-title:
     | "The " big-nebulous-thing>upcase-first " of " something-of-2>upcase-first
     | big-nebulous-thing>pluralise>upcase-first " of " something-of-2>upcase-first
     | doing-something-to-movement>upcase-first " " social-movement>upcase-first
-    //MSC
+
+    // MSAC
     | concrete-adj>upcase-first " " concrete-noun>pluralise>upcase-first
     | foo=dualisable-word "/" $foo>opposite>upcase-first
     | p-three-term-title(ing-ing ing-ing ing-ing)
@@ -116,12 +117,18 @@ candid-title:
     | ing-ing " " big-abst-thing "/" ing-ing>upcase-first " " [big-thing | "ourselves"]
 ;
 
+// from pomo but largely changed.
 concrete-adj: "sounding" | "circular" | "silent" | "forgotten" | "fragmented"
   | "felt" | "cloistered" | "forbidden" | "sonic"
 ;
-// symbolic-type objects
-concrete-noun: "door" | "window" | "key" | "sky" | "fruit" | "sea" | "tool" | "bridge";
 
+// symbolic-type objects
+concrete-noun-gets-you-there: "door" | "window" | "key" | "bridge";
+
+// from pomo mostly
+concrete-noun: "door" | "window" | "key" | "sky" | "fruit" | "sea" | "tool";
+
+// MSAC
 ing-ing: doing-something-to | doing-something-to-movement | affective-verb>gerund;
 
 doing-something-to-infinitives:
@@ -141,7 +148,7 @@ doing-something-to-movement-infinitives:
 
 doing-something-to-movement: doing-something-to-movement-infinitives>gerund;
 
-
+// pomo
 formatted-authors: authors ;
 
 authors: authors author | author | author | author;
@@ -156,12 +163,12 @@ dept-topic:
     "Music" | "Music" | "Musicology" | "Music Theory" | "Ethnomusicology" |
     "Visual and Performing Arts" | "Visual and Performing Arts" |
     "English" | "Literature" | "Dance" | "Art" |
-    "Women's Studies" | "African Studies" |
+    "Women’s Studies" | "African Studies" |
     "Sociolinguistics" | "Music Informatics" |
     "Sound Studies" | "Sonic Studies"
 ;
 
-// institutions from whence authors come;
+// institutions from whence authors come; mostly MSAC
 
 acad-institution:
     "University of " university-of
@@ -182,33 +189,36 @@ uc-schools:
 university-of:
     "Illinois" | "Georgia" | "Massachusetts, Amherst" |
     "California, " uc-schools | "California, " uc-schools |
-    "Michigan" | "North Carolina, Chapel Hill" | "North Texas" | "Chicago"
+    "Michigan" | "North Carolina, Chapel Hill" | "North Texas" | "Chicago" |
+    "Hawai‘i"
 ;
 
 something-university:
-    "Oxford" | "Harvard" | "Cambridge" | "Yale" |
-    "Princeton" | "Columbia" | "Cornell" | "Grinnell" | "Brandeis" | "Tufts" | "Boston"
+    "Oxford" | "Harvard" | "Cambridge" | "Yale" | "Indiana" |
+    "Princeton" | "Columbia" | "Cornell" | "Grinnell" | "Brandeis" | "Tufts" | "Boston" |
+    "The Ohio State"
 ;
 something-college:
      "Smith" | "Mt. Holyoke" | "Kenyon" | "Dartmouth" | "Wellesley" | "Wesleyan"
 ;
 state-university:
-     "Ohio" | "Portland" | "Penn" | "San Diego" | "Florida" | "Michigan" | "Humboldt" | "Chico" | "Oklahoma"
+     "Portland" | "Penn" | "San Diego" | "Florida" | "Michigan" | "Humboldt" | "Chico" | "Oklahoma"
 ;
 
 other-institution:
-     "CUNY" | "M.I.T." | "Women's Music Research Institute" | "The Julliard School" | "Boston Conservatory"
+     "CUNY" | "M.I.T." | "Women’s Music Research Institute" | "The Juilliard School" | "Boston Conservatory"
 ;
 
-sections: sections section | sections section | sections section | section section;
+sections: { num_sections=3..8 } %repeat(section, num_sections);
 
 section: SECTION(section-title) PBRK paragraphs ;
 
 section-title:
     term " and " v-subject-3=new-term
-    | v-artist<<artist " re" neut-verb>past-tensify
     | v-citable<<citable-artist " and " new-section-term
     | big-nebulous-thing>pluralise " of " something-of-2
+    // MSAC
+    | v-artist<<artist " re" neut-verb>past-tensify
 ;
 
 // optionally clear v-subject-3 for the new term
@@ -216,6 +226,7 @@ new-section-term:
     term
     | v-subject-3=new-term
 ;
+
 // stack the odds towards the creation of more text
 
 paragraphs: intro-paragraph PBRK paragraphs-2 ;
@@ -229,9 +240,11 @@ intro-paragraph:
     intro-sentence paragraph
     | intro-sentence paragraph
     | intro-sentence paragraph
+    // MSAC
     | intro-sentence post-introduction-transition-sentence paragraph
 ;
 
+// MSAC -- min 3-sentence paragraphs.
 paragraph: paragraph sentence | sentence sentence sentence ;
 
 sentence:
@@ -244,6 +257,7 @@ sentence:
     | preamble>upcase-first sentence2
     | preamble>upcase-first sentence2
     | preamble>upcase-first sentence2
+    // MSAC
     | "(" sentence2>trim_space>upcase-first ") "
     | question-sentence>upcase-first
 
@@ -251,13 +265,15 @@ sentence:
 
 sentence2:
     assumption " " implies-that result ". "
-    | optional-transition v-person<<intellectual " uses the term \"" term "\" to denote " concept-desc ". "
+    | optional-transition v-person<<intellectual " uses the term “" term "” to denote " concept-desc ". "
     | justifier "we have to " choose " between " term " and " term ". "
-    | sentence-main-theme-of
+    | sentence-main-theme-of  // expanded
     | v-person=intellectual " " promotes " the use of " term " to " imper-vp ". "
-    | sentence-about-existence
+    | sentence-about-existence  // expanded
     | sentence-about-citable-artist(v-citable<<citable-artist)
     | "the " subject-object " is " neut-verb>past-tensify " into a " term>strip_the " that " p-includes-as(big-abst-thing) " " big-singular-thing ". "
+
+    // MSAC new
     | p-sentence-choice-concept(term)
     | sentence-containing-measure-numbers
     | sent-about-big-neb-thing
@@ -271,7 +287,7 @@ intro-sentence:
     intro-sentence2>upcase-first ;
 
 intro-sentence2:
-    "\"" pseudo-quote>upcase-first ",\" " says " " v-person=intellectual ". "
+    "“" pseudo-quote>upcase-first ",” " says " " v-person=intellectual ". "
     | p-intro-sent-thing-state(big-thing state-of-being)
     | p-intro-sent-exhort-thing-author(big-thing citable-writer)
     | intro-sentence-choice
@@ -284,6 +300,7 @@ sentence-main-theme-of:
     "the " main-theme-of " " work " is " concept-desc ". "
 ;
 
+// MSAC
 post-introduction-transition-sentence:
     post-introduction-transition-sentence-2>upcase-first " "
 ;
@@ -352,12 +369,13 @@ conclude-that:
     | "decide that"
 ;
 
-p-intro-sent-thing-state(th st): p-intro-sent-thing-state-pomo(th st) |
-      p-intro-sent-thing-state-msc(th st)
+p-intro-sent-thing-state(th st):
+     p-intro-sent-thing-state-pomo(th st)
+     | p-intro-sent-thing-state-msc(th st)
 ;
 
 p-intro-sent-thing-state-pomo(th st):
-    "\"" th>upcase-first " is " st ",\" " says " " intellectual
+    "“" th>upcase-first " is " st ",” " says " " intellectual
     "; " however "according to " foo=person footnote-cite($foo)
     ", it is not so much " th " that is " st ", but " rather " the " something-of " of "
     th ". "
@@ -440,7 +458,7 @@ p-intro-sent-thing-state-msc(th st):
      "Though " intellectual " "
      stated
      [ " that " th " is " st ", "
-         | ", \"" th " is " st ",\" " ]
+         | ", “" th " is " st ",” " ]
      author-work-preamble " "
      foo=generic-surname footnote-cite($foo)
      show " that in a " optional-very-real " way, " th " is not " st
@@ -475,22 +493,23 @@ nuance-adjective:
     | "groundbreaking"
 ;
 
-// MSC:
+// MSAC:
 
 p-intro-sent-exhort-thing-author(th au):
-  "\"We must " neg-or-impersonal-neg-verb
+  "“We must " neg-or-impersonal-neg-verb
   " " th " " anticipate-phrase " "
   affective-verb
-  " " th ".\" So " wrote-word " "
-  au " "
+  " " th ".” So " wrote-word " "
+  au
   optional-echo
-  position-in-book " \"" @au>make_cite "\""
+  position-in-book " “" @au>make_cite "”"
   optional-concluding-ramble
   ". "
 ;
 
 optional-echo:
-  "" | "" | "(echoing " idea-source ") "
+  " " | " " | " " | " " | " " | " (echoing " idea-source ") "
+  | "—paraphrasing " idea-source "—"
 ;
 
 affective-verb:
@@ -511,7 +530,7 @@ optional-concluding-ramble:
       " of " the-or-this " " philosophy-statement
       " are " obvious-adj ")"
     | " (" not-confused " " new-term ")"
-    | "--not to " say " we " should-nt " " try
+    | "—not to " say " we " should-nt " " try
 ;
 
 // not that we should *
@@ -622,11 +641,11 @@ sent-about-citable-and-dualism(this-artist dualism):
 //   50/50 same composer or different
 
 sent-about-citable-and-dualism-2(thisartist dualism):
-    "\"" ?ac=@thisartist>make_cite $ac>strip_the>upcase-first "\" "
+    "“" ?ac=@thisartist>make_cite $ac>strip_the>upcase-first "” "
     makes-statement-about " " dualism " " position-word " "
-    [ "\"" ?ac=@thisartist>make_cite $ac>strip_the |
-      cc=citable-artist "'s \"" ?ac=@$cc>make_cite $ac>strip_the ]
-    "\" " makes-statement-about " " dualism>opposite ". "
+    [ "“" ?ac=@thisartist>make_cite $ac>strip_the |
+      cc=citable-artist "’s “" ?ac=@$cc>make_cite $ac>strip_the ]
+    "” " makes-statement-about " " dualism>opposite ". "
 ;
 
 // This one is fun:
@@ -634,16 +653,15 @@ sent-about-citable-and-dualism-2(thisartist dualism):
 //        Contrary motion asserts Marxist femininity
 // if other artist is involved, puts other name in
 // Einstein on the Beach enforces capitalist masculinity where
-//        Beach's Mass asserts Marxist femininity
-
+//        Beach’s Mass asserts Marxist femininity
 
 sent-about-citable-and-dualism-2double(thisartist dualism dualadj):
-    "\"" ?ac=@thisartist>make_cite $ac>strip_the>upcase-first "\" "
+    "“" ?ac=@thisartist>make_cite $ac>strip_the>upcase-first "” "
     makes-statement-about " " dualadj " " dualism
     " " position-word " "
-    [ "\"" ?ac=@thisartist>make_cite $ac>strip_the |
-      cc=citable-artist "'s \"" ?aac=@$cc>make_cite $aac>strip_the ]
-    "\" " makes-statement-about " " dualadj>opposite " " dualism>opposite ". "
+    [ "“" ?ac=@thisartist>make_cite $ac>strip_the |
+      cc=citable-artist "’s “" ?aac=@$cc>make_cite $aac>strip_the ]
+    "” " makes-statement-about " " dualadj>opposite " " dualism>opposite ". "
 ;
 
 position-word:
@@ -652,15 +670,15 @@ position-word:
    | "in the places where"
 ;
 
-// the characteristic feature of Ross's "Rest is Noise"
+// the characteristic feature of Ross’s "Rest is Noise"
 // is also evident in "The Ring Cycle", albeit tangentally.
 sentence-with-features(c-artist):
     ?first-cite=@c-artist>make_cite
 
     "the " feature-of " " c-artist
-    "'s \"" $first-cite>strip_the "\" "
-    is-also-evident-in " \""
-    [ @c-artist>make_cite | @citable-artist>make_cite ] "\"" adverb-postjustify ". "
+    "’s “" $first-cite>strip_the "” "
+    is-also-evident-in " “"
+    [ @c-artist>make_cite | @citable-artist>make_cite ] "”" adverb-postjustify ". "
 ;
 
 sentence-about-citable-artist(c-artist):
@@ -676,22 +694,22 @@ sentence-about-citable-artist(c-artist):
 // structuralist bimusicality.
 
 sentence-contrasting-citable-artist-works(artistname):
-        "in \"" @artistname>make_cite ",\" " artistname " "
+        "in “" @artistname>make_cite ",” " artistname " "
         says-something
-        "; in \""
-  @artistname>make_cite "\", "
+        "; in “"
+        @artistname>make_cite "”, "
         however " " artistname>artist-gender-pronoun " "
         says-something-else(artistname)
   ". "
 ;
 
 
-// e.g.: the Conservatory\'s reinventing of musical form, and insistence on instead
+// e.g.: the Conservatory’s reinventing of musical form, and insistence on instead
 // hearing the music which is a central argument of musical form, reframes,
 // indeed reenacts, Marxist communism
 
 sent-about-big-neb-thing:
-       big-neb-or-institution "'s " ing-ing  " of " thisbig=big-thing
+       big-neb-or-institution "’s " ing-ing  " of " thisbig=big-thing
        [ "" | ", and " insistence-on-thing($thisbig) ]
         " " says-or-makes-statement ". "
 ;
@@ -725,7 +743,7 @@ sentence-about-self:
 ;
 
 self-statement-found:
-    found " that a statement like \"" result-2 "\" " not-exist
+    found " that a statement like “" result-2 "” " not-exist
 ;
 
 // advances a sociology of remose in the Abbatian-sociololinguistic vein
@@ -993,11 +1011,11 @@ citable-response:
     newcitable-response
     | oldcitable-response
 ;
-newcitable-response: cc=citable-artist "'s \""
-                    ?first-cite=@$cc>make_cite $first-cite>strip_the "\"";
-oldcitable-response: v-citable<<citable-artist "'s \""
+newcitable-response: cc=citable-artist "’s “"
+                    ?first-cite=@$cc>make_cite $first-cite>strip_the "”";
+oldcitable-response: v-citable<<citable-artist "’s “"
                     ?first-cite=@$v-citable>make_cite
-                    $first-cite>strip_the "\"";
+                    $first-cite>strip_the "”";
 
 
 is-also-evident-in: "emerges " intensifier-pre-in " in" | "is also evident in" ;
@@ -1053,7 +1071,7 @@ tangental-cursorily-2:
 ;
 
 
-work: foo=generic-surname "'s" footnote-cite($foo) work-about " " term
+work: foo=generic-surname "’s" footnote-cite($foo) work-about " " term
     | "the works of " v-citable<<citable-artist
 ;
 
@@ -1062,7 +1080,7 @@ sentence-containing-measure-numbers:
 ;
 
 //This genius, or rather paradigm, is also evident in measures 222-229 of
-//Beethoven's Hammerklavier Sonata, although in a more redundant sense, and
+//Beethoven’s Hammerklavier Sonata, although in a more redundant sense, and
 //again in mm.  227-251, 36-58, and (in retrograde) in 74-87.
 
 sentence-containing-measure-numbers-2:
@@ -1070,7 +1088,7 @@ sentence-containing-measure-numbers-2:
    something-of-2-chain
    transition-seen
    measure-work-citation
-   cc=citable-composer "'s "
+   cc=citable-composer "’s "
    ?first-cite=@$cc>make_cite
    $first-cite>strip_the adverb-postjustify
    optional-intensifier-pre-in " "
@@ -1118,6 +1136,8 @@ optional-measure-range: " " | ", " measure-range ", ";
 
 distorted-measure-range-prefix:
     ""
+    | ""
+    | ""
     | ""
     | "(in retrograde) in "
     | "inverted in "
@@ -1177,7 +1197,7 @@ consequently:
 
 
 p-abst-altern-2(conc):
-    accept-or-reject " " idea-source "'s " work-about
+    accept-or-reject " " idea-source "’s " work-about
     " " conc
 ;
 
@@ -1392,7 +1412,7 @@ result-2:
 result-with-preamble:
      result
      | "one can " assume " that " result
-     | intellectual "'s " model " of " term " " is-one-of " \"" new-term "\", and "
+     | intellectual "’s " model " of " term " " is-one-of "“" new-term "”, and "
         thus " " state-of-being
 ;
 
@@ -1416,8 +1436,8 @@ is-one-of:
 
 // something that can be used as an assumption: "If * holds",
 assumption:  term
-  | intellectual "'s " work-about " " term
-  | pi=intellectual "'s " work-about " " @$pi>make_concepts
+  | intellectual "’s " work-about " " term
+  | pi=intellectual "’s " work-about " " @$pi>make_concepts
   | "the premise of " term
 ;
 
@@ -1554,11 +1574,11 @@ summary:
 
     further-conjunction>upcase-first " " study-verb
     " of " v-citable<<citable-artist
-    "'s works, " especially " "
-    @$v-citable>make_cite ", in "
+    "’s works, " especially " “"
+    @$v-citable>make_cite ",” in "
     context-conjunction " "
-    p-intell-term(intellectual) " and the " role "'s " adj " "
-    abst-noun " will be the " concrete-noun " to " goal "."
+    p-intell-term(intellectual) " and the " role "’s " adj " "
+    abst-noun " will be the " concrete-noun-gets-you-there " to " goal "."
 ;
 
 summary-digression:
@@ -1892,7 +1912,7 @@ plural-victim:
 heroes:
    plural-victim
    | plural-victim
-   | "women's rights"
+   | "women’s rights"
    | "gay studies"
    | "ethnomusicological approaches"
    | "interdisciplinary scholars"
@@ -2108,7 +2128,7 @@ dualisable-adjective:
     | "exotic" | "commonplace"
     | "transgendered" | "cisgendered"
     | "insider" | "outsider"
-    | "\"highbrow\"" | "\"lowbrow\""
+    | "“highbrow”" | "“lowbrow”"
     | "discrete" | "continous"
     | "conservative" | "liberal"
 ;
@@ -2139,7 +2159,7 @@ opposite:
     "tonality" <-> "atonality"
     "homosexuality" <-> "heterosexuality"
 
-// MSC
+// MSAC
     "minimalism" <-> "serialism"
     "tonal" <-> "atonal"
     "common-practice" <-> "serial"
@@ -2162,7 +2182,7 @@ opposite:
     "transgendered" <-> "cisgendered"
     "insider" <-> "outsider"
     "self" <-> "Other"
-    "\"highbrow\"" <-> "\"lowbrow\""
+    "“highbrow”" <-> "“lowbrow”"
     "discrete" <-> "continuous"
     "conservative" <-> "liberal"
 ;
@@ -2223,13 +2243,14 @@ first-name:
   | "Gina" | "Aaron" | "Drew"
   | "Rebecca" | "Eleanor" | "Jessica"
   | "Emily" | "Elina" | "Samuel" | "Lindsay"
+// 2025 finally time for a few non-white names as plausible!
+  | "Luis" | "Hector" | "Maria" | "Tabitha" | "Kumi" | "Yu"
 ;
 
 
-// the surnames of people I know (of), used for effect.
 
+// the surnames of people I know (of), used for effect.
 generic-surname:
-    // Names taken from AMS programs
     "Bent"
     | "Berger" | "Katz" | "Zaslaw" | "Shreffler"
     | "Stone" | "Clark" | "Cumming"
@@ -2242,6 +2263,9 @@ generic-surname:
     | "Goodman" | "Linklater" | "Ingolfsson"
     | "Brinkmann" | "Harris" | "Wegman"
     | "Pollock" | "Hamilton" | "Dorf" | "Bellmann" | "Wright"
+
+    // 2025 finally time for a few non-white names as plausible!
+    | "Chen" | "Wen" | "Kim" | "Gonzales" | "Lopez"
 ;
 
 // Initials
@@ -2251,7 +2275,6 @@ initial:
   | "I. " | "J. " | "K. " | "L. " | "M. " | "N. " | "O. " | "P. "
   | "Q. " | "R. " | "S. " | "T. " | "U. " | "V. " | "W. "
   | "Y. " | "Z. "
-
   | "Ll. "
 ;
 
@@ -2263,14 +2286,13 @@ year: "19" recent-decade digit | "19" recent-decade digit |
 // digits of this decade
 year-digit: "0" | "1" | "2" | "3" | "4" | "5";
 
-recent-decade: "7" | "8" | "9";
+recent-decade: "8" | "9";
 
 digit: "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 non-zero-digit: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 non-zero-digit-or-space: "" | "" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 
-
-measure-range: { a=1..300; c=1..30; b=a+c } $a "-" $b;
+measure-range: { a=1..300; c=1..30; b=a+c } $a "–" $b;
 
 
 // publishers
@@ -2302,6 +2324,9 @@ footnote-cite-text(surname):
     "(" year ") "
     ITALIC([title "."]) " " publisher
 ;
+// note how ITALIC([...]) has only one option, but
+// it allows for evaluating an atom within a param call -- otherwise
+// not tested/documented.  ITALIC(title ".") would be a two-argument call.
 
 footnote-cite(surname):
     FOOTNOTE(footnote-cite-text(surname))
@@ -2345,7 +2370,7 @@ writer: citable-writer | citable-writer| citable-writer | uncitable-writer;
 citable-artist: citable-composer | citable-writer;
 
 citable-composer:
-    "Ueno"| "Zorn" | "Bizet" | "Bjork" | "Radiohead" |
+    "Ueno"| "Zorn" | "Bizet" | "Björk" | "Radiohead" |
     "Cage" | "Mahler" | "Reich" | "Glass" | "Wagner" |
     "Crawford" | "Saariaho" | "Beethoven" | "Beach" | "Rorem" |
     "Muhly" | "Williams" | "Shaw" | "Oliveros"
@@ -2386,7 +2411,7 @@ artist-gender-pronoun:
     "Zorn" -> "he"
     "Bizet" -> "he"
     "Sherr" -> "he"
-    "Bjork" -> "she"
+    "Björk" -> "she"
     "Radiohead" -> "it"
     "Ueno" -> "he"
     "Muhly" -> "he"
@@ -2428,7 +2453,7 @@ Reich-works: "Music as Gradual Process" | "Pendulum Music" | "Slow Motion Sound"
 Glass-works: "Einstein on the Beach" | "Koyaanisqatsi" | "Music with Changing Parts" |
              "Contrary Motion";
 Bizet-works: "the Toreador song" | "the Habanera" | "the flower aria" | "the Seguidilla";
-Bjork-works: "Hunter" | "Bachelorette" | "Vespertine" | "Isobel";
+Björk-works: "Hunter" | "Bachelorette" | "Vespertine" | "Isobel";
 Radiohead-works: "O.K. Computer" | "Kid A" | "The Bends";
 Ueno-works:
      "On a Sufficient Condition for the Existence of Most Specific Hypothesis"
@@ -2447,7 +2472,7 @@ Beethoven-works: "the Eroica" | "the Ninth Symphony" | "the Hammerklavier Sonata
            "the Fifth Symphony" | "the Pastoral Symphony" | "Fidelio";
 Zorn-works: "Cat o' Nine Tales" | "Forbidden Fruit" | "Masada" | "Spillane";
 Muhly-works: "I Drink the Air Before Me" | "Mothertongue";
-Williams-works: "Star Wars" | "Schindler's List" | "Last Jedi" | "Imperial March" ;
+Williams-works: "Star Wars" | "Schindler’s List" | "Last Jedi" | "Imperial March" ;
 Shaw-works: "Partita" | "String Quartets" ;
 Oliveros-works: "Deep Listening" | "Sonic Meditations" ;
 
@@ -2480,7 +2505,7 @@ Brett-works: "Queering the Pitch" | "Decomposition: Post-Disciplinary Performanc
              "Cruising the Performative: Interventions into the Representation of Ethnicity, Nationality, and Sexuality" |
              "Editing Renaissance Music"
 ;
-Koestenbaum-works: "The Queen's Throat" | "Hotel Theory" | "Humiliation";
+Koestenbaum-works: "The Queen’s Throat" | "Hotel Theory" | "Humiliation";
 Mann-works: "The Magic Mountain" | "Doktor Faustus";
 Sherr-works: "A Distressing Incident: Choirboys, Canons, and Homosexuality" |
         "Guglielmo Gonzaga and the Castrati" | "Competence and Incompetence";
@@ -2558,7 +2583,7 @@ trim_space:
     ".* $" -> " $"/""
 ;
 
-// make an artist's name into the symbol representing his/her works
+// make an artist’s name into the symbol representing his/her works
 
 make_cite:
     ".*" -> "$"/"-works"
@@ -2587,5 +2612,5 @@ gerund:
 // scarequote -- a function not a mapping
 
 scare-quote(scarything):
-    "\"" scarything "\""
+    "“" scarything "”"
 ;
