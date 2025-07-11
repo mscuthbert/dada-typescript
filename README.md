@@ -40,14 +40,15 @@ for instance `npm start scripts/pomo.pb`.
 * Embedded Code
 * Footnotes
 * HTML Formatting
+* `%repeat(token, times)` (undocumented but used in crackpot and test/repeattest).
 
 ## Not Supported
-* Percent %trans mappings (however, upcase and upcase-first are provided by the system)
+* Arbitrary %trans mappings (however, %upcase and %upcase-first are provided by the system)
 * C-Processor User Parameters (-DNAME="Henry")
 * C-style #define statements
 * C-language #includes
-* TROFF Formatting (no plans to integrate)
-* `%repeat(token, times)` was undocumented (only in test/repeattest) and not ported. (Other unused/unimplemented directives from lexer.x were also not ported)
+* TROFF Formatting
+* Undocumented/unused/unimplemented Bison directives from lexer.x (e.g. %unique, %pick, %cond, %e).
 
 ## Differences with c Parser + Clarifications
 * Unknown rule errors are found only on generation, not parsing. A script may therefore
@@ -66,6 +67,10 @@ for instance `npm start scripts/pomo.pb`.
     - `$var>trans` is treated as `($var)>trans` and not `$(var>trans)`
     - Because parentheses are not actually allowed, silenced temporary variables may be needed for cases where other operator precedence is desired.
     - For instance, musicology.pb uses `?ac=@$cc>make_cite $ac>strip_the` to retrieve variable `$cc`, make a citation from it, then (with `@` indirection) call the rule.  That output is stored as the silenced variable `ac` which is then retrieved to have any `the` removed from the front.
+* `%repeat(..., -1)` will not parse on TypeScript (equal to repeat(..., 0) in C).  `%repeat(..., var)` where var is negative does "work" (prints nothing).
+* Note that there is a bug in the C dada engine where + and * use `rand()` not `random()` and thus do
+    not obey the random seed of `srandom()`. There are random cases in C where + will always give 5
+    repetitions, etc. Obviously this bug is not duplicated in the Javascript version.
 
 ### Embedded Code Expression Differences and Clarification
 Since Embedded Code in pb was designed to be evaluated by C, some differences were
@@ -94,7 +99,9 @@ bound to arise with a Javascript parser.
 * Variable names with hyphens in them cannot be used in code bocks (`the-word` will be
     evaluated as the variable `the` subtracting the variable `word`).  I don't know if this worked
     in the C version.
-
+* Currently there is no access inside code to Javascript functions except Math (masqueraded as __Math),
+    but this should still not be considered secure not used in high security places. Parsing a string
+    as a number can be done with `+var`; the reverse can be done with `''+var`.
 
 ## License
 The software here is released under the BSD 3-clause license.  The pb scripts--

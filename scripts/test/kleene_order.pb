@@ -1,6 +1,7 @@
 // MSAC -- testing the operator order of Kleene symbols (+ / *) to match C/Yacc and Typescript
+// Note that these
 
-S: A "\n" B "\n" C "\n" D "\n" E;
+S: A "\n" B "\n" C "\n" D "\n" E "\n" F G;
 
 // kleene can work on bare strings
 A: "hi "+;
@@ -34,3 +35,11 @@ add-boo:
 
 E: "This should appear 0 or more times.\n"*;
 
+// assigns after calling 1 or more times.
+F: var=animal+ " " $var;
+
+// prints nothing, but assigns to potentially one or more times;
+G: ?var="he"*;
+
+// this does not work, phew!
+// H: var+=animal;

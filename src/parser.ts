@@ -35,6 +35,7 @@ export type Kleene = (typeof Kleene)[keyof typeof Kleene];
 export interface BareString {
     kind: 'string';
     value: string;
+    textMappings: string[];  // ridiculous, but possible!
     kleene: Kleene;
 }
 
@@ -81,7 +82,16 @@ export interface CodeBlock {
     kleene: Kleene;
 }
 
-export type Option = BareString | Ref | SetVar | LazySetVar | GetVar | SilencedOption | Indirection | CodeBlock;
+export interface Repeat {
+    kind: 'repeat';
+    value: Option;
+    integer?: number;
+    variable?: string;
+    kleene: Kleene;
+}
+
+export type Option = BareString | Ref | SetVar | LazySetVar | GetVar
+    | SilencedOption | Indirection | CodeBlock | Repeat;
 
 export type Statement = Rule | TextMapping;
 
@@ -113,7 +123,13 @@ export function parse(tokens: Token[]): Statement[] {
 
         if (token.type === 'string') {
             next();
-            return { kind: 'string', value: token.value, kleene: Kleene.None };
+            // transformations go after args.
+            const bareString: BareString = { kind: 'string', value: token.value, textMappings: [], kleene: Kleene.None };
+            while (peek().type === 'transform') {
+                next();
+                bareString.textMappings.push(expect('identifier').value);
+            }
+            return bareString;
         }
 
         if (token.type === 'silenced') {
@@ -174,11 +190,32 @@ export function parse(tokens: Token[]): Statement[] {
                 ref.textMappings.push(expect('identifier').value);
             }
             return ref;
-        } else if (token.type === 'symbol' && token.value === '[') {
-            return parseAnonymousRule();
-        } else {
-            throw new Error(`Unexpected token in option: ${token.type} ${token.value}`);
         }
+
+        if (token.type === 'symbol' && token.value === '[') {
+            return parseAnonymousRule();
+        }
+        if (token.type === 'repeat') {
+            // %repeat(atom, integer_or_identifier)
+            next();
+            expect('symbol', '(');
+            const leftAtom = parseOption();
+            expect('symbol', ',');
+
+            let repeatOption : Repeat;
+            if (peek().type === 'integer') {
+                repeatOption = { kind: 'repeat', value: leftAtom, integer: parseInt(peek().value), kleene: Kleene.None }
+            } else if (peek().type === 'identifier') {
+                repeatOption = { kind: 'repeat', value: leftAtom, variable: peek().value, kleene: Kleene.None };
+            } else {
+                throw new Error(`Unexpected second parameter in %repeat: ${peek().value}`);
+            }
+            next();
+            expect('symbol', ')');
+            return repeatOption;
+        }
+
+        throw new Error(`Unexpected token in option: ${token.type} ${token.value}`);
     }
 
     function parseAnonymousRule(): Ref {
@@ -218,6 +255,7 @@ export function parse(tokens: Token[]): Statement[] {
                 || token.type === 'lazy-set-var'
                 || token.type === 'silenced'
                 || token.type === 'indirection'
+                || token.type === 'repeat'
             ) {
                 currentOption.push(parseOption());
             } else if (token.type === 'symbol' && token.value === '|') {
@@ -233,13 +271,26 @@ export function parse(tokens: Token[]): Statement[] {
                     throw new Error(`Kleene token ${token.value} found at beginning of option${ruleError()}.`);
                 }
                 // .at(-1) after updating to Library to 2022
-                const lastOption = currentOption[currentOption.length - 1];
-                if (!("kleene" in lastOption)) {
-                    throw new Error(`Kleene token ${token.value} cannot be used in this position${ruleError()}.`);
-                } else {
-                    const kleeneType = (token.value === '+' ? Kleene.Plus : Kleene.Star);
-                    lastOption.kleene = kleeneType;
+                let lastOption = currentOption[currentOption.length - 1];
+                if (!('kleene' in lastOption)) {
+                    if ('value' in lastOption && 'kleene' in lastOption.value) {
+                        // allows for var="hello"+
+                        lastOption = lastOption.value;
+                    } else if (
+                        'value' in lastOption
+                        && 'value' in lastOption.value
+                        && typeof lastOption.value.value === 'object'
+                        && 'kleene' in lastOption.value.value
+                    ) {
+                        // in theory, should continue as long as there is a value...
+                        // but this allows for ?var="hello"+
+                        lastOption = lastOption.value.value;
+                    } else {
+                        throw new Error(`Kleene token ${token.value} cannot be used in this position${ruleError()}.`);
+                    }
                 }
+                const kleeneType = (token.value === '+' ? Kleene.Plus : Kleene.Star);
+                lastOption.kleene = kleeneType;
                 next()
             } else {
                 if (!isAnonymous && token.type === 'symbol' && token.value === ':') {
@@ -286,7 +337,7 @@ export function parse(tokens: Token[]): Statement[] {
         }
 
         // until ';'
-        while (peek().type !== 'symbol') {
+        while (peek().type !== 'symbol' || peek().value !== ';') {
             const pattern = expect('string').value;
             const mapping_type = expect('mapping');
             if (mapping_type.value === '<->') {

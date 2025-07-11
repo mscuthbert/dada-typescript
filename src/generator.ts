@@ -21,6 +21,10 @@ import {scopedEval} from './helpers.ts';
 function isRef(obj: Option): obj is Ref {
     return typeof obj === 'object' && obj !== null && 'ref' in obj;
 }
+function isIntegerString(str: string): boolean {
+    return /^-?\d+$/.test(str);
+}
+
 
 // Context are context variables -- global or parameter
 type Context = Record<string, string>;
@@ -103,7 +107,7 @@ export function generate(statements: Statement[], start: string, format: 'none'|
 
         if ('kind' in option) {
             if (option.kind === 'string') {
-                return option.value;
+                return applyTextmappings(option.value, option.textMappings);
             }
             if (option.kind === 'get') {
                 const result = globalVars[option.name] ?? '';
@@ -127,6 +131,38 @@ export function generate(statements: Statement[], start: string, format: 'none'|
                 resolve(option.value, context);
                 return '';
             }
+            if (option.kind === 'repeat') {
+                let num;
+                if (typeof option.integer !== 'undefined') {
+                    num = option.integer;
+                } else {
+                    const variable = option.variable || '';
+                    if (variable in context) {
+                        num = context[variable];
+                    } else if (variable in globalVars) {
+                        num = globalVars[variable];
+                    } else {
+                        throw new Error(`Unrecognized variable "${variable}" in %repeat`);
+                    }
+                    if (typeof num !== 'number') {
+                        if (isIntegerString(num)) {
+                            num = parseInt(num);
+                        } else {
+                            throw new Error(`Variable "${variable}" not holding an integer in %repeat`);
+                        }
+                    }
+                }
+                if (Number.isNaN(num)) {
+                    throw new Error(`Value "${num}" is NaN in %repeat`);
+                }
+                // faster up to 10000 strings than Array.join:
+                let out = '';
+                for (let i = 0; i < num; i++) {
+                    out += resolve(option.value, context);
+                }
+                return out;
+            }
+
             if (option.kind === 'indirection') {
                 const localOption = option.value;
                 const refEval = resolve(localOption, context);  // will resolve textMappings

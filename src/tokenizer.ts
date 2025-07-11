@@ -19,7 +19,13 @@ export type Token =
     | { type: 'set-var'; value: string }
     | { type: 'lazy-set-var'; value: string }
     | { type: 'resource'; value: '%resource' }
+    | { type: 'repeat'; value: '%repeat' }
+    | { type: 'integer'; value: string }
     | { type: 'eof'; value: '<eof>' };
+
+function isDigit(ch: string): boolean {
+    return ch >= '0' && ch <= '9';
+}
 
 export function tokenize(input: string): Token[] {
     const tokens: Token[] = [];
@@ -161,6 +167,17 @@ export function tokenize(input: string): Token[] {
             continue;
         }
 
+        if (isDigit(input[i])) {
+            // used only as a value to the %repeat directive.
+            let integer = ''
+            while (i < input.length && isDigit(input[i])) {
+                integer += input[i];
+                advance();  // i++
+            }
+            tokens.push({ type: 'integer', value: integer });
+            continue;
+        }
+
         // this use of startsWith means "continues after i with..."
         if (input.startsWith('->', i)) {
             advance(2);
@@ -177,6 +194,12 @@ export function tokenize(input: string): Token[] {
         if (input.startsWith('%resource', i)) {
             advance('%resource'.length);
             tokens.push({ type: 'resource', value: '%resource' });
+            continue;
+        }
+
+        if (input.startsWith('%repeat', i)) {
+            advance('%repeat'.length);
+            tokens.push({ type: 'repeat', value: '%repeat' });
             continue;
         }
 
@@ -243,7 +266,7 @@ export function tokenize(input: string): Token[] {
             continue;
         }
 
-        const symbol = match(/^[;:|(){}[\]]/);
+        const symbol = match(/^[;,:|(){}[\]]/);
         if (symbol) {
             tokens.push({ type: 'symbol', value: symbol });
             continue;

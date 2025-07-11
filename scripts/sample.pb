@@ -7,31 +7,33 @@
 
 
 story: title introduction named sentence "A " sentence>strip_the
-       noise opposite-sentence parametric-sentence parade conclusion;
+       noise opposite-sentence weather-sentence parametric-sentence parade friends conclusion;
 
 // testing silence and lazy set; note that main-animal<<animal>upcase-first is parsed as
 // main-animal<<(animal>upcase-first) which isn't what is wanted here.  Hence the silence
 // (this part of grammar isn't discussed in the spec nor included in any sample files.
-title: ?punct=punctuation "The " ?main-animal<<animal $main-animal>upcase-first $punct "\n";
+title: ?punct=punctuation "The " ?main-animal<<animal $main-animal>upcase-first $punct "\n" | title>upcase;
 introduction: "A story about " main-animal<<animal "s.\n";  // testing main-animal not overwritten.
-sentence: "The " double(animal) " run " [ "fast" | "sl" ["o" | "oooo"] "w"] ". ";
+sentence: "The " double(animal) " run " [ "fast" | "sl" ["o" | "oooo"] "w"] ". \n";
 double(wrd): wrd " and " wrd;
-conclusion: "\nThat's my story about a " $main-animal ".";  // testing retrieval
+conclusion: "That's my story about a " $main-animal ".\n";  // testing retrieval
 punctuation: "!" | "" | "?";
-noise: "\nI heard a " $main-animal>sound ".";
+noise: "I heard a " $main-animal>sound ".\n";
 sound:
     "fish" -> "gurgle"
     "dog" -> "bark"
     "cat" -> "meow"
 ;
-opposite-sentence: "\nIt was like " opp-word=opposite-word " and " $opp-word>opposites ".";
-opposite-word: "night" | "day" | "hot" | "cold";
+opposite-sentence: "It was like " opp-word=opposite-word " and " $opp-word>opposites ". ";
+opposite-word: "night" | "day" | "left" | "right";
 opposites:
     "night" <-> "day"
-    "hot" <-> "cold"
+    "left" <-> "right"
 ;
 
-parametric-sentence: "\nAnother " parametric-sentence2(animal) punctuation "\n";
+weather-sentence: "And it was " "very "* ["hot" | "cold"] ".\n";
+
+parametric-sentence: "Another " parametric-sentence2(animal) punctuation "\n";
 parametric-sentence2(ani): ani | ani " and " [ ani | cat ];  // parameters in inline choices
 
 // indirection tests
@@ -49,8 +51,18 @@ parade: "In the parade there were:\n" { i=1 } parade2 parade2;
 parade2: parade3 | parade3 parade2;
 parade3: $i ". " {=2..20} " " other_animal>pluralize ".\n" {i += 1};
 
+friends: "The " $main-animal " had "
+    { num_friends = 2..4; fc = 1; word=["zero","one","two","three","four"][num_friends] } $word
+    " friends: " friend-repeat>strip_comma ".\n";
+friend-repeat: %repeat(friend, num_friends);
+friend: "(" $fc ") " other_animal ", " { fc++ };
+
+strip_comma:
+    ".*, $" -> ", $"/""
+;
+
 pluralize:
-    "fish$" -> "fish$"/"fishes"
+    "^fish$" -> "fish$"/"fishes"
 	".*y$" -> "y$"/"ies"
 	".*s$" -> "$"/"es"
 	".*" -> "$"/"s"
