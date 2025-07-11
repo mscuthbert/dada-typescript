@@ -2,41 +2,65 @@
 // #include <stdmap.pbi>
 // #include <format.pbi>
 
-main: company company company company company company company company
-      company company company company company company company company
+main: company company company company
       company company company company
-      company company company company company company company company
-      company company company company company company company company company company company company;
+      company company company company
+      company company company company
+      company company company company
+      company company company company
+      company company company company
+      company company company company
+      company company company company
+      company company company company;
 
-company: front " " back "\n";
+company: front back "\n";
 
 front: article front_type;
 
 article: "The " | "" | "" | "" | "" | "";
 
-front_type: "" | initial_type | animal_type | animal_type |
-     flower_type |
-     people_adjectives | legal_term | culinary_terms | front_type " & " front_type ;
+front_type:
+     initial_type |
+     animal_type " "|
+     flower_type " " |
+     people_adjective " " |
+     legal_term " " |
+     culinary_term " " |
+     front_type "& " front_type;
 
 back: back_adjective back_noun back_gibberish;
 
 
 // ## hard to tell their adjectives from their nouns
 
-back_adjective: "" | "" | "" |"" | "" | "" | "Investment " | insurance | insurance |
-        "International "| securities | securities | "Financial " | service |
+back_adjective: "" | "" | "" |"" | "" | "" |
+        "Investment " |
+        insurance | insurance |
+        "International "|
+        securities | securities |
+        "Financial " |
+        service |
         "Perpetual " | "Diversified " | "Options " | "Management " |
         "Asset " |
         "Trading " | "Investors " | "First " | "Commercial " |
         back_adjective back_adjective ;
 
-back_noun: advisors | "Agency " | "Group " | "Corporation " |
-           "Planning " | bankthing | brokers | "Capital " | "Counsel " |
-           "Distributors " | "Enterprises " | securities | securities           |
-           service | "Specialists " | "International " |
-           corp | corp | "Advantage " | equity | "Consultants " |
-           "Partners " | limited-maybe "Partnership " |
-           back_noun "of " location | back_noun back_noun | back_noun and_thing "Associates ";
+back_noun:
+    advisors |
+    "Agency " | "Group " | "Corporation " |
+    "Planning " | bankthing | brokers | "Capital " | "Counsel " |
+    "Distributors " | "Enterprises " |
+    securities | securities |
+    service |
+    "Specialists " | "International " |
+    corp | corp |
+    "Advantage " |
+    equity | "Consultants " |
+    "Partners " |
+    limited-maybe "Partnership " |
+    back_noun "of " location |
+    back_noun back_noun |
+    back_noun and_thing "Associates ";
 
 limited-maybe: "" | "Limited ";
 insurance: "Insurance " | "Insurance " | "Life Insurance " | "Pension Insurance ";
@@ -57,7 +81,7 @@ location: "America " | "America " | "California " | "New York " |
 advisors: "Advisors " | "Advisors " | "Advisers " | "Advisory ";
 
 initial_type: initial ". " | initial ". " | initial ".-" initial ". " |
-              initial "&" initial | initial_type initial;
+              initial " & " initial " " | initial_type initial " ";
 
 initial: "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" |
          "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" |
@@ -121,7 +145,7 @@ animal_type:
 "Bearded seal" |
 "Beaver" |
 "Beluga Whale" |
-"Bengal tiger" |
+"Bengal Tiger" |
 "Bennett's Tree-Kangaroo" |
 "Big Brown Bat" |
 "Bighorn Sheep" |
@@ -134,23 +158,23 @@ animal_type:
 "Black Tailed Jack Rabbit" |
 "Black Wallaroo" |
 "Blackbuck" |
-"Black-footed Ferret" |
-"Black-striped Wallaby" |
-"Black-tailed Jack Rabbit" |
+"Black-Footed Ferret" |
+"Black-Striped Wallaby" |
+"Black-Tailed Jack Rabbit" |
 "Blue Whale" |
 "Bobcat" |
 "Bongo" |
 "Boto" |
-"Bottle-nosed Dolphin" |
+"Bottle-Nosed Dolphin" |
 "Bowhead Whale" |
 "Brazilian Free-Tailed Bat" |
-"Bridled nailtail wallaby" |
+"Bridled Nailtail Wallaby" |
 "Broad Faced Potoroo" |
 "Brown Antechinus" |
 "Brown Bear" |
 "Brown Rat" |
-"Brush-tailed Bettong" |
-"Brush-tailed Phascogale" |
+"Brush-Tailed Bettong" |
+"Brush-Tailed Phascogale" |
 "Bryde's Whale" |
 "Buffalo" |
 "Burmeister's Porpoise" |
@@ -158,7 +182,7 @@ animal_type:
 "Burrowing Bettong" |
 "Bush Dog" |
 "Bush Pig" |
-"Bushy-tailed Woodrat" |
+"Bushy-Tailed Woodrat" |
 "Butler's Dunnart" |
 "California Myotis" |
 "California Sea Lion" |
@@ -208,9 +232,9 @@ animal_type:
 "Dark Kangaroo Mouse" |
 "Deer" |
 "Deer Mouse" |
-"Dense-beaked Whale" |
+"Dense-Beaked Whale" |
 "Desert Cottontail" |
-"Desert rat-kangaroo" |
+"Desert Rat-Kangaroo" |
 "Desert Woodrat" |
 "Dhole" |
 "Dingo" |
@@ -218,7 +242,7 @@ animal_type:
 "Dolphin" |
 "Donkey" |
 "Dromedary Camel" |
-"Duck-billed Platypus" |
+"Duck-Billed Platypus" |
 "Dugong" |
 "Dusky Antechinus" |
 "Dusky Dolphin" |
@@ -231,7 +255,7 @@ animal_type:
 "Eastern Pipistrelle" |
 "Eastern Pygmy Possum" |
 "Eastern Quoll" |
-"Eastern Small-footed Bat" |
+"Eastern Small-Footed Bat" |
 "Eastern Tarsier" |
 "Echidna" |
 "Egyptian Mongoose" |
@@ -250,12 +274,12 @@ animal_type:
 "Fallow Deer" |
 "False Killer Whale" |
 "Fanaloka" |
-"Fat-tailed Dunnart" |
+"Fat-Tailed Dunnart" |
 "Fat-Tailed Pseudantechinus" |
 "Fawn Antechinus" |
 "Feathertail Glider" |
 "Fennec Fox" |
-"Feral pig" |
+"Feral Pig" |
 "Ferret" |
 "Fin Whale" |
 "Finless Porpoise" |
@@ -284,20 +308,20 @@ animal_type:
 "Gibbon" |
 "Gilbert's Dunnart" |
 "Giles' Planigale" |
-"Ginkgo-toothed Beaked Whale" |
+"Ginkgo-Toothed Beaked Whale" |
 "Giraffe" |
 "Gnu" |
 "Goat" |
 "Godman's Rock Wallaby" |
 "Golden Bandicoot" |
 "Golden Lion Tamarin" |
-"Goose-beaked Whale" |
+"Goose-Beaked Whale" |
 "Gopher" |
 "Goral" |
 "Gorilla" |
 "Grant's Gazelle" |
 "Gray Fox" |
-"Gray seal" |
+"Gray Seal" |
 "Gray Whale" |
 "Gray's Beaked Whale" |
 "Great Basin Kangaroo Rat" |
@@ -309,13 +333,13 @@ animal_type:
 "Grison" |
 "Grizzly Bear" |
 "Groundhog" |
-"Guadalupe fur seal" |
+"Guadalupe Fur Seal" |
 "Guanaco" |
 "Hairy Footed Dunnart" |
-"Hairy-tailed Mole" |
+"Hairy-Tailed Mole" |
 "Hamsters" |
 "Harbor Porpoise" |
-"Harbor seal" |
+"Harbor Seal" |
 "Hare" |
 "Harp Seal" |
 "Hartebeest" |
@@ -358,8 +382,8 @@ animal_type:
 "Karakul" |
 "Killer Whale" |
 "Kinkajou" |
-"Kirk's Dik-dik" |
-"Kit fox" |
+"Kirk's Dik-Dik" |
+"Kit Fox" |
 "Klipspringer" |
 "Koala" |
 "Kowari" |
@@ -378,7 +402,7 @@ animal_type:
 "Lion" |
 "Little Pocket Mouse" |
 "Little Pygmy Possum" |
-"Little-Long tailed Dunnart" |
+"Little-Long Tailed Dunnart" |
 "Llama" |
 "Long Footed Potoroo" |
 "Long Nosed Potoroo" |
@@ -386,12 +410,12 @@ animal_type:
 "Long-eared Myotis" |
 "Long-Finned Pilot Whale" |
 "Longman's Beaked Whale" |
-"Long-tailed Dunnart" |
-"Long-tailed Planigale" |
-"Long-tailed Pocket Mouse" |
-"Long-tailed Pygmy Possum" |
-"Long-tailed Vole" |
-"Long-tailed weasel" |
+"Long-Tailed Dunnart" |
+"Long-Tailed Planigale" |
+"Long-Tailed Pocket Mouse" |
+"Long-Tailed Pygmy Possum" |
+"Long-Tailed Vole" |
+"Long-Tailed Weasel" |
 "Loris" |
 "Lumholtz's Tree-kangaroo" |
 "Lynx" |
@@ -433,13 +457,13 @@ animal_type:
 "Musky Rat-kangaroo" |
 "Mustang" |
 "Nabarlek" |
-"Naked Mole-rat" |
+"Naked Mole-Rat" |
 "Narbalek" |
 "Narwhal" |
 "New England Cottontail" |
 "Nine Banded Armadillo" |
 "Ningbing Pseudantechinus" |
-"Norrow-nosed Planigale" |
+"Norrow-Nosed Planigale" |
 "North Atlantic Beaked Whale" |
 "Norther Dibbler" |
 "Northern Bettong" |
@@ -449,11 +473,11 @@ animal_type:
 "Northern Flying Squirrel" |
 "Northern Fur Seal" |
 "Northern Grasshopper Mouse" |
-"Northern Hairy-nosed Wombat" |
+"Northern Hairy-Nosed Wombat" |
 "Northern Nailtail Wallaby" |
 "Northern Quoll" |
 "Northern Rightwhale Dolphin" |
-"Northern Short-tailed shrew" |
+"Northern Short-Tailed shrew" |
 "Northern Yellow Bat" |
 "Norway Rat" |
 "Numbat" |
@@ -492,7 +516,7 @@ animal_type:
 "Polar Bear" |
 "Polecat" |
 "Porcupine" |
-"Prairie dog" |
+"Prairie Dog" |
 "Preble's Shrew" |
 "Pronghorn" |
 "Pronghorn Antelope" |
@@ -517,35 +541,35 @@ animal_type:
 "Red Panda" |
 "Red Squirrel" |
 "Red Wolf" |
-"Red-cheeked Dunnart" |
+"Red-Cheeked Dunnart" |
 "Red-Necked Wallaby" |
-"Red-tailed Phascogale" |
+"Red-Tailed Phascogale" |
 "Reedbuck" |
 "Reindeer" |
 "Rhinoceros" |
-"Ribbon seal" |
+"Ribbon Seal" |
 "Richardson Ground" |
 "Right Whale" |
 "Ringtail Cat" |
 "Ringtail Possum" |
-"Ring-tailed Lemur" |
+"Ring-Tailed Lemur" |
 "Risso's Dolphin" |
 "River Otter" |
 "Rock Ringtail Possum" |
 "Rock Squirrel" |
 "Roe Deer" |
-"Rough-toothed Dolphin" |
+"Rough-Toothed Dolphin" |
 "Royal Antelope" |
 "Rufous Bettong" |
 "Rufous Hare Wallaby" |
 "Rufous Spiny Bandicoot" |
 "Sable Antelope" |
-"Saddle-backed Dolphin" |
+"Saddle-Backed Dolphin" |
 "Sagebrush Vole" |
 "Saiga Antelope" |
-"Salt's Dik-dik" |
+"Salt's Dik-Dik" |
 "Sandhill Dunnart" |
-"Scaly-tailed Possum" |
+"Scaly-Tailed Possum" |
 "Scrub Hare" |
 "Sea Otter" |
 "Seal" |
@@ -561,7 +585,7 @@ animal_type:
 "Siberian Tiger" |
 "Sika Deer" |
 "Simian Jackal" |
-"Siver-naired Bat" |
+"Siver-Naired Bat" |
 "Skunk" |
 "Sloth" |
 "Sloth Bear" |
@@ -574,7 +598,7 @@ animal_type:
 "Southern Common Cuscus" |
 "Southern Dibbler" |
 "Southern Flying Squirrel" |
-"Southern Hairy-nosed Wombat" |
+"Southern Hairy-Nosed Wombat" |
 "Southern Ningaui" |
 "Southern Pocket Gopher" |
 "Sowerby's Beaked Whale" |
@@ -585,12 +609,12 @@ animal_type:
 "Spinner Dolphin" |
 "Spotted Hyena" |
 "Spotted Skunk" |
-"Spotted-tailed Quoll" |
+"Spotted-Tailed Quoll" |
 "Springbok" |
 "Squirrel" |
 "Squirrel Glider" |
 "Squirrel Monkey" |
-"Star-nosed Mole" |
+"Star-Nosed Mole" |
 "Steenbok" |
 "Stejneger's Beaked Whale" |
 "Steller Sea Lion" |
@@ -598,7 +622,7 @@ animal_type:
 "Striped Dolphin" |
 "Striped Possum" |
 "Striped Skunk" |
-"Stripe-faced Dunnart" |
+"Stripe-Faced Dunnart" |
 "Sugar Glider" |
 "Sun Bear" |
 "Swamp Antechinus" |
@@ -621,13 +645,12 @@ animal_type:
 "True's Beaked Whale" |
 "Tucuxi" |
 "Tundra Hare" |
-"Tundra Red-back vole" |
+"Tundra Red-Back Vole" |
 "Twilight Bats" |
 "Uinta Chipmunk" |
 "Unadorned Rock Wallaby" |
 "Vagrant Shrew" |
 "Vampire Bat" |
-"Vancouver Island" |
 "Vaquita" |
 "Vicuna" |
 "Virginia Opossum" |
@@ -646,20 +669,20 @@ animal_type:
 "Western Jumping Mouse" |
 "Western Pygmy Possum" |
 "Western Ringtail Possum" |
-"Western small-footed Myotis" |
+"Western Small-Footed Myotis" |
 "Whale" |
 "Whiptail Wallaby" |
 "White Rhinoceros" |
 "White Tailed Antelope" |
 "White Whale" |
-"White-footed Dunnart" |
-"White-footed Mouse" |
-"White-tailed Deer" |
-"White-tailed Dunnart" |
+"White-Footed Dunnart" |
+"White-Footed Mouse" |
+"White-Tailed Deer" |
+"White-Tailed Dunnart" |
 "Wild Ass" |
 "Wild Boar" |
-"Wild dog" |
-"Wild horse" |
+"Wild Dog" |
+"Wild Horse" |
 "Wild Yak" |
 "Wildebeest" |
 "Wolf" |
@@ -669,41 +692,38 @@ animal_type:
 "Woodland Caribou" |
 "Yak" |
 "Yellow Footed Rock Wallaby" |
-"Yellow-bellied glider" |
-"Yellow-bellied Marmot" |
-"Yellow-footed Antechinus" |
+"Yellow-Bellied glider" |
+"Yellow-Bellied Marmot" |
+"Yellow-Footed Antechinus" |
 "Zebra" |
 "Zorilla" |
 "Zorro" |
-"Almaco jack" |
-"American eel" |
-"American shad" |
+"Almaco Jack" |
+"American Eel" |
+"American Shad" |
 "Angelfish" |
-"Arctic grayling" |
+"Arctic Grayling" |
 "Arkansas River Shiner" |
 "Arowana" |
-"Atlantic croaker" |
-"Atlantic sharpnose shark" |
-"Atlantic spadefish" |
+"Atlantic Croaker" |
+"Atlantic Sharpnose Shark" |
+"Atlantic Spadefish" |
 "Aurora" |
 "Bairdiella" |
-"Banded rudderfish" |
+"Banded Rudderfish" |
 "Bank" |
-"Bank sea Bass" |
+"Bank Sea Bass" |
 "Bass" |
 "Beautiful Shiner" |
-"Betta splenden" |
-"Bigmouth buffalo" |
-"Bigscale logperch" |
-"Black" |
-"Black and Yellow" |
+"Betta Splenden" |
+"Bigmouth Buffalo" |
+"Bigscale Logperch" |
 "Black Buffalo" |
 "Black Bullhead" |
 "Black Crappie" |
 "Black Grouper" |
 "Black Sea Bass" |
 "Blackfin Snapper" |
-"Blue" |
 "Blue Catfish" |
 "Blue Marlin" |
 "Blue Runner" |
@@ -750,7 +770,7 @@ animal_type:
 "Cutthroat Trout" |
 "Darkblotched" |
 "Darter" |
-"Desert pupfish" |
+"Desert Pupfish" |
 "Desert Sucker" |
 "Discus" |
 "Dolphin" |
@@ -762,7 +782,7 @@ animal_type:
 "Flannelmouth Sucker" |
 "Flathead Catfish" |
 "Flathead Chub" |
-"Florida pompano" |
+"Florida Pompano" |
 "Flounder" |
 "Flying fish" |
 "Freshwater Drum" |
@@ -777,8 +797,6 @@ animal_type:
 "Gray Redhorse" |
 "Greater Amberjack" |
 "Green Sunfish" |
-"Greenspotted" |
-"Greenstriped" |
 "Greenthroat Darter" |
 "Grunion" |
 "Gulf Flounder" |
@@ -789,14 +807,14 @@ animal_type:
 "Herring" |
 "Hoki" |
 "Humpback Chub" |
-"Inland silverside" |
-"Iowa darter" |
+"Inland Silverside" |
+"Iowa Darter" |
 "Jewfish" |
-"Johnny darter" |
+"Johnny Darter" |
 "Killifish" |
-"King mackerel" |
+"King Mackerel" |
 "Koi" |
-"Kokanee salmon" |
+"Kokanee Salmon" |
 "Ladyfish" |
 "Lake Trout" |
 "Lamprey" |
@@ -808,67 +826,63 @@ animal_type:
 "Longbill Spearfish" |
 "Longear Sunfish" |
 "Longfin Dace" |
-"Longjaw mudSucker" |
-"Longnose dace" |
-"Longnose gar" |
+"Longjaw MudSucker" |
+"Longnose Dace" |
+"Longnose Gar" |
 "Lungfish" |
 "Mahongany Snapper" |
-"Mexican stoneroller" |
-"Mexican tetra" |
+"Mexican Stoneroller" |
 "Minnow" |
-"Monkey pupfish" |
+"Monkey Pupfish" |
 "Monkfish" |
 "Mooneyes" |
 "Mosquitofish" |
-"Mottled sculpin" |
-"Mozambique tilapia" |
+"Mottled Sculpin" |
+"Mozambique Tilapia" |
 "Mutton Snapper" |
 "Nassau Grouper" |
-"Northern pike" |
-"Orangemouth corvina" |
+"Northern Pike" |
+"Orangemouth Corvina" |
 "Paddlefish" |
-"Palomas pupfish" |
+"Palomas Pupfish" |
 "Palometa" |
 "Pecos Gambusia" |
-"Pecos pupfish" |
+"Pecos Pupfish" |
 "Perch" |
 "Phantom Shiner" |
 "Pike" |
 "Piranha" |
-"Plains killifish" |
+"Plains Killifish" |
 "Plains Minnow" |
 "Puffer" |
 "Pumpkinseed" |
 "Pupfish" |
 "Queen Snapper" |
 "Rainbow Trout" |
-"Rainwater killifish" |
+"Rainwater Killifish" |
 "Ray" |
 "Razorback Sucker" |
-"Red drumRed Grouper" |
+"Red Grouper" |
 "Red Shiner" |
 "Red Snapper" |
-"Redbelly dace" |
-"Redbelly tilapia" |
+"Redbelly Dace" |
+"Redbelly Tilapia" |
 "Redbreast Sunfish" |
 "Redear Sunfish" |
 "Redeye Bass" |
-"Redfin pickerel" |
+"Redfin Pickerel" |
 "Redside Shiner" |
 "Rio Grande Chub" |
 "Rio Grande Shiner" |
-"Rio Grande Sucker" |
-"River carpSucker" |
+"River Carp" |
 "Rock Bass" |
-"Rock sea Bass" |
 "Rockfish" |
 "Roundnose Minnow" |
 "Roundtail Chub" |
-"Sacramento perch" |
-"Sailfin molly" |
+"Sacramento Perch" |
+"Sailfin Molly" |
 "Sailfish" |
 "Salmon" |
-"Sand seaTrout" |
 "Sand Shiner" |
 "Sandbar Shark" |
 "Sargo" |
@@ -946,18 +960,17 @@ animal_type:
 "Yellowfin Grouper" |
 "Yellowmouth Grouper" |
 "Yellowtail Snapper" |
-"Zebra danio" |
+"Zebra Danio" |
 "Zebrafish" |
 "Zuni Bluehead Sucker" |
 "Aphid" |
 "Ant" |
 "Ant Lion" |
-"Apple Maggot" |
 "Bee" |
 "Boxelder Bug" |
 "Bronze Birch Borer" |
-"Cabbage worm" |
-"Carpenter ant" |
+"Cabbage Worm" |
+"Carpenter Ant" |
 "Carpet Beetle" |
 "Centipede" |
 "Cicada" |
@@ -991,7 +1004,7 @@ animal_type:
 "Mosquito" |
 "Sawfly" |
 "Silkworm" |
-"Sow bug" |
+"Sow Bug" |
 "Painted Lady Butterfly" |
 "Pantry Pest" |
 "Peach Tree Borer" |
@@ -1019,8 +1032,8 @@ animal_type:
 "Barred Owl" |
 "Barred Warbler" |
 "Barrows Goldeneye" |
-"Bar-tailed Godwit" |
-"Bay-breasted Warbler" |
+"Bar-Tailed Godwit" |
+"Bay-Breasted Warbler" |
 "Bean Goose" |
 "Bearded Reedling" |
 "Bearded Tit" |
@@ -1038,7 +1051,6 @@ animal_type:
 "Black Kite" |
 "Black Redstart"
 ;
-
 
 flower_type:
 "Acacia Blossom" |
@@ -1073,9 +1085,8 @@ flower_type:
 "Arctic Sandwort" |
 "Arizona Lupine" |
 "Arrowleaf Butterweed" |
-"Arrow-leaved Balsamroot" |
-"Arrow-leaved Thelypody" |
-"Arthur's Milkvetch" |
+"Arrow-Leaved Balsamroot" |
+"Arrow-Leaved Thelypody" |
 "Aspen" |
 "Aster" |
 "Autumn Sage" |
@@ -1099,7 +1110,7 @@ flower_type:
 "Betony" |
 "Bicolored Cluster Lily" |
 "Bicolored Lotus" |
-"Bigelow mimulus" |
+"Bigelow Mimulus" |
 "Bigelow Monkeyflower" |
 "Big-Headed Clover" |
 "Big-Leaved Huckleberry" |
@@ -1120,7 +1131,7 @@ flower_type:
 "Black Locust" |
 "Black Raspberry" |
 "Black Twinberry" |
-"Black-eyed Susan" |
+"Black-Eyed Susan" |
 "Blackfoot daisy" |
 "Blanket Flower" |
 "Blazing Star" |
@@ -1129,15 +1140,14 @@ flower_type:
 "Blue Anemone" |
 "Blue boneset" |
 "Blue Cup" |
-"Blue curls" |
-"Blue Dicks" |
-"Blue mistflower" |
+"Blue Curls" |
+"Blue Mistflower" |
 "Blue Mountain Loco Weed" |
 "Blue Mountain Onion" |
 "Blue Mountain Penstemon" |
 "Blue Mountain Swamp Onion" |
 "Blue Oak" |
-"Blue sage" |
+"Blue Sage" |
 "Blue Vine Clematis" |
 "Blue Violet" |
 "Bluebell" |
@@ -1159,7 +1169,7 @@ flower_type:
 "Brewer's Cliff Brake" |
 "Brewer's Lupine" |
 "Brewer's Monkeyflower" |
-"Bristly langloisia" |
+"Bristly Langloisia" |
 "Brittlebush" |
 "Broad Flowered Gilia" |
 "Broad Leaf Lupine" |
@@ -1170,9 +1180,8 @@ flower_type:
 "Broom" |
 "Broom Buckwheat" |
 "Brown Dogwood" |
-"Brown-eyed Susan" |
+"Brown-Eyed Susan" |
 "Buckbrush" |
-"Buckbrush or Sticky Laurel" |
 "Buckeye" |
 "Buckwheat" |
 "Buffalo Bur" |
@@ -1182,17 +1191,16 @@ flower_type:
 "Bush Monkeyflower" |
 "Bush Poppy" |
 "Bush Sunflower" |
-"Bushy skullcap" |
 "Butter and Eggs" |
 "Butter Lupine" |
 "Buttercup" |
 "Butterweed" |
 "Button Pom" |
-"Button snakeroot" |
+"Button Snakeroot" |
 "Cactus" |
 "Calico Flower" |
 "California Black Oak" |
-"California Blue-eyed Grass" |
+"California Blue-Eyed Grass" |
 "California Buckeye" |
 "California Buttercup" |
 "California Corn Lily" |
@@ -1200,7 +1208,7 @@ flower_type:
 "California Fire Chalice" |
 "California Golden-eyed Grass" |
 "California Indian Pink" |
-"California Ladys-slipper" |
+"California Ladys-Slipper" |
 "California Pitcher Plant" |
 "California Poppy" |
 "California Rose" |
@@ -1210,10 +1218,8 @@ flower_type:
 "Calliopsis" |
 "Calthaleaf Phacelia" |
 "Calypso Orchid" |
-"Calypso Orchid or Moccasin Flower" |
 "Camas" |
-"Camas Lily or Blue Camas" |
-"Canada goldenrod" |
+"Canada Goldenrod" |
 "Canada Thistle" |
 "Candytuft" |
 "Canon Delphinium" |
@@ -1228,7 +1234,7 @@ flower_type:
 "Ceanothus" |
 "Centaur Flower" |
 "Chaparral Lily" |
-"Charming centaury" |
+"Charming Centaury" |
 "Checker Bloom" |
 "Cherry Blossom" |
 "Chia" |
@@ -1276,7 +1282,6 @@ flower_type:
 "Common Toadflax" |
 "Common Valerian" |
 "Common Water Crowfoot" |
-"Common wild petunia" |
 "Common Yellow Monkeyflower" |
 "Coneflower" |
 "Coreopsis" |
@@ -1297,15 +1302,15 @@ flower_type:
 "Crosswort" |
 "Cuckoo Flower" |
 "Cup Clover" |
-"Curl-leaf Mountain Mahogany" |
+"Curl-Leaf Mountain Mahogany" |
 "Cusick's Monkeyflower" |
-"Cutleaf daisy" |
-"Cut-leaved Fleabane" |
+"Cutleaf Daisy" |
+"Cut-Leaved Fleabane" |
 "Cyclamen" |
 "Daffodil" |
 "Dagger Pod Mustard" |
 "Daisy" |
-"Dakota vervain" |
+"Dakota Vervain" |
 "Dalmatian Toad Flax" |
 "Damianita" |
 "Dandelion" |
@@ -1352,7 +1357,6 @@ flower_type:
 "Downy Birch" |
 "Downy Hemp Nettle" |
 "Drought tolerant garden" |
-"Drummond phlox" |
 "Drummond Wild Onion" |
 "Drummond's Anemone" |
 "Dune Evening Primrose" |
@@ -1370,7 +1374,6 @@ flower_type:
 "Elegant Camas" |
 "Elegant Death Camas" |
 "Elephants Head" |
-"Elk Weed or Monument Plant" |
 "Emory's Rock Daisy" |
 "Engelmann daisy" |
 "Engelmann Spruce" |
@@ -1379,10 +1382,10 @@ flower_type:
 "Eriogonum" |
 "Eriophyllum" |
 "Eryngo" |
-"Evening star" |
+"Evening Star" |
 "Eyebright" |
 "Fairy Bells" |
-"Fairy thimbles" |
+"Fairy Thimbles" |
 "Fairybells" |
 "False Garlic" |
 "False Hyacinth" |
@@ -1400,19 +1403,19 @@ flower_type:
 "Field Mustard" |
 "Fiesta Flower" |
 "Fine-leaf bluets" |
-"Finger poppy mallow" |
-"Fireweed or Willow Herb" |
+"Finger Poppy Mallow" |
+"Fireweed" |
 "Firewheel" |
 "Five Point Bishops Cap" |
 "Fivespot" |
-"Flame flower" |
+"Flame Flower" |
 "Flax" |
 "Fluttermill" |
 "Foothill Delphinium" |
 "Foothill Penstemon" |
 "Forget Me Not" |
 "Forsythia" |
-"Four-nerve daisy" |
+"Four-Nerve Daisy" |
 "Foxfire" |
 "Foxglove" |
 "Freesia" |
@@ -1429,13 +1432,11 @@ flower_type:
 "Geranium" |
 "Gerbera Daisy" |
 "Giant Blazing Star" |
-"Giant blue sage" |
 "Giant Helleborine Orchid" |
 "Giant Hyssop" |
 "Giant Trillium" |
 "Ginger Lily" |
 "Glacier Lily" |
-"Gladioli" |
 "Gladiolus" |
 "Gloriosa Lily" |
 "Gloxinia" |
@@ -1447,9 +1448,8 @@ flower_type:
 "Golden Fairy Lantern" |
 "Golden Fleabane" |
 "Golden Nuggets" |
-"Golden wave" |
 "Goldeneye" |
-"Golden-fruited Sedge" |
+"Golden-Fruited Sedge" |
 "Goldenrod" |
 "Goldenwave" |
 "Goldfields" |
@@ -1458,12 +1458,12 @@ flower_type:
 "Grass-of-Parnassus" |
 "Gravelghost" |
 "Gray Mule Ears" |
-"Gray vervain" |
-"Gray wood-sorrel" |
+"Gray Vervain" |
+"Gray Wood-Sorrel" |
 "Great Blazingstar" |
 "Greater Stitchwort" |
 "Green False Hellebore" |
-"Green  Phacelia" |
+"Green Phacelia" |
 "Greenthread" |
 "Grey Willow" |
 "Ground Cherry" |
@@ -1478,8 +1478,7 @@ flower_type:
 "Harsh Indian Paintbrush" |
 "Hawthorn" |
 "Hazel" |
-"Heart-leaf skullcap" |
-"Heart-leaved Arnica" |
+"Heart-Leaved Arnica" |
 "Heath" |
 "Heath Bedstraw" |
 "Heath Milkwort" |
@@ -1501,23 +1500,18 @@ flower_type:
 "Hooker's Onion" |
 "Horehound" |
 "Hounds Tongue" |
-"Hound's Tongue" |
 "Howell Dimersia" |
 "Hudson's Bay Currant" |
 "Hyacinth" |
 "Hydrangea" |
 "Indian blanket" |
 "Indian Jasmine" |
-"Indian mallow" |
 "Indian Paintbrush" |
 "Indian Pipe" |
-"Indian plume" |
-"Indian Warrior" |
 "Indigo Bush" |
 "Inflated Sedge" |
 "Inkberry" |
 "Iris" |
-"Iris hybrid" |
 "Irish Fleabane" |
 "Ironweed" |
 "Ivy" |
@@ -1538,37 +1532,28 @@ flower_type:
 "Klamath Weed" |
 "Lace Cactus" |
 "Laitris" |
-"Lanceleaf coreopsis" |
-"Lance-leaved Grapefern" |
-"Lance-leaved Spring Beauty" |
-"Lance-leaved Stonecrop" |
-"Large Bittercress" |
-"Large Mountain Monkeyflower" |
-"Large-flowered Collomia" |
-"Large-flowered Tonella" |
-"Large-flowered vervain" |
 "Larkspur" |
 "Laurel" |
 "Lavender" |
 "Leafy Spurge" |
-"Lemon beebalm" |
-"Lemon mint" |
+"Lemon Beebalm" |
+"Lemon Mint" |
 "Leptospernum" |
 "Lesser Calendine" |
 "Lewis' Mockorange" |
 "Lewis' Monkeyflower" |
 "Lilac" |
-"Lindheimer daisy" |
-"Lindheimer senna" |
+"Lindheimer Daisy" |
+"Lindheimer Senna" |
 "Lira de San Pedro" |
 "Lisianthus" |
 "Little Prince's Pine" |
 "Lodgepole Pine" |
-"Long-flowered Bluebells" |
-"Long-headed coneflower" |
+"Long-Flowered Bluebells" |
+"Long-Headed Coneflower" |
 "Lotus" |
-"Low or Creeping Oregon Grape" |
-"Low ruellia" |
+"Low Oregon Grape" |
+"Low Ruellia" |
 "Macdougal's Pincushion" |
 "Macfarlane's Four O'Clock" |
 "Magnolia" |
@@ -1585,7 +1570,7 @@ flower_type:
 "Marsh Thistle" |
 "Marsh Valerian" |
 "Marsh Violet" |
-"Maximilian sunflower" |
+"Maximilian Sunflower" |
 "Meadow Buttercup" |
 "Meadow Foam" |
 "Meadow Penstemon" |
@@ -1593,13 +1578,12 @@ flower_type:
 "Meadow Rue" |
 "Meadow Vetchling" |
 "Meadowsweet" |
-"Mealy blue sage" |
+"Mealy Blue Sage" |
 "Mealy Sage" |
 "Mentzelia" |
 "Menzies' Wallflower" |
 "Merten's Mountain Heather" |
-"Mexican hat" |
-"Mexican primrose" |
+"Mexican Primrose" |
 "Midland Hawthorn" |
 "Milk Maids" |
 "Miner's Lettuce" |
@@ -1607,7 +1591,7 @@ flower_type:
 "Mini Carnation" |
 "Mint" |
 "Mission Bells" |
-"Missouri primrose" |
+"Missouri Primrose" |
 "Mistletoe" |
 "Mojave Desert Star" |
 "Monkey Flower" |
@@ -1619,12 +1603,11 @@ flower_type:
 "Moth Mullein" |
 "Mountain Ash" |
 "Mountain Buttercup" |
-"Mountain Dryas or White Dryas" |
+"Mountain Dryas" |
 "Mountain Grapefern" |
 "Mountain Heather" |
 "Mountain Lady's Slipper" |
 "Mountain Mariposa" |
-"Mountain Mariposa Lily" |
 "Mountain Monardella" |
 "Mountain Mule Ears" |
 "Mountain Pennyroyal" |
@@ -1637,23 +1620,20 @@ flower_type:
 "Musk Monkeyflower" |
 "Mustang Linanthus" |
 "Myrtle" |
-"Naked-stemmed Desert Parsley" |
+"Naked-Stemmed Desert Parsley" |
 "Narcissus" |
 "Narrlow-leaved Indian Lettuce" |
-"Narrow-leaf gayfeather" |
 "Narrowleaf Mules Ears" |
 "Narrow-leaved Collomia" |
 "Narrowleaved Popcorn Flower" |
 "Nasturtium" |
 "Needle Navarretia" |
 "Nettle" |
-"Nettle-leaved Horsemint" |
 "Nevada Primrose" |
 "Nipplewort" |
 "Northern Fairy Candelabra" |
 "Northern Mule's Ears" |
 "Northern Starflower" |
-"Northern Sticky Monkeyflower" |
 "Northern Sweet Vetch" |
 "Northern Wyethia" |
 "Northwest Balsamroot" |
@@ -1700,7 +1680,7 @@ flower_type:
 "Parakeet Heliconia" |
 "Parish Larkspur" |
 "Parry's Primrose" |
-"Partridge pea" |
+"Partridge Pea" |
 "Passionflower" |
 "Pearly Everlasting" |
 "Pennell's Penstemon" |
@@ -1743,16 +1723,11 @@ flower_type:
 "Popcorn Flower" |
 "Poppy" |
 "Porcupine Sedge" |
-"Prairie agalinis" |
-"Prairie bluets" |
-"Prairie coneflower" |
-"Prairie gentian" |
 "Prairie Larkspur" |
 "Prairie lily" |
 "Prairie Lupine" |
 "Prairie spiderwort" |
 "Prairie Star" |
-"Prairie verbena" |
 "Prickly Pear" |
 "Prickly Pear Cactus" |
 "Prickly Phlox" |
@@ -1766,7 +1741,6 @@ flower_type:
 "Purple Candle" |
 "Purple Chinese Houses" |
 "Purple Coneflower" |
-"Purple horsemint" |
 "Purple Leatherflower" |
 "Purple Loosestrife" |
 "Purple Mat" |
@@ -1803,7 +1777,7 @@ flower_type:
 "Rosebud" |
 "Rosy Balsamroot" |
 "Rosy Plectritis" |
-"Rouge-plant" |
+"Rouge-Plant" |
 "Roundtooth Ookow" |
 "Rowan" |
 "Royal Penstemon" |
@@ -1839,8 +1813,8 @@ flower_type:
 "Self Heal" |
 "Senecio" |
 "Sensitive plant" |
-"Serrated-leaved Balsamroot" |
-"Shining  Oregon Grape" |
+"Serrated-Leaved Balsamroot" |
+"Shining Oregon Grape" |
 "Shooting Star" |
 "Short-flowered Monkeyflower" |
 "Showy Milkweed" |
@@ -1859,10 +1833,8 @@ flower_type:
 "Silky Phacelia" |
 "Silver Birch" |
 "Silver Leaf Lupine" |
-"Silver-leaf nightshade" |
 "Simpson's Ball Cactus" |
 "Single Stemmed Groundsel" |
-"Single-leaf Pinyon Pine" |
 "Siskiyou Fireweed" |
 "Sitka Mist Maidens" |
 "Skullcap" |
@@ -1870,17 +1842,14 @@ flower_type:
 "Sky Pilot" |
 "Sleepy Cat" |
 "Slender St. John's Wort" |
-"Slender-stem bitterweed" |
 "Slinkpod" |
-"Small pokeweed" |
-"Small-flowered Fringecup" |
+"Small-Flowered Fringecup" |
 "Smilax" |
 "Smooth Blazingstar" |
 "Smooth Hawksbeard" |
 "Smooth Sow-Thistle" |
 "Smooth Stemmed Fagonia" |
 "Snapdragon" |
-"Snapdragon Skullcap" |
 "Sneezewort" |
 "Snow Plant" |
 "Snow Willow" |
@@ -1905,7 +1874,6 @@ flower_type:
 "Standard Mum" |
 "Standing cypress" |
 "Standing Wine Cup" |
-"Star daisy" |
 "Star Gazer Lily" |
 "Star of Bethlehem" |
 "Statice" |
@@ -1917,7 +1885,6 @@ flower_type:
 "Sticky Currant" |
 "Sticky Penstemon" |
 "Sticky Phlox" |
-"Stiff-stem flax" |
 "Stock" |
 "Strawberry" |
 "Strawtop Cholla" |
@@ -1936,19 +1903,13 @@ flower_type:
 "Sweet William Tritoma" |
 "Tackstem" |
 "Tailcup Lupine" |
-"Tall goldenrod" |
 "Tall Mountain Bluebells" |
 "Tansy" |
 "Tansy Ragwort" |
-"Tansy-leaved Evening Primrose" |
 "Teasel" |
-"Ten-petal anemone" |
-"Texas bluebell" |
+"Texas Bluebell" |
 "Texas Bluebonnet" |
-"Texas paintbrush" |
-"Texas plume" |
-"Texas prickly pear" |
-"Texas star" |
+"Texas Star" |
 "Texas Yellow Star" |
 "Thelesperma" |
 "Thimbleberry" |
@@ -1980,8 +1941,6 @@ flower_type:
 "Umbellate Spring Beauty" |
 "Utah Honeysuckle" |
 "Valley Oak" |
-"Velvet-leaf senna" |
-"Velvet-leaf skullcap" |
 "Venus' Looking Glass" |
 "Viburnum" |
 "Violet" |
@@ -2011,7 +1970,6 @@ flower_type:
 "Western Choke Cherry" |
 "Western Columbine" |
 "Western Corydalis" |
-"Western ironweed" |
 "Western Larch" |
 "Western Lily" |
 "Western Meadow Rue" |
@@ -2019,7 +1977,6 @@ flower_type:
 "Western Pennyroyal" |
 "Western Red Bud" |
 "Western Solomon Plume" |
-"Western spiderwort" |
 "Western Trillium" |
 "Western White Pine" |
 "Western Yarrow" |
@@ -2034,28 +1991,25 @@ flower_type:
 "White Hyacinth" |
 "White Loco" |
 "White Mountain Azalea" |
-"White prickly poppy" |
 "White Shooting Star" |
 "White Trillium" |
 "Whitetop" |
 "Whitney's Loco Weed" |
 "Whorled Solomon's Seal" |
-"Wild belladonna" |
 "Wild Carnation" |
-"Wild cauliflower" |
+"Wild Cauliflower" |
 "Wild Cherry" |
-"Wild foxglove" |
+"Wild Foxglove" |
 "Wild Ginger" |
-"Wild heliotrope" |
-"Wild Iris or" |
+"Wild Heliotrope" |
+"Wild Iris" |
 "Wild Paeony" |
 "Wild Pansy" |
-"Wild petunia" |
-"Wild red columbine" |
+"Wild Petunia" |
 "Wild Strawberry" |
 "Wild Tobacco" |
 "Wind Poppy" |
-"Wind-flower" |
+"Wind-Flower" |
 "Wine Cup" |
 "Wintergreen" |
 "Wishbone Bush" |
@@ -2093,11 +2047,11 @@ legal_term:
 "Abbacinare" |
 "Abduction" |
 "Absolute Divorce" |
-"Abstract Of Title" |
+"Abstract of Title" |
 "Acceleration Clause" |
 "Acceptance" |
 "Accomplice" |
-"Accord And Satisfaction" |
+"Accord and Satisfaction" |
 "Accretion" |
 "Acquiescence" |
 "Acquittal" |
@@ -2132,7 +2086,7 @@ legal_term:
 "Affirmed" |
 "Aggravated Damages" |
 "Agreement" |
-"Aid And Abet" |
+"Aid and Abet" |
 "Alias Summons" |
 "Alien" |
 "Alimony" |
@@ -2180,7 +2134,6 @@ legal_term:
 "Bailment" |
 "Bailor" |
 "Bankruptcy" |
-"Bar 1" |
 "Bar Examination" |
 "Bare Trust" |
 "Barrister" |
@@ -2444,7 +2397,6 @@ legal_term:
 "File" |
 "Filing Fee" |
 "Finding" |
-"Food And Drug (FDA)" |
 "Foreclosure" |
 "Forfeiture" |
 "Fraud" |
@@ -2789,9 +2741,7 @@ legal_term:
 "Quo Warranto" |
 "Quorum" |
 "Ransom" |
-"Rape" |
 "Ratio Decidendi" |
-"Real Property" |
 "Real Property" |
 "Reasonable Doubt" |
 "Reasonable Person" |
@@ -2864,7 +2814,6 @@ legal_term:
 "Session Law" |
 "Settlement" |
 "Settlor" |
-"Sexual Harassment" |
 "Sexual Intercourse" |
 "Share" |
 "Shareholder Agreement" |
@@ -3013,7 +2962,7 @@ legal_term:
 "Zoning Commission"
 ;
 
-culinary_terms:
+culinary_term:
 "A La Boulangere" |
 "A La Carte" |
 "A La Creole" |
@@ -3313,8 +3262,6 @@ culinary_terms:
 "Chef De Salle" |
 "Chef De Service" |
 "Chef De Vin" |
-"Chef'S Knife" |
-"Chef'S Potato" |
 "Chemical Leavener" |
 "Cherrystone" |
 "Chiffon" |
@@ -3864,7 +3811,7 @@ culinary_terms:
 "Zuppa Inglese"
 ;
 
-people_adjectives:
+people_adjective:
 "Bad" |
 "Jittery" |
 "Purple" |
