@@ -38,7 +38,8 @@
 // test: sent-about-citable-and-dualism-2double(citable-artist dualisable-noun dualisable-adjective);
 // test: doing-something-to-movement;
 // test: sentence-about-self>upcase-first;
-// test: conclusion-preamble;
+// test: quick-model-sentence;
+test: post-introduction-transition-sentence;
 
 // production rules start here
 //
@@ -135,7 +136,7 @@ ing-ing: doing-something-to | doing-something-to-movement | affective-verb>gerun
 doing-something-to-infinitives:
     "hear" | "deconstruct" | "feel" | "silence"
     | "sound" | "discipline" | "increase" | "instate" | "transpose"
-    | "voice"
+    | "voice" | "border"
 ;
 
 doing-something-to: doing-something-to-infinitives>gerund;
@@ -280,6 +281,7 @@ sentence2:
     | sent-about-big-neb-thing
     | sentence-about-self
     | sentence-about-heroes-and-victims
+    | [ sentence2 | quick-model-sentence ]  // this one should not appear too often.
 ;
 
 // sentences especially suited for introductions to paragraphs.
@@ -307,20 +309,48 @@ post-introduction-transition-sentence:
 ;
 
 post-introduction-transition-sentence-2:
-    the-or-this " idea has " optional-historical "precedent:"
-    | "but what does this really " mean-signify "?"
-    | "where can " we-one " " go-move " from here?"
-    | "On one " point ", " person " was " right ":"
+    the-or-this " " [ "idea" | theme ] " has " optional-historical precedent ":"
+    | but "what does " this-it " " really " " mean-signify "?"
+    | "where can " we-one " " go-move " from " here-there "?"
+    | "On " one-this " " point ", " person " was " right ":"
+;
+
+precedent:
+   "precedent" | "antecedents";
+
+this-it:
+   "this" | "this" | "it" | "that"
+;
+
+really:
+   "really"
+   | "actually"
+;
+
+here-there:
+   "here"
+   | "here"
+   | "there"
+;
+
+one-this:
+   "one"
+   | "this"
 ;
 
 point:
     "thing"
     | "point"
+    | "point"
+    | "observation"
 ;
 
 right:
     "right"
     | "wrong"
+    | "correct"
+    | "incorrect"
+    | "more " right " than not"  // counting on the not choose same twice rule
 ;
 
 go-move:
@@ -547,7 +577,7 @@ we-one:
 ;
 
 should-nt:
-    "should" | "shouldn't"
+    "should" | "shouldn’t"
 ;
 
 not-confused:
@@ -1413,8 +1443,7 @@ result-2:
 result-with-preamble:
      result
      | "one can " assume " that " result
-     | intellectual "’s " model " of " term " " is-one-of "“" new-term "”, and "
-        thus " " state-of-being
+     | model-statement
 ;
 
 
@@ -1425,11 +1454,48 @@ assume:
     | "assume"
     | "suppose"
     | "believe"
+    // 2025
+    | "trust"
 ;
+
+//  intellectual's *conception* of bi-compassionate musicology is ...
+model-statement: intellectual "’s " model " of " term " " is-one-of
+        ["“" new-term ",”" | new-term "," ] [" and " | " and " | "—" ]
+        thus " " state-of-being;
 
 model:
     "model" | "conception" | "definition"
+    // 2025
+    | "system"
+    | empty-adj " " model
+    | less-known-model
+    | empty-adj " " less-known-model
 ;
+
+// meaningless adjectives to throw in; most begin with As for some reason
+empty-adj: "abstract" | "absent" | "active" | "ambiguous" | "apparent"
+    | "latent" | "virtual" | "emergent" | "nominal" | "putative"
+    | "perceived" | "understood" | "imagined" | "intended"
+    | "iterative" | "transitional"
+    | "ideal" | "conceptual" | "symbolic" | "cognitive" | "phenomenological"
+    | "invisible" | "silent"
+;
+
+// appear seldomly
+less-known-model:
+    "signifier" | "paradigm" | "framework" | "schema" | "construct"
+    | "representation" | "abstraction" | "interpretation"
+    | "referent" | "ontology" | "episteme"
+;
+
+// 2025
+quick-model-sentence:
+   [ "" | "" | but | thus " " ]
+   [ "which" | "what" | "whose" ] " "
+   [model | less-known-model | empty-adj " " less-known-model]
+   " " modal-verb-phrase " " we-one " " [assume | singular-verb] "? "
+;
+
 
 is-one-of:
     "is one of" | "takes for granted" | "is based on" | "grounds itself in"
@@ -1511,6 +1577,8 @@ implies-that:
     | "states that "
     | "holds that "
     | "suggests that "
+    // MSAC 2025
+    | "teaches that "
 ;
 
 is-used-to:
@@ -1829,8 +1897,6 @@ succeed-in:
     | "surmount by"
 ;
 
-
-
 optional-post-cite:
     ""
     | ""
@@ -1907,6 +1973,8 @@ singular-victim:
     | "the bystander"
     | "the disabled"
     | "popular culture"
+    // MSAC 2025
+    | "diversity"
 ;
 plural-victim:
    "subcultures"
@@ -1924,8 +1992,8 @@ heroes:
    | "ethnomusicological approaches"
    | "interdisciplinary scholars"
    | "multicultural thinkers"
+   | "Latinx scholars"
 ;
-
 
 // bogeymen boogymen
 // things we want to be rid of
@@ -1933,7 +2001,7 @@ bogeyman:
     "elitism"
     | "hierarchy"
     | "the status quo"
-    | "globalization"
+    | "globalization"  // bad, but global=good
     | "the musicologist"
     | "sexism"
     | neg-adj " perceptions of " big-thing
@@ -1990,6 +2058,8 @@ pos-whishy-washy-adj:
     | "rich"
     | "thriving"
     | "growing"
+    // MSAC 2025
+    | "anti-racist"
 ;
 
 // positive and to be used in terms
@@ -2002,6 +2072,10 @@ pos-concrete-adj2:
   | "Global"
   | "diverse"
   | "postmodern"
+  // MSAC 2025
+  | "student-led"
+  | "equitable"
+  | "compassionate"
 ;
 
 work-about:
@@ -2154,8 +2228,6 @@ dualisable-positive-adjective:
     | "liberal"
 ;
 
-
-
 opposite:
     "opening" <-> "closing"
     "figure" <-> "ground"
@@ -2166,7 +2238,7 @@ opposite:
     "tonality" <-> "atonality"
     "homosexuality" <-> "heterosexuality"
 
-// MSAC
+    // MSAC
     "minimalism" <-> "serialism"
     "tonal" <-> "atonal"
     "common-practice" <-> "serial"
@@ -2377,10 +2449,10 @@ writer: citable-writer | citable-writer| citable-writer | uncitable-writer;
 citable-artist: citable-composer | citable-writer;
 
 citable-composer:
-    "Ueno"| "Zorn" | "Bizet" | "Björk" | "Radiohead" |
-    "Cage" | "Mahler" | "Reich" | "Glass" | "Wagner" |
-    "Crawford" | "Saariaho" | "Beethoven" | "Beach" | "Rorem" |
-    "Muhly" | "Williams" | "Shaw" | "Oliveros"
+    "Ueno"| "Zorn" | "Bizet" | "Björk" | "Radiohead"
+    | "Cage" | "Mahler" | "Reich" | "Glass" | "Wagner"
+    | "Crawford" | "Saariaho" | "Beethoven" | "Beach" | "Rorem"
+    | "Muhly" | "Williams" | "Shaw" | "Oliveros"
 ;
 
 uncitable-composer:
@@ -2389,19 +2461,21 @@ uncitable-composer:
 ;
 
 // writers can also be intellectuals
-citable-writer: "Adorno" | "Cage" | "McClary" | "Abbate" | "Solie" |
-                "Brett" | "Straus" | "Tomlinson" | "Cusick" |
-                "Fuller" | "Mann" | "Koestenbaum" | "Sherr" |
-                "Ross" | "Born";
+citable-writer: "Adorno" | "Cage" | "McClary" | "Abbate" | "Solie"
+                | "Brett" | "Straus" | "Tomlinson" | "Cusick"
+                | "Fuller" | "Mann" | "Koestenbaum" | "Sherr"
+                | "Ross" | "Born";
 
 uncitable-writer:
-    "Puri" | "Beckerman" |
-    "Mockus" |  // Pauline Oliveros and Lesbian Musicality
-    "Attinello" | "Ta-Nehisi Coates" |
+    "Puri"
+    | "Beckerman"
+    | "Mockus"  // Pauline Oliveros and Lesbian Musicality
+    | "Attinello"
+    | "Ta-Nehisi Coates"
     // 2025 additions
-    "McWhorter"
+    | "McWhorter"
+    | "Dolan"  // agent instruments
 ;
-
 
 // needed for citables
 artist-gender-pronoun:
