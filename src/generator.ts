@@ -4,6 +4,8 @@
  * Copyright (c) 2025 Michael Scott Asato Cuthbert
  * BSD License: Some Rights Reserved
  */
+import {apStyleTitleCase} from 'ap-style-title-case';
+
 import type {
     Statement,
     Rule,
@@ -56,6 +58,18 @@ export function generate(statements: Statement[], start: string, format: 'none'|
                 target: '(.*)',
                 replacement: (_m: any, g: string): string => g.toUpperCase(),
             }]},
+        "title-case": {
+            type: "textMapping",
+            name: "title-case",
+            rules: [{
+                pattern: '.*',
+                target: '(.*)',
+                replacement: (_m: any, g: string): string => apStyleTitleCase(g)
+                    .replace(
+                    /([“"]\w)/g, (_m,g) => g.toUpperCase()
+                    ).replace('(S)', '(s)'),
+            }]},
+
     };
     const globalVars: Record<string, string> = {};
 

@@ -105,7 +105,7 @@ export function htmlRules(): RuleMap {
 
 // TITLE(t): generates code at start of output for title
 
-TITLE(t): $HTML_BODY { HTML_BODY="" } "<h1>" t "</h1>" "\n" ;
+TITLE(t): $HTML_BODY { HTML_BODY="" } "<h1 class='title'>" t "</h1>" "\n" ;
 
 // AUTHOR(au):  generates a formatted author name; usually used after the
 // title

@@ -18,5 +18,8 @@
     "typescript-eslint": "^8.34.1",
     "vite": "^7.0.4",
     "vite-plugin-static-copy": "^3.1.0"
+  },
+  "dependencies": {
+    "ap-style-title-case": "^2.0.0"
   }
 }
