@@ -3,7 +3,8 @@
 // PB script for generating New Musicology Essays -- based on the Pomo script
 // Updated, format-independent version
 // Copyright (C) 1995, 1996 Andrew C. Bulhak
-// Substantial modifications (C) 2006, 2011, 2018, 2025 Michael Scott Asato Cuthbert
+
+// Substantial Additions and Reworking (C) 2006, 2011, 2018, 2025 Michael Scott Asato Cuthbert
 // A paper generated from this was accepted to one of those bogus journals in 2018.
 
 // The pomo.pb script includes this message:
@@ -27,19 +28,7 @@
 
 // uncomment test line to test things
 // test: PROLOGUE sentence-about-existence EPILOGUE;
-// test: PROLOGUE sentence-about-heroes-and-victims EPILOGUE;
-// test: p1-concept-desc("modernism");
-// test: p-three-term-title(ing-ing ing-ing ing-ing);
-// test: insistence-on-thing("horse");
-// test: artist>past-tensify;
-// test: adj2 " " adj2 " " adj2 " " adj2 " " big-abst-thing;
-// test: sent-about-big-neb-thing;
-// test: sentence-containing-measure-numbers;
-// test: sent-about-citable-and-dualism-2double(citable-artist dualisable-noun dualisable-adjective);
-// test: doing-something-to-movement;
-// test: sentence-about-self>upcase-first;
-// test: quick-model-sentence;
-// test: post-introduction-transition-sentence;
+// test: footnote-cite-edited-volume(generic-surname) PBRK footnote-cite-edited-volume(generic-surname) PBRK footnote-cite-edited-volume(generic-surname) PBRK footnote-cite-edited-volume(generic-surname);
 
 // production rules start here
 //
@@ -48,7 +37,7 @@
 
 // The first rule is the one that is run.
 
-output: PROLOGUE TITLE(title>upcase-first) formatted-authors
+output: PROLOGUE TITLE(title>title-case) formatted-authors
   BODY sections PBRK summary EPILOGUE ;
 
 title: title2>upcase-first | candid-title>upcase-first ": " title2>upcase-first ;
@@ -211,7 +200,7 @@ other-institution:
      "CUNY" | "M.I.T." | "Women’s Music Research Institute" | "The Juilliard School" | "Boston Conservatory"
 ;
 
-sections: { num_sections=3..8 } %repeat(section, num_sections);
+sections: { num_sections=3..6 } %repeat(section, num_sections);
 
 section: SECTION(section-title) PBRK paragraphs ;
 
@@ -267,7 +256,7 @@ sentence:
 
 sentence2:
     assumption " " implies-that result ". "
-    | optional-transition v-person<<intellectual " uses the term “" term "” to denote " concept-desc ". "
+    | optional-transition v-person<<intellectual " uses the term " scare-quote(term) " to denote " concept-desc ". "
     | justifier "we have to " choose " between " term " and " term ". "
     | sentence-main-theme-of  // expanded
     | v-person=intellectual " " promotes " the use of " term " to " imper-vp ". "
@@ -345,11 +334,14 @@ point:
     | "observation"
 ;
 
+// an author or his/her view is "[right]"
 right:
     "right"
+    | "right"
     | "wrong"
     | "correct"
     | "incorrect"
+    | "orthogonal"
     | "more " right " than not"  // counting on the not choose same twice rule
 ;
 
@@ -489,7 +481,7 @@ p-intro-sent-thing-state-msc(th st):
      "Though " intellectual " "
      stated
      [ " that " th " is " st ", "
-         | ", “" th " is " st ",” " ]
+         | ", “" wrap_quote(th) " is " st ",” " ]
      author-work-preamble " "
      foo=generic-surname footnote-cite($foo)
      show " that in a " optional-very-real " way, " th " is not " st
@@ -533,7 +525,7 @@ p-intro-sent-exhort-thing-author(th au):
   " " th ".” So " wrote-word " "
   au
   optional-echo
-  position-in-book " “" @au>make_cite "”"
+  position-in-book " “" wrap_quote(@au>make_cite) "”"
   optional-concluding-ramble
   ". "
 ;
@@ -707,7 +699,7 @@ sentence-with-features(c-artist):
     ?first-cite=@c-artist>make_cite
 
     "the " feature-of " " c-artist
-    "’s “" $first-cite>strip_the "” "
+    "’s “" wrap_quote($first-cite>strip_the) "” "
     is-also-evident-in " “"
     [ @c-artist>make_cite | @citable-artist>make_cite ] "”" adverb-postjustify ". "
 ;
@@ -774,7 +766,7 @@ sentence-about-self:
 ;
 
 self-statement-found:
-    found " that a statement like “" result-2 "” " not-exist
+    found " that a statement like " scare-quote(result-2) " " not-exist
 ;
 
 // advances a sociology of remose in the Abbatian-sociololinguistic vein
@@ -1055,7 +1047,22 @@ in-term:
     "prevalent in"
     | "intrinsic to"
     | "depicted in"
-    | "which is a central argument of" ;
+    | which-that " is " a-the " " central " " argument " of"
+;
+
+a-the: "a" | "the";
+which-that: "which" | "that";
+
+// which is a [central] argument of // 2025
+central:
+    // no beginning with vowels, unless a/an is fixed
+    "central" | "central" | "foundational" | "constitutive" | "structual" | "salient" | "formative"
+;
+
+// which is a central [argument] of // 2025
+argument:
+   "argument" | "argument" | "claim" | "intervention" | "reading" | "critique" | "reframing"
+;
 
 adverb-postjustify:
     ""
@@ -1413,6 +1420,8 @@ something-of-2:
     | "stasis" | "modulation" | "absurdity" | "paradigm" | "sensitivity"
     | "pigeonholing" | "newness" | "defining characteristic" | "dialectic" | "economy"
     | "obligation" | "form"
+    // 2025
+    | "priority"
 ;
 
 // preamble; redundant preamble to sentence
@@ -1476,7 +1485,8 @@ model:
     | empty-adj " " less-known-model
 ;
 
-// meaningless adjectives to throw in; most begin with As for some reason
+// meaningless adjectives to throw in for models; most begin with As for some reason
+// "latent paradigm"  "imagined schema" "phenomenological construct"
 empty-adj: "abstract" | "absent" | "active" | "ambiguous" | "apparent"
     | "latent" | "virtual" | "emergent" | "nominal" | "putative"
     | "perceived" | "understood" | "imagined" | "intended"
@@ -1612,6 +1622,7 @@ performer: "performer" | "performer" | "composer" | "musician"
 term:
     new-term
     | v-subject<<new-term
+    | v-subject<<new-term // more weight
     | v-subject-2<<new-term
     | v-subject-3<<new-term
 ;
@@ -1651,7 +1662,11 @@ summary:
     @$v-citable>make_cite ",” in "
     context-conjunction " "
     p-intell-term(intellectual) " and the " role "’s " adj " "
-    abst-noun " will be the " concrete-noun-gets-you-there " to " goal "."
+    abst-noun " will be the " concrete-noun-gets-you-there " to " goal "." fn-end
+;
+
+fn-end:
+    FOOTNOTE("The author(s) wish to thank <a target=_blank href='https://www.trecento.com'>Michael Scott Asato Cuthbert</a> for his careful editing of this text, and to <a href='https://en.wikipedia.org/wiki/Postmodernism_Generator' target=_blank>A.C. Bulhak</a> whose earlier work inspired it.")
 ;
 
 conclusion-preamble-it-is:
@@ -1788,13 +1803,13 @@ adj2:
     | scare-quote("scientific")
 ;
 
+// can have -ism attached (maybe after removing e)
 adj3:
     "structural" | "semiotic" | "modern" | "Schenkerian"
     | "conceptual" | "material" | "triadic" | "sexual"
     | "cryptographic" | "clandestine"
     | "ecomusicological"
     | "hermeneutic"
-    | "sonorous"
 ;
 
 // adverbs
@@ -1838,6 +1853,10 @@ abst-noun2:
     | "theorizing"
     | "improvisation"
     | "analysis"
+    // 2025...
+    | "ontology"
+    | "interiority"
+    | "temporality"
 ;
 
 singular-verb:
@@ -1849,7 +1868,7 @@ singular-verb:
     | imper-verb2
 ;
 
-// these use postive and negative closely
+// these use positive and negative closely
 sentence-about-heroes-and-victims:
     sentence-about-heroes-and-victims-using-dualisables
     | p-sentence-about-heroes-and-victims(neg-adj pos-concrete-adj)
@@ -1963,6 +1982,8 @@ pos-neg-verb:
     "reinforce"
     | "entrench"
     | "respell"
+    // 2025
+    | "misinterpret"
 ;
 
 // victims to help
@@ -1981,6 +2002,7 @@ singular-victim:
     // MSAC 2025
     | "diversity"
 ;
+
 plural-victim:
    "subcultures"
    | "women"
@@ -1991,6 +2013,7 @@ plural-victim:
 // heroes -- can also be victims
 heroes:
    plural-victim
+   | plural-victim
    | plural-victim
    | "women’s rights"
    | "gay studies"
@@ -2014,6 +2037,7 @@ bogeyman:
     | "the canon"
     | "the critic"
     | "modes of exclusion"
+    | "ableism"
 ;
 
 neg-adj:
@@ -2037,6 +2061,7 @@ neg-adj2:
     | "static"
     | "capitalist"
     | "conservative"
+    | "ableist"
     | dualisable-positive-adjective>opposite
     | dualisable-positive-adjective>opposite
 ;
@@ -2065,6 +2090,8 @@ pos-whishy-washy-adj:
     | "growing"
     // MSAC 2025
     | "anti-racist"
+    | "allusive"
+    | "evocative"
 ;
 
 // positive and to be used in terms
@@ -2081,6 +2108,8 @@ pos-concrete-adj2:
   | "student-led"
   | "equitable"
   | "compassionate"
+  | "neurodivergent"
+  | "sonorous" // was adj3 but doesnt -ism
 ;
 
 work-about:
@@ -2110,7 +2139,7 @@ big-abst-thing:
     "culture" | "language" | "art" | "performance" | "truth"
     | "sexuality" | "composition" | "memory" | "politics" | "scholarship"
     | "ambiguity" | "physicality" | "disability" | "history"
-    | "musical form"
+    | "musical form" | "nature"
     | big-abst-thing " " ITALIC("vis-a-vis") " " big-abst-thing
 ;
 
@@ -2217,6 +2246,8 @@ dualisable-adjective:
     | "“highbrow”" | "“lowbrow”"
     | "discrete" | "continous"
     | "conservative" | "liberal"
+    | "absolute" | "program"
+    | "formal" | "expressive"  // Kivy
 ;
 
 // the positive side of a dualisable adjective
@@ -2269,6 +2300,10 @@ opposite:
     "“highbrow”" <-> "“lowbrow”"
     "discrete" <-> "continuous"
     "conservative" <-> "liberal"
+
+    // 2025
+    "absolute" <-> "program"
+    "formal" <-> "expressive"
 ;
 
 // e.g. "popular/art" "figure/ground" "Western/"Western""
@@ -2326,12 +2361,16 @@ first-name:
   | "Paul" | "Catherine" | "Martin" | "Stefano" | "Michael"
   | "Gina" | "Aaron" | "Drew"
   | "Rebecca" | "Eleanor" | "Jessica"
-  | "Emily" | "Elina" | "Samuel" | "Lindsay"
+  | "Emily" | "Elina" | "Samuel" | "Lindsay" | "Hallie"
 // 2025 finally time for a few non-white names as plausible!
   | "Luis" | "Hector" | "Maria" | "Tabitha" | "Kumi" | "Yu"
+  | "Amina" | "Ravi" | "Soledad" | "Tariq" | "Min-Jae"
+  | "Chioma" | "Farid" | "Mei" | "Ananya" | "Jabari"
+  | "Zahra" | "Nana" | "Leila"
+ // gender neutral names:
+  | "Sky" | "River" | "Morgan" | "Sage" | "Taylor"
+  | "Quinn" | "Emerson" | "Avery"
 ;
-
-
 
 // the surnames of people I know (of), used for effect.
 generic-surname:
@@ -2350,6 +2389,14 @@ generic-surname:
 
     // 2025 finally time for a few non-white names as plausible!
     | "Chen" | "Wen" | "Kim" | "Gonzales" | "Lopez"
+    | "González" | "Okonkwo" | "Patel" | "Nguyen"
+    | "Kimura" | "Hernández" | "Abdi" | "Rahman"
+    | "Ibrahim" | "Mendoza" | "Almeida" | "Tanaka"
+    | "Mbaye" | "Chowdhury" | "Hashimoto" | "Ali"
+    | "Velasquez" | "Adebayo" | "Qureshi" | "Srinivasan"
+    | "Park" | "Mwangi" | "Esquivel"
+    | "Singh" | "Morales" | "Aoki"
+    | "Saeed" | "Yamamoto" | "Carrasco" | "Zhou"
 ;
 
 // Initials
@@ -2364,8 +2411,10 @@ initial:
 
 initials: initial | initial | initial | initial | initial initial | initial initial initial ;
 
-year: "19" recent-decade digit | "19" recent-decade digit |
-      "19" digit digit | "200" digit | "201" digit | "202" year-digit | "18" recent-decade digit;
+year: "19" recent-decade digit | "19" recent-decade digit
+      | "200" digit | "200" digit | "201" digit | "201" digit
+      | "200" digit | "200" digit | "201" digit | "201" digit | "202" year-digit | "202" year-digit
+      | "19" digit digit | "18" recent-decade digit;
 
 // digits of this decade
 year-digit: "0" | "1" | "2" | "3" | "4" | "5";
@@ -2376,6 +2425,7 @@ digit: "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 non-zero-digit: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 non-zero-digit-or-space: "" | "" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 
+// also now used for page numbers of journals 2025
 measure-range: { a=1..300; c=1..30; b=a+c } $a "–" $b;
 
 
@@ -2398,23 +2448,143 @@ publisher:
   | "Scarecrow Press"
 ;
 
-// a footnote, in the *roff ms package.
 
 opt-ed: "" | "" | "ed. " | "ed./trans. ";
 
-footnote-cite-text(surname):
+// a footnote. wrapped.
+footnote-cite(surname):
+    FOOTNOTE(footnote-cite-book(surname))
+    | FOOTNOTE(footnote-cite-edited-volume(surname))
+    | FOOTNOTE(footnote-cite-journal(surname))
+;
+
+footnote-cite-book(surname):
     surname ", " [initials | first-name " "]
     opt-ed
     "(" year ") "
-    ITALIC([title "."]) " " publisher
+    ITALIC([title>title-case "."]) " " publisher
 ;
+
 // note how ITALIC([...]) has only one option, but
 // it allows for evaluating an atom within a param call -- otherwise
 // not tested/documented.  ITALIC(title ".") would be a two-argument call.
 
-footnote-cite(surname):
-    FOOTNOTE(footnote-cite-text(surname))
+footnote-cite-journal(surname):
+    surname ", " [initials | first-name " "]
+    "(" year ") "
+    "“" wrap_quote(title>title-case) ",” "
+    ITALIC([journal-title>title-case]) " "
+    [ {=1..12} | {=1..80} ] ", " // more young journals
+    " pp. " measure-range "."
 ;
+
+journal-title:
+    ["International " | ""] "Journal of " abst-noun2
+    | actual-journal
+    | "Music " and-amp " "  abst-noun2
+    | abst-noun>pluralise " " and-amp " " abst-noun2
+    | intellectual " studies"
+    | profession-of " " and-amp " " term
+    | after-prep " " abst-noun
+    | ing-ing " " big-abst-thing [ "" | ": " journal-title]
+    | stodgy-journal
+    | term " " today
+;
+
+after-prep:
+    "after" | "beyond" [ " the" | ""] | "against" | "contra"
+;
+stodgy-journal:
+    ["The " | ""] big-abst-thing " Review"
+    | "Proceedings of the Society " [ "for " | "of "] pos-concrete-adj2 " " abst-noun
+    | heroes " Quarterly"
+;
+
+and-amp:
+   "and" | "and" | "&"
+;
+
+actual-journal:
+    "Journal of the American Musicological Society"
+    | "Musical Quarterly"
+    | "Twentieth-Century Music"
+    | "Music Theory Spectrum"
+    | "Perspectives of New Music"
+    | "Women & Music"
+    | "Current Musicology"
+    | "Music & Letters"
+    | "ECHO: A Music-Centered Journal"
+    | "Music, Sound, and the Moving Image"
+    // not music
+    | "Critical Inquiry"
+    | "Representations"
+    | "New Literary History"
+    | "Cultural Critique"
+    | "Social Text"
+    | "Theory, Culture & Society"
+    | "October"
+    | "Differences: A Journal of Feminist Cultural Studies"
+    // just for fun
+    | "Plainsong & Mediaeval Music"
+;
+
+footnote-cite-edited-volume(surname):
+    surname ", " [initials | first-name " "]
+    "(" year ") "
+    "“" wrap_quote(title>title-case) ",” in "
+    ITALIC([ed-vol-title>title-case | festschrift-title>title-case]) ", "
+    [name " ed." | name " ed." | name " and " name " eds."]
+    ", " publisher
+    ", pp. " measure-range "."
+;
+
+// three term titles are very common for edited volumes
+ed-collection-three-title:
+    p-three-term-title([ing-ing | abst-noun] ing-ing [ing-ing | big-abst-thing])
+;
+
+// not for festschrifts which wouldn't use "today"
+ed-vol-title:
+    title | title | title " " today
+    | ed-collection-three-title | ed-collection-three-title ": " term " " today
+;
+
+today:
+   "today" | "today" | "in contemporary society" | "in the 21st century"
+;
+
+festschrift-title:
+     title2 ": " festschrift-part
+     | candid-title ": " festschrift-part
+     | festschrift-part
+     | ed-collection-three-title ": " festschrift-part
+;
+
+festschrift-part:
+    "Essays on " term " " festschrift-honor
+    | "In memoriam " festschrift-dedicatee
+    | festschrift-honor
+    | "Essays for " festschrift-dedicatee
+    | "Festschrift " festschrift-dedicatee " zum " {= (12..20)*5} ". Geburtstag"
+;
+
+festschrift-honor:
+    "in honor of " festschrift-dedicatee
+    | "for the " {= (12..20)*5} "th birthday of " festschrift-dedicatee
+
+;
+
+festschrift-dedicatee:
+    festschrift-first-name festschrift-last-name
+;
+
+festschrift-first-name:
+    first-name " " | first-name " " | initial " " | initial " " | ""
+;
+festschrift-last-name:
+    citable-writer | uncitable-writer | intellectual | book-author | generic-surname
+;
+
 
 // sources of quotes, cites, etc.
 
@@ -2480,6 +2650,7 @@ uncitable-writer:
     // 2025 additions
     | "McWhorter"
     | "Dolan"  // agent instruments
+    | "Kivy"  // Peter
 ;
 
 // needed for citables
@@ -2643,7 +2814,7 @@ Tomlinson-concepts: "Hermeneutic dialogue";
 Cheng-concepts: "musicology of caring";
 Born-concepts: "encompassment";
 
-// mappings start here
+// mappings (and helpers) start here
 
 // trim trailing 'e's from word. Used when deriving "deconstructivist" from
 // "deconstructive", for instance.
@@ -2698,5 +2869,18 @@ gerund:
 // scarequote -- a function not a mapping
 
 scare-quote(scarything):
-    "“" scarything "”"
+    "“" wrap_quote(scarything) "”"
+;
+
+// for quotes you know will go inside other quotes
+wrap_quote(qtd):
+   qtd>wrap_quote_left>wrap_quote_right
+;
+
+wrap_quote_left:
+    "“" -> "“"/"‘"
+;
+
+wrap_quote_right:
+    "”" -> "”"/"’"
 ;
