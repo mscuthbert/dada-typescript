@@ -1,13 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <title>Dada Parser Output</title>
+    <link rel="stylesheet" href="static/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <script type="module" src="/src/app.ts"></script>
+</head>
+<body>
+    <header>
+        <h1>Dada Typescript Generator</h1>
+        <p class="subtitle">A browser-based edition tool for PB grammars</p>
+    </header>
+    <main>
+        <div id="output-container">
+            <p>Loading...</p>
+        </div>
+    </main>
+</body>
 </html>

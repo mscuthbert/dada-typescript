@@ -45,7 +45,7 @@ export function generate(statements: Statement[], start: string, format: 'none'|
             name: "upcase-first",
             rules: [{
                 pattern: '.*',
-                target: '^("?.)',  // upcase after quotes
+                target: '^(“?"?.)',  // upcase after quotes
                 replacement: (_m: any, g: string): string => g.toUpperCase(),
             }]},
         "upcase": {

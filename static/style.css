@@ -1,0 +1,128 @@
+/* Modern Academic Journal Style with Flair */
+
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400&family=IM+Fell+DW+Pica+SC&family=IM+Fell+DW+Pica:ital@0;1&display=swap');
+
+body {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin: 3rem auto;
+    max-width: 900px;
+    padding: 2rem;
+    background-color: #f4f3f0;
+    color: #222;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3 {
+    font-family: 'IM Fell DW Pica SC', serif;
+    font-weight: normal;
+    text-align: center;
+    line-height: 3rem;
+    margin-bottom: 0em;
+}
+h1 {
+   margin-bottom: 1.5rem;
+}
+h2.author {
+   margin-bottom: 0em;
+}
+h3.institution {
+    font-family: 'IM Fell DW Pica', serif;
+    font-style: italic;
+    margin-top: 0em;
+}
+sup {
+    font-family: 'IM Fell DW Pica', serif;
+}
+p.footnote {
+    font-family: 'IM Fell DW Pica', serif;
+    color: #444;
+}
+
+hr {
+    border: none;
+    border-top: 2px dotted #999;
+    margin: 2rem 0;
+}
+
+footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 3rem;
+    border-top: 1px solid #ccc;
+    padding-top: 1rem;
+}
+
+/* Dingbats / flourishes */
+hr::before {
+    content: "\2766\00A0\00A0\2766";
+    display: block;
+    text-align: center;
+    font-size: 1.5rem;
+    color: #999;
+    margin-bottom: 0.5rem;
+}
+
+/* Dropdown menu removed */
+#source-select {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-family: 'EB Garamond', serif;
+    font-size: 1.25rem;
+    padding: 0.4rem 0.75rem;
+    margin: 1rem 0 0 auto;
+    display: block;
+    float: right;
+    border: 2px solid #7b3f00;
+    border-radius: 8px;
+    background-color: #f8f6f2;
+    color: #3a2e1c;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+    background-image: linear-gradient(to bottom right, #fefcf8, #f2ede3);
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    background-size: 1rem;
+}
+
+/* Fix Garamond quotes */
+body {
+    quotes: '"' '"' "'" "'";
+}
+
+q::before, q::after {
+    content: '"';
+    font-family: inherit;
+    font-style: normal;
+}
+
+/* Journal-style links */
+a {
+    color: #7b3f00;
+    text-decoration: none;
+    border-bottom: 1px dotted #7b3f00;
+}
+
+a:hover {
+    color: #a0522d;
+    border-bottom: 1px solid #a0522d;
+}
+
+@media (min-width: 1000px) {
+    body {
+        font-size: 1.5rem;
+        background-color: #f8f6f2;
+        border: 1px solid #ccc;
+        padding: 3rem;
+        border-radius: 12px;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        font-size: 1rem;
+        margin: 1rem;
+    }
+}

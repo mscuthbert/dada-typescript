@@ -93,11 +93,11 @@ export function htmlRules(): RuleMap {
 
 %resource PROLOGUE: { HTML_section_num=0; HTML_footnote_num=0 ;
   HTML_footnotes=""
-} "<html><head>" {HTML_BODY="</head><body>"};
+} {HTML_BODY="<main>"};
 
 // EPILOGUE: format-specific epilogue
 
-%resource EPILOGUE: "<hr><p>\n" $HTML_footnotes "</body></html>";
+%resource EPILOGUE: "<hr><p>\n" $HTML_footnotes "</main>";
 
 // BODY: called when body text is to start
 
@@ -105,7 +105,7 @@ export function htmlRules(): RuleMap {
 
 // TITLE(t): generates code at start of output for title
 
-TITLE(t): "<title>" t "</title>" $HTML_BODY { HTML_BODY="" } "<h1>" t "</h1>" "\n" ;
+TITLE(t): $HTML_BODY { HTML_BODY="" } "<h1>" t "</h1>" "\n" ;
 
 // AUTHOR(au):  generates a formatted author name; usually used after the
 // title
@@ -115,7 +115,7 @@ AUTHOR(au): "<h2>" au "</h2>\n" ;
 // AUTHOR_INST(auth inst):  generates a formatted author name and institution;
 // usually used after the title.
 
-AUTHOR_INST(auth inst): "<h2>" auth "<br>\n<i>" inst "</i></h2>\n";
+AUTHOR_INST(auth inst): "<h2 class='author'>" auth "</h2><h3 class='institution'>" inst "</h3>\n";
 
 // SECTION(title):  generates a numbered section title.
 
@@ -125,10 +125,12 @@ SECTION(title): { HTML_section_num=HTML_section_num+1 } "<h3>"
 // FOOTNOTE(text):  generates a numbered footnote
 
 FOOTNOTE(text): ?tx=text // parameters can't be used in inline code as such
-  { HTML_footnote_num=HTML_footnote_num+1 } "<a href='#fn" $HTML_footnote_num
-  "'>[" $HTML_footnote_num "]</a> " {  // append the text to the accumulating footnotes
-  HTML_footnotes = HTML_footnotes + "<a name='fn" + HTML_footnote_num + "'> "
-   + HTML_footnote_num + ". " + tx + "</a><p>" + SLASH_N
+  { HTML_footnote_num=HTML_footnote_num+1 } "<sup><a href='#fn" $HTML_footnote_num
+  "'>[" $HTML_footnote_num "]</a><a id='fn-return" $HTML_footnote_num "'></a></sup> "
+  {  // append the text to the accumulating footnotes
+   HTML_footnotes = HTML_footnotes + "<p class='footnote'><a id='fn" + HTML_footnote_num + "'></a> "
+   + "<a href='#fn-return" + HTML_footnote_num + "'>"
+   + HTML_footnote_num + "</a>. " + tx + "</p>" + SLASH_N
 }
 ;
 

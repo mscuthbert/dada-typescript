@@ -51,6 +51,7 @@ for instance `npm start scripts/pomo.pb`.
 * Undocumented/unused/unimplemented Bison directives from lexer.x (e.g. %unique, %pick, %cond, %e).
 
 ## Differences with c Parser + Clarifications
+* .pb files can be fully Unicode and are assumed to be encoded as UTF-8 files.
 * Unknown rule errors are found only on generation, not parsing. A script may therefore
     pass sometimes but fail others depending on if the unknown rule is called.
 * The original parser treated `#` as a comment, despite not being in the spec. Found in test/maptest.pb,
