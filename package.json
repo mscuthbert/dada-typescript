@@ -1,7 +1,7 @@
 {
   "name": "dada-typescript",
   "private": false,
-  "version": "0.010",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "build": "tsc -b",
