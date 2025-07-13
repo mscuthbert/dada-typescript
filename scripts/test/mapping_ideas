@@ -1,0 +1,22 @@
+// JavaScript mapping improvements, does not work in C:
+
+S: test_maps;
+
+test_maps: test1 test1 test1 test1 test1 test1 test1 test1;
+
+test1: a=animal "->" $a>speak "\n";
+
+animal: "dog" | "cat" | "giraffe" | "mushroom" | "sheep";
+
+speak:
+    "dog" -> "bark"
+    "cat" -> "meow"
+// does not work on C or Javascript
+//    "sheep" -> sheep-sound
+    "sheep" -> "baa"
+
+// is not a feature in C - mushroom maps to "mushroom" not "no clue"
+   "_" -> "no clue"
+;
+
+sheep-sound: "baa" | "baaaaaa";

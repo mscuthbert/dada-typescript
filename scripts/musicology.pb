@@ -262,13 +262,16 @@ sentence2:
     | optional-transition v-person<<intellectual " uses the term " scare-quote(term) " to denote " concept-desc ". "
     | justifier "we have to " choose " between " term " and " term ". "
     | sentence-main-theme-of  // expanded
-    | v-person=intellectual " " promotes " the use of " term " to " imper-vp ". "
+    | v-person=intellectual " " promotes-or-rejects " " the-use-of " " term " to " imper-vp ". "
     | sentence-about-existence  // expanded
     | sentence-about-citable-artist(v-citable<<citable-artist)
-    | "the " subject-object " is " neut-verb>past-tensify " into a " term>strip_the " that " p-includes-as(big-abst-thing) " " big-singular-thing ". "
+    | "the " subject-object " is " neut-verb>past-tensify " into a " term>strip_the
+            " that " p-includes-as(big-abst-thing) " " big-singular-thing ". "
+
+    // MSAC bug-fixed-released was "p-sentence-about-concept"
+    | p-sentence-choice-concept(term)
 
     // MSAC new
-    | p-sentence-choice-concept(term)
     | sentence-containing-measure-numbers
     | sent-about-big-neb-thing
     | sentence-about-self
@@ -1220,7 +1223,6 @@ optional-earlier-deintensifier:
 
 seen-word: "seen" | "observed" | "heard" | "felt";
 
-
 // parametric sentences: a parametric sentence about a concept
 
 // an abstract alternative
@@ -1296,7 +1298,56 @@ not-exist:
 
 found:  "found" | "discovered" | "revealed" | "uncovered";
 
-promotes: "promotes" | "suggests" ;
+promotes-or-rejects: promotes | promotes | rejects;  // more work done on promotes
+
+// 2025 [promotes] the use of the term. -- must be trim-s to use as "not that we should [promote] them"
+promotes: "promotes" | "promotes" | "suggests" | "encourages" | "demands" | "requires"
+    // this line w/ AI help
+    | "advocates" | "endorses" | "valorizes" | privileges" | "foregrounds" | "champions"
+    | "normalizes" | "recommends" | "necessitates" | "legitimizes" | "supports"
+    | "elevates" | "sanctions" | "installs"
+;
+
+rejects: "rejects" | "rejects" | "refutes" | "disavows" | "challenges" | "questions"
+    | "dismisses" | "critiques" | "problematizes" | "undermines" | "destablizes"
+    | "condemns" | "resists" | "negates" | "repudiates" | "denounces"
+    | "unmasks" | "displaces"
+;
+
+
+// intellectual rejects|encourages the-use-of term "to" ....
+the-use-of:
+    use-of-verb-gerund
+    | "the " use-of-verb-compound " of"
+;
+
+use-of-verb-gerund:
+    "using"
+    | "employing"
+    | "applying"
+    | "utilizing"
+    | "adopting"
+    | "mobilizing"
+    | "instrumentalizing"
+    | "operating"
+    | "deploying"
+    | "enacting"
+;
+
+use-of-verb-compound:
+    "use"
+    | "employment"
+    | "application"
+    | "utilization"
+    | "adoption"
+    | "mobilization",
+    | "instrumentalization"
+    | "operation"
+    | "activating"
+    | "engaging with"
+;
+
+
 
 // imperative verb phrase "use narrative to "
 imper-vp:

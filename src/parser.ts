@@ -113,7 +113,7 @@ export function parse(tokens: Token[]): Statement[] {
     function expect(type: Token['type'], value?: string): Token {
         const token = next();
         if (token.type !== type || (value !== undefined && token.value !== value)) {
-            throw new Error(`Expected ${type} ${value ?? ''}, got ${token.type} ${token.value}${currentRuleName ? ` (in rule: ${currentRuleName})` : ''}`);
+            throw new Error(`Expected ${type}${value ? ` ${value}` : ''}, got ${token.type} ${token.value}${currentRuleName ? ` (in rule: ${currentRuleName})` : ''}`);
         }
         return token;
     }
@@ -365,16 +365,28 @@ export function parse(tokens: Token[]): Statement[] {
             const target_or_replacement = expect('string').value;
             if (peek().type !== 'slash') {
                 // type 1 "Alice" -> "she" style mapping
-                rules.push({
-                    pattern: '^' + pattern + '$',
-                    target: '^' + pattern + '$',
-                    replacement: target_or_replacement,
-                });
+                if (pattern !== '_') {
+                    // normal
+                    rules.push({
+                        pattern: '^' + pattern + '$',
+                        target: '^' + pattern + '$',
+                        replacement: target_or_replacement,
+                    });
+                } else {
+                    // wildcard -- should be last.
+                    rules.push({
+                        pattern: '^.*$',
+                        target: '^.*$',
+                        replacement: target_or_replacement,
+                    });
+                }
             } else {
                 // type 3: ".*s$" -> "$"/"es"
                 expect('slash', '/');
                 const replacement = expect('string').value;
                 rules.push({ pattern, target: target_or_replacement, replacement });
+
+
             }
         }
         expect('symbol', ';');

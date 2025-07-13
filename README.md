@@ -55,6 +55,11 @@ for instance `npm start scripts/pomo.pb`.
 * TROFF Formatting
 * Undocumented/unused/unimplemented Bison directives from lexer.x (e.g. %unique, %pick, %cond, %e).
 
+## Added Features
+* `title-case` transformation tries to do `Intelligent Title Cases of Files`.
+* TextMapping `_` rule applies if no rules have matched, as in `_ -> "Not Found"`.
+
+
 ## Differences with c Parser + Clarifications
 * .pb files can be fully Unicode and are assumed to be encoded as UTF-8 files.
 * Unknown rule errors are found only on generation, not parsing. A script may therefore

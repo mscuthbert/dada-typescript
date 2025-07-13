@@ -13,6 +13,8 @@ const sources: [string, string][] = [
     ['legal', 'Random Legalese'],
 ];
 
+const titleSuffix = 'New Musicology Essay Generator (Javascript) - MSAC'
+
 const select = document.createElement('select');
 select.id = 'source-select';
 // Populate the dropdown
@@ -27,7 +29,7 @@ document.body.appendChild(select);
 select.addEventListener('change', () => {
   const file = select.value;
   history.replaceState(null, '', `?file=${encodeURIComponent(file)}`);
-  loadAndRender(file);
+  loadAndRender(file).catch(console.error);
 });
 
 const params = new URLSearchParams(location.search);
@@ -52,6 +54,10 @@ async function loadAndRender(fileUrl: string) {
     document.body.innerHTML = `<pre>Error: ${(err as Error).message}</pre>`;
     document.body.appendChild(select);
   }
+  const titleElement = document.querySelector('h1.title');
+  if (titleElement) {
+      document.title = titleElement.textContent + ' -- ' + titleSuffix;
+  }
 }
 
-loadAndRender(file);
+loadAndRender(file).catch(console.error);
