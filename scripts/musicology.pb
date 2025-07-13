@@ -38,9 +38,12 @@
 // The first rule is the one that is run.
 
 output: PROLOGUE TITLE(title>title-case) formatted-authors
-  BODY sections PBRK summary EPILOGUE ;
+  BODY fix-comma(sections) PBRK summary EPILOGUE;
 
-title: title2>upcase-first | candid-title>upcase-first ": " title2>upcase-first ;
+//fix-comma(x): x;
+fix-comma(expression): {= expression.replace(/”([,.])/g, "$1”")};
+
+title: title2>upcase-first | candid-title>upcase-first ": " title2>upcase-first;
 
 title2:
   v-subject<<new-term " in the works of " v-citable=citable-artist
@@ -1128,7 +1131,8 @@ sentence-containing-measure-numbers-2:
    measure-work-citation
    cc=citable-composer "’s "
    ?first-cite=@$cc>make_cite
-   $first-cite>strip_the adverb-postjustify
+   scare-quote($first-cite>strip_the)
+   adverb-postjustify
    optional-more-measures
    optional-earlier-works
 ;
@@ -2331,11 +2335,11 @@ intellectual:
 // authors of books; not necessarily all major contributors to new musicology discourse but
 // good for rounding out the discussion.
 
-book-author: "Agawu" | "Lockwood" | "Cohn" | "Lewin" | "Babbitt" |
-             "Rosen" | "Oja" | "Van Orden" | "Tick" |
-             "Dell'Antonio" | "Morris" | "Fink" |
-             "Auner" | "Sisman" | "Levitz" | "Dubiel" | "Hisama"
-             "Taruskin" | "Tymoczko" | "Mosley"
+book-author: "Agawu" | "Lockwood" | "Cohn" | "Lewin" | "Babbitt"
+             | "Rosen" | "Oja" | "Van Orden" | "Tick"
+             | "Dell'Antonio" | "Morris" | "Fink"
+             | "Auner" | "Sisman" | "Levitz" | "Dubiel" | "Hisama"
+             | "Taruskin" | "Tymoczko" | "Mosley"
 ;
 
 // names, randomly generated
@@ -2628,6 +2632,8 @@ citable-composer:
     | "Cage" | "Mahler" | "Reich" | "Glass" | "Wagner"
     | "Crawford" | "Saariaho" | "Beethoven" | "Beach" | "Rorem"
     | "Muhly" | "Williams" | "Shaw" | "Oliveros"
+    // 2025
+    | "Chappell Roan"
 ;
 
 uncitable-composer:
@@ -2689,6 +2695,7 @@ artist-gender-pronoun:
     "Shaw" -> "she"
     "Oliveros" -> "she"
     "Born" -> "she"
+    "Chappell Roan" -> "she"
 //    "Maxwell" -> "she"
 //    "Zayaruznaya" -> "they"
 ;
@@ -2701,7 +2708,6 @@ possessivify-pronoun:
 ;
 
 // works of citable artists
-
 Cage-works: "I-VI" | "Silence" | "Composition as Process" | "A Year from Monday" |
             "Empty Words" | "X" | "Notations";
 Reich-works: "Music as Gradual Process" | "Pendulum Music" | "Slow Motion Sound" |
@@ -2729,9 +2735,12 @@ Beethoven-works: "the Eroica" | "the Ninth Symphony" | "the Hammerklavier Sonata
            "the Fifth Symphony" | "the Pastoral Symphony" | "Fidelio";
 Zorn-works: "Cat o' Nine Tales" | "Forbidden Fruit" | "Masada" | "Spillane";
 Muhly-works: "I Drink the Air Before Me" | "Mothertongue";
-Williams-works: "Star Wars" | "Schindler’s List" | "Last Jedi" | "Imperial March" ;
-Shaw-works: "Partita" | "String Quartets" ;
-Oliveros-works: "Deep Listening" | "Sonic Meditations" ;
+Williams-works: "Star Wars" | "Schindler’s List" | "Last Jedi" | "Imperial March";
+Shaw-works: "Partita" | "String Quartets";
+Oliveros-works: "Deep Listening" | "Sonic Meditations";
+Chappell-Roan-works: "Pink Pony Club" | "Good Luck, Babe!"
+    | "Hot to Go!" | "Femininomenon";  // first space-substitute artist.
+
 
 // works of citable writers
 Abbate-works:
