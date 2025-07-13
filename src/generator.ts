@@ -179,16 +179,22 @@ export function generate(statements: Statement[], start: string, format: 'none'|
 
             if (option.kind === 'indirection') {
                 const localOption = option.value;
-                const refEval = resolve(localOption, context);  // will resolve textMappings
+                let refEval = resolve(localOption, context);  // will resolve textMappings
                 // console.log('refEval', refEval);
+                // @"Chapel Roan" -> "Chapel-Roan"
+                refEval = refEval.replace(/\s/g, '-');
                 const rule: Rule = rules[refEval];
                 if (!rule) {
                     throw new Error(`Indirection resolved to unknown rule: ${refEval}`);
                 }
-                // indirection with parameters currently not defined.
+                // indirection with parameters currently not defined.  Always a copy.
                 let localRef: Ref | null = null;
                 if (isRef(localOption)) {
-                    localRef = {...localOption, textMappings: []};  // textMappings already done.
+                    localRef = {
+                        ...localOption,
+                        textMappings: [],
+                        kleene: Kleene.None
+                    };  // textMappings already done. Kleen-star too?
                 } else {
                     localRef = {
                         ref: refEval,
@@ -197,7 +203,6 @@ export function generate(statements: Statement[], start: string, format: 'none'|
                         kleene: Kleene.None,
                     }
                 }
-
                 // console.log('localRef', localRef);
                 const indirectionResolution = resolveRule(rule, localRef, context);
                 // console.log('indirectionResolution', indirectionResolution);

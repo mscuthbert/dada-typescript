@@ -1,6 +1,6 @@
 # Dada-Typescript
 
-This is a new parser for the Dada Engine's PB format written entirely in TypeScript
+This is a new parser for the Dada Engine's PB format written entirely in TypeScript/JavaScript
 to be run on the browser.
 
 Written by and (c) 2025 Michael Scott Asato Cuthbert.
@@ -65,7 +65,7 @@ for instance `npm start scripts/pomo.pb`.
 * The original parser treated parametric rules as resource rules (for instance
     `BOLD(xxx)` was in format.pbi was not prefaced by `%resource`). This reading is retained here.
 * The original parser did not allow parameters in inline choices (`[ x | y ]` expressions). Since
-    this was called a restriction "in the current release" and it just worked in the Typescript
+    this was called a restriction "in the current release" and it just worked in the JavaScript
     interpreter, we're leaving it in.
 * Spaces around ` = ` and ` << ` in set-var and get-var are currently not allowed.
 * I've attempted to retain the operator precedences seen in the C parser:
@@ -73,21 +73,22 @@ for instance `npm start scripts/pomo.pb`.
     - `$var>trans` is treated as `($var)>trans` and not `$(var>trans)`
     - Because parentheses are not actually allowed, silenced temporary variables may be needed for cases where other operator precedence is desired.
     - For instance, musicology.pb uses `?ac=@$cc>make_cite $ac>strip_the` to retrieve variable `$cc`, make a citation from it, then (with `@` indirection) call the rule.  That output is stored as the silenced variable `ac` which is then retrieved to have any `the` removed from the front.
-* `%repeat(..., -1)` will not parse on TypeScript (equal to repeat(..., 0) in C).  `%repeat(..., var)` where var is negative does "work" (prints nothing).
+* `%repeat(..., -1)` will not parse on JavaScript (equal to repeat(..., 0) in C).  `%repeat(..., var)` where var is negative does "work" (prints nothing).
 * Note that there is a bug in the C dada engine where + and * use `rand()` not `random()` and thus do
     not obey the random seed of `srandom()`. There are random cases in C where + will always give 5
-    repetitions, etc. Obviously this bug is not duplicated in the Javascript version.
+    repetitions, etc. Obviously this bug is not duplicated in the JavaScript version.
+* In JavaScript, Variables assigned in a local context can be used without $
 
 ### Embedded Code Expression Differences and Clarification
 Since Embedded Code in pb was designed to be evaluated by C, some differences were
-bound to arise with a Javascript parser.
+bound to arise with a JavaScript parser.
 
 * The original parser did not allow parameters to be
     used as variables in inline code. (It could be gotten around by aliasing with silencing,
-    like `FOOTNOTE(text): ?tx=text { FOOTNOTE_TEXT=FOOTNOTE_TEXT + tx }`)  They work in Javascript.
+    like `FOOTNOTE(text): ?tx=text { FOOTNOTE_TEXT=FOOTNOTE_TEXT + tx }`)  They work in JavaScript.
 * The use of the `a..b` expression wasn't fully documented in the original pb and allowed expressions
     like `{a = 1..300; b=a+1..a+30 }` to assign `b` to a number between 1 and 30 above `a`.
-    I could not easily make the operator work this way in Javascript, so now special operators
+    I could not easily make the operator work this way in JavaScript, so now special operators
     have low priority.  To do the above statement call `{a = 1..300; c=1..30; b=a+c}` or
     `{a = 1..300; b=(a+1)..(a+30) }` with parentheses.
 * Special operators cannot appear within parentheses in another special operator, so no
@@ -96,24 +97,31 @@ bound to arise with a Javascript parser.
 * Currently, if there is a parameter with the same name as a global variable but different values
     and a `{code block}` is run the global variable will be updated to the
     value of the local, even if the code block doesn't reference that name.
-* Because Javascript will be evaluated strings like `{res="\n"}` will cause errors since it will
-    put the whitespace on a new line.  Either write as `{res="\\n"}` or use backticks.
-* A return statement in this Javascript version must be the first statement in the embedded code
+* Because JavaScript is run by wrapping the code string in an eval context, strings
+    like `{res="\n"}` will cause errors, since the interpreter will have already converted `\n`
+    to a new line and put that illegal whitespace in the code.  Either write as `{res="\\n"}`
+    or surround `\n` with backticks instead of quotes.
+* A return statement in the JavaScript version must be the first statement in the embedded code
     (the `{= ... }` expression is converted to a magic expression, but the `=` sign is
     only searched for at the beginning of the expression, after optional whitespace.)  Any
-    other position of the leading `=` will probably result in syntax errors.
+    other position of the leading `=` will usually result in syntax errors.
+    (see the script `test/what_is_returned.pb` for more details about return values in both JavaScript
+    and C.)
 * Variable names with hyphens in them cannot be used in code bocks (`the-word` will be
     evaluated as the variable `the` subtracting the variable `word`).  I don't know if this worked
-    in the C version.
-* Currently there is no access inside code to Javascript functions except Math (masqueraded as __Math),
+    in the C version or not.
+* In a deliberate difference w/ the C version, strings with spaces used for `@indirections` have their
+    spaces replaced with hyphens in JavaScript.  This allows for artists with spaces in their official
+    names, like "Chappell Roan" to be used in indirections.
+* Currently, there is no access inside code to JavaScript functions except Math (masqueraded as __Math),
     but this should still not be considered secure not used in high security places. Parsing a string
     as a number can be done with `+var`; the reverse can be done with `''+var`.
 
 ## License
 The software here is released under the BSD 3-clause license.  The pb scripts--
-with the exception of securities.pb and sample.pb are by Andrew C. Bulhak and
+except musicology.pb, securities.pb and sample.pb and a few tests--are by Andrew C. Bulhak and
 therefore follow his original BSD Old (4-clause) license w/ his copyright.
-musicology.pb is a hybrid of his pomo.pb and substantial new work by MSAC.
+The script musicology.pb is a hybrid of his pomo.pb and substantial new work by MSAC.
 
 ## Author
 
