@@ -61,7 +61,9 @@ for instance `npm start scripts/pomo.pb`.
 
 
 ## Differences with c Parser + Clarifications
-* .pb files can be fully Unicode and are assumed to be encoded as UTF-8 files.
+* .pb files are now fully Unicode aware and are assumed to be encoded as UTF-8 files.
+* UTF-8 non-space characters are also valid as rule names, enabling cases like
+    `artist: "Björk"|"Bartók"; work: @[artist "-work"]; Björk-work: "Vespertine";`
 * Unknown rule errors are found only on generation, not parsing. A script may therefore
     pass sometimes but fail others depending on if the unknown rule is called.
 * The original parser treated `#` as a comment, despite not being in the spec. Found in test/maptest.pb,
