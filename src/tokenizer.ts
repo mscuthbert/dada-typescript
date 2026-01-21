@@ -1,16 +1,23 @@
 /*
  * Tokenizer for the TypeScript PB/Dada parser.
  *
- * Copyright (c) 2025 Michael Scott Asato Cuthbert
+ * Copyright (c) 2025-26 Michael Scott Asato Cuthbert
  * BSD License: Some Rights Reserved
  */
-export type Token =
-    | { type: 'identifier'; value: string }
-    | { type: 'string'; value: string }
-    | { type: 'code'; value: string }
+const DEBUG = false;
+
+export type TokenBase = {
+    line: number;
+    column: number;
+};
+
+export type Token = TokenBase & (
+    | { type: 'identifier'; value: string }  // my-verb
+    | { type: 'string'; value: string }  // "hello"
+    | { type: 'code'; value: string }  // in { ... }
     | { type: 'symbol'; value: string }
-    | { type: 'kleene'; value: '+'|'*' }
-    | { type: 'mapping'; value: '->'|'<->' }
+    | { type: 'kleene'; value: '+' | '*' }
+    | { type: 'mapping'; value: '->' | '<->' }
     | { type: 'slash'; value: '/' }
     | { type: 'transform'; value: '>' }
     | { type: 'silenced'; value: '?' }
@@ -21,7 +28,8 @@ export type Token =
     | { type: 'resource'; value: '%resource' }
     | { type: 'repeat'; value: '%repeat' }
     | { type: 'integer'; value: string }
-    | { type: 'eof'; value: '<eof>' };
+    | { type: 'eof'; value: '<eof>' }
+);
 
 function isDigit(ch: string): boolean {
     return ch >= '0' && ch <= '9';
@@ -74,6 +82,13 @@ export function tokenize(input: string): Token[] {
             return matched[0];
         }
         return null;
+    }
+
+    function addToken<T extends Token['type']>(
+        type: T,
+        value: Extract<Token, { type: T }>['value']
+    ): void {
+        tokens.push({ type, value, line, column } as Token);
     }
 
     function extractQuote(): string {
@@ -134,12 +149,14 @@ export function tokenize(input: string): Token[] {
 
         if (input[i] === '"') {
             const str = extractQuote();
-            tokens.push({ type: 'string', value: str });
+            addToken('string', str);
             continue;
         }
 
         if (input[i] === '{') {
             // console.log('entered code block');
+            const codeStartLine = line;
+            const codeStartColumn = column;
             let codeBlock = '';
             advance();
             let depth = 1;
@@ -162,7 +179,12 @@ export function tokenize(input: string): Token[] {
                     advance();
                 }
             }
-            tokens.push({ type: 'code', value: codeBlock });
+            if (depth !== 0) {
+                throw new Error(
+                    `Tokenizer: Unterminated code block starting at line ${codeStartLine}, column ${codeStartColumn}`
+                );
+            }
+            addToken('code', codeBlock);
             // console.log(`exited code block ${codeBlock}`);
             continue;
         }
@@ -174,67 +196,67 @@ export function tokenize(input: string): Token[] {
                 integer += input[i];
                 advance();  // i++
             }
-            tokens.push({ type: 'integer', value: integer });
+            addToken('integer', integer);
             continue;
         }
 
         // this use of startsWith means "continues after i with..."
         if (input.startsWith('->', i)) {
             advance(2);
-            tokens.push({ type: 'mapping', value: '->' });
+            addToken('mapping', '->');
             continue;
         }
 
         if (input.startsWith('<->', i)) {
             advance(3);
-            tokens.push({ type: 'mapping', value: '<->' });
+            addToken('mapping', '<->');
             continue;
         }
 
         if (input.startsWith('%resource', i)) {
             advance('%resource'.length);
-            tokens.push({ type: 'resource', value: '%resource' });
+            addToken('resource', '%resource');
             continue;
         }
 
         if (input.startsWith('%repeat', i)) {
             advance('%repeat'.length);
-            tokens.push({ type: 'repeat', value: '%repeat' });
+            addToken('repeat', '%repeat');
             continue;
         }
 
         if (input[i] === '>') {
             advance();
-            tokens.push({ type: 'transform', value: '>' });
+            addToken('transform', '>');
             continue;
         }
 
         if (input[i] === '?') {
             advance();
-            tokens.push({ type: 'silenced', value: '?' });
+            addToken('silenced', '?');
             continue;
         }
 
         if (input[i] === '@') {
             advance();
-            tokens.push({ type: 'indirection', value: '@' });
+            addToken('indirection', '@');
             continue;
         }
 
         if (input[i] === '/') {
             advance();
-            tokens.push({ type: 'slash', value: '/' });
+            addToken('slash', '/');
             continue;
         }
 
         if (input[i] === '+') {
             advance();
-            tokens.push({ type: 'kleene', value: '+' });
+            addToken('kleene', '+');
             continue;
         }
         if (input[i] === '*') {
             advance();
-            tokens.push({ type: 'kleene', value: '*' });
+            addToken('kleene', '*');
             continue;
         }
 
@@ -244,7 +266,7 @@ export function tokenize(input: string): Token[] {
             if (!name) {
                 throw new Error(`Tokenizer: Invalid variable name after $ at line ${line}, column ${column}`);
             }
-            tokens.push({ type: 'get-var', value: name });
+            addToken('get-var', name);
             continue;
         }
         const setVar = match(/^[\p{L}_][\p{L}0-9_-]*(=|<<)/u);
@@ -252,27 +274,40 @@ export function tokenize(input: string): Token[] {
             const name = setVar.endsWith('=')
                 ? setVar.slice(0, -1)
                 : setVar.slice(0, -2);
-            tokens.push({
-                type: setVar.endsWith('=') ? 'set-var' : 'lazy-set-var',
-                value: name
-            });
+            addToken(setVar.endsWith('=') ? 'set-var' : 'lazy-set-var', name);
             continue;
         }
 
         const identifier = match(/^[\p{L}_][\p{L}0-9_-]*/u);
         if (identifier) {
-            tokens.push({ type: 'identifier', value: identifier });
+            addToken('identifier', identifier);
             continue;
         }
 
         const symbol = match(/^[;,:|(){}[\]]/);
         if (symbol) {
-            tokens.push({ type: 'symbol', value: symbol });
+            addToken('symbol', symbol);
             continue;
         }
-        throw new Error(`Tokenizer: Unexpected character at line ${line}, column ${column}: '${input[i]}'`);
+        const suspiciousPipeString = tokens.find(t =>
+            t.type === 'string' && /^\s*\|\s*$/.test(t.value)
+        );
+        const hint = suspiciousPipeString
+            ? `\nPossible missing quotation marks before line ${suspiciousPipeString.line}, `
+                + `column ${suspiciousPipeString.column}\n(suspicious string: "${suspiciousPipeString.value}")\n`
+            : `Last tokens:\n${tokens.slice(-5).map(t => t.value + '\n')}\n`;
+
+        const debug_hint = DEBUG ?  '\n---------\n'
+            + (tokens.filter(t => t.type === 'string').map(t => t.value + '\n'))
+            : '';
+
+        throw new Error(
+            `Tokenizer: Unexpected character at line ${line}, column ${column}: '${input[i]}'\n`
+            + hint
+            + debug_hint
+        );
     }
 
-    tokens.push({ type: 'eof', value: '<eof>' });
+    addToken('eof', '<eof>');
     return tokens;
 }
