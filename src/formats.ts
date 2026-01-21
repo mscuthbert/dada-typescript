@@ -82,6 +82,7 @@ FOOTNOTE(text): ?tx=text // the inline-code parameter bug^H^H^Hfeature.
 
 BOLD(foo): foo ;
 ITALIC(foo): foo ;
+CENTER(foo): food ;
     `;
     input = input.replace('SLASH_N', '`\n`');
     return rulesFromInput(input);
@@ -152,6 +153,7 @@ FOOTNOTE(text): ?tx=text // parameters can't be used in inline code as such
 
 BOLD(foo): "<b>" foo "</b>";
 ITALIC(foo): "<i>" foo "</i>";
+CENTER(foo): "<div style='text-align: center'>" foo "</div>";
     `;
     input = input.replace('SLASH_N', '`\n`');
     return rulesFromInput(input);

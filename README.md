@@ -40,7 +40,7 @@ Run `npx vite` for dev and `npx vite build` for distributing (from dist)
 * Inline choices (anonymous rules)
 * Resource rules (%resource)
 * Silenced atoms (?colour="green")
-* Indirection (@references)
+* Indirection (@references) -- using a value as the name of a rule
 * Text mappings: pattern style with slash
 * Text mappings: source -> destination
 * Text mappings: reversible <-> mappings

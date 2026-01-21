@@ -11,6 +11,8 @@ const sources: [string, string][] = [
     ['manifesto', 'Manifesto'],
     ['sample', 'Testing File'],
     ['legal', 'Random Legalese'],
+    ['marriage', 'Good Marriage'],
+    ['mykeExcuses', 'Myke’s Receipts'],
 ];
 
 const titleSuffix = 'New Musicology Essay Generator (Javascript) - MSAC'

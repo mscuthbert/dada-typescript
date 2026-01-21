@@ -90,8 +90,11 @@ export interface Repeat {
     kleene: Kleene;
 }
 
-export type Option = BareString | Ref | SetVar | LazySetVar | GetVar
-    | SilencedOption | Indirection | CodeBlock | Repeat;
+export type Option =
+    BareString | Ref
+    | SetVar | LazySetVar | GetVar
+    | SilencedOption | Indirection
+    | CodeBlock | Repeat;
 
 export type Statement = Rule | TextMapping;
 
