@@ -36,7 +36,6 @@
 // they accept parameters (usually for important elements)
 
 // The first rule is the one that is run.
-
 output: PROLOGUE TITLE(title>title-case) formatted-authors
   BODY fix-comma(sections) PBRK summary EPILOGUE;
 
@@ -262,7 +261,7 @@ sentence2:
     | optional-transition v-person<<intellectual " uses the term " scare-quote(term) " to denote " concept-desc ". "
     | justifier "we have to " choose " between " term " and " term ". "
     | sentence-main-theme-of  // expanded
-    | v-person=intellectual " " promotes-or-rejects " " the-use-of " " term " to " imper-vp ". "
+    | promotes-or-rejects-sentence
     | sentence-about-existence  // expanded
     | sentence-about-citable-artist(v-citable<<citable-artist)
     | "the " subject-object " is " neut-verb>past-tensify " into a " term>strip_the
@@ -1297,6 +1296,9 @@ not-exist:
 ;
 
 found:  "found" | "discovered" | "revealed" | "uncovered";
+
+promotes-or-rejects-sentence: v-person=intellectual " " promotes-or-rejects " " the-use-of " "
+    term " to " imper-vp ". ";
 
 promotes-or-rejects: promotes | promotes | rejects;  // more work done on promotes
 
