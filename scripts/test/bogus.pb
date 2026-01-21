@@ -6,4 +6,4 @@ foo: bar baz
 
 bar : undefined | "xyzzy" ;
 
-baz : "plugh" ;
+baz : "not gotten to" ;

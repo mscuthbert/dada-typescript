@@ -9,10 +9,10 @@ const sources: [string, string][] = [
     ['securities', 'Finance Company Names'],
     ['crackpot', 'Crackpot'],
     ['manifesto', 'Manifesto'],
-    ['sample', 'Testing File'],
     ['legal', 'Random Legalese'],
     ['marriage', 'Good Marriage'],
     ['mykeExcuses', 'Myke’s Receipts'],
+    ['sample', 'Testing File'],
 ];
 
 const titleSuffix = 'New Musicology Essay Generator (Javascript) - MSAC'

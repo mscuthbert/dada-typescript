@@ -1,12 +1,14 @@
 // MSAC -- testing the operator order of Kleene symbols (+ / *) to match C/Yacc and Typescript
-// Note that these
+// + = 1 or more: print, then flip a coin and if heads, do it again.
+// * = 0 or more: flip a coin and if heads, print and do it again.
 
+// tests
 S: A "\n" B "\n" C "\n" D "\n" E "\n" F G;
 
-// kleene can work on bare strings
+// A. kleene can work on bare strings
 A: "hi "+;
 
-// this gives one or more "cow-boo " or "chick-boo " (independently chosen)
+// B. this gives one or more "cow-boo " or "chick-boo " (independently chosen)
 B: animal>add-boo+ " ";
 
 // This parses incorrectly in C/Yacc (+ is ignored); so it is okay to have it not parse in
