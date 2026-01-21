@@ -1,6 +1,8 @@
 // a: set-vars %repeat([gerund-activity-phrase>upcase-first PBRK], 30);
 // a: set-vars %repeat([take-phrase>upcase-first PBRK], 30);
 // a: set-vars %repeat([clean-phrase>upcase-first PBRK], 30);
+// a: set-vars %repeat([watch-phrase>upcase-first PBRK], 30);
+// a: set-vars %repeat([drink-phrase>upcase-first PBRK], 30);
 
 start: set-vars
        TITLE([{= max_point + 1 } " " title]) PBRK
@@ -24,6 +26,15 @@ article:
 trim-space:
     ".* $" -> " $"/""
 ;
+
+pluralise:
+    ".*y$" -> "y$"/"ies"
+    ".*s$" -> "$"/"es"
+    ".*" -> "$"/"s"
+;
+
+
+scare-quote(scarything): "“" scarything "”";
 
 title: lead " " connector " " quality>article " " union;
 lead:
@@ -112,9 +123,9 @@ verb-phrase:
     | food-phrase
     | try-phrase
     | clean-phrase
-    | "remember " memory>trim-space
+    | remember-phrase
     | watch-phrase
-    | "drink " drink
+    | drink-phrase
     | "forgive that " $them " " partner-problems
     | "be " the-kind-of " " $me>make_affectionate_youth " that " $them " " fell-for
     | therapy-sentence
@@ -156,17 +167,17 @@ purgeable-things:
     | "those boxes in the garage"
     | "half your storage unit"
     | [ "your" | $them>possessive ] " "
-      optional-expensive " collection of " collection-thing
+      optional-expensive "collection of " collection-thing
     | [ "your" | $them>possessive ] " "
-      optional-expensive " stash of " collection-thing
+      optional-expensive "stash of " collection-thing
     | [ "your" | $them>possessive ] " "
-      optional-expensive " pile of " collection-thing
+      optional-expensive "pile of " collection-thing
 ;
 
-optional-expensive: "" | expensive;
-expensive:
-    "vintage" | "treasured" | "expensive" | "antique"
-    | "rare" | "prized" | "nostalgic"
+optional-expensive: "" | expensive " " | collection-expensive " ";
+collection-expensive:
+    "treasured" | "antique"
+    | "prized" | "nostalgic"
     | "long-forgotten" | "dusty" | "sentimental"
 ;
 
@@ -187,15 +198,13 @@ collection-thing:
     | "decorative theme-park throw pillows"
 ;
 
-watch-phrase:
-    "watch “" watch-list "”" optional-together-or-with-others
-;
 
 noun-phrase(n): n | adjective " " n;
 
 adjective: "old standby" | "new" | "quick" | "long" | "passionate" | adjective " " adjective;
 generic-noun: play-noun | make-noun | food-noun;
-play-noun: "piano" | "hookey" | "around" | scare-quote(play-noun);
+play-noun: "piano" | "hookey" | "games" | scare-quote(play-noun);
+
 make-noun:
     "movies"
     | "love"
@@ -277,9 +286,158 @@ food: "food" | "food" | "cuisine";
 the-kind-of: "the kind of" | "a type of " | "the " | "a ";
 fell-for: "first fell for" | "goes gaga for" | ["always " | ""] "dreamt of";
 
-scare-quote(scarything): "“" scarything "”";
+watch-phrase:
+    watch-verb " " watch-thing optional-snuggle
+    optional-together-or-with-others;
 
-watch-list: "Mad Men" | "Whose Line is it Anyway" | "Børgen" | "Succession" | "Severance" | "Top Chef";
+watch-verb:
+    "watch" | "binge" | "rewatch" | "put on"
+    | "fall asleep to" | "half-watch" | "start and never finish"
+    | "pretend to watch" | "get emotionally invested in";
+
+watch-thing:
+    scare-quote(quoted-watch)
+    | generic-watch optional-decade
+    | generic-watch " " generic-watch-adjective
+;
+
+quoted-watch:
+    "Mad Men" | "Whose Line Is It Anyway"
+    | "Børgen" | "Succession" | "Severance"
+    | "Top Chef" | "Pride and Prejudice"
+    | "When Harry Met Sally"
+    | "Love Actually" | "The Great British Bake Off"
+    | "Bridgerton" | "Before Sunrise"
+    | "The Holiday"
+    | "My Big Fat Greek Wedding"
+    | "Crazy Rich Asians"
+    | "The Princess Bride"
+    | "Notting Hill"
+    | "Sleepless in Seattle" | "You’ve Got Mail"
+    | "Four Weddings and a Funeral"
+    | "Amélie"
+    | "Elisa y Marcela"
+    | "Brokeback Mountain"
+    | "Heated Rivalry"
+    | "Triumph of the Will"  // HA! NO! :-D
+;
+
+generic-watch:
+    optional-opinion country-adjective " " genre>pluralise
+    | opinion " movies"
+    | "old-school " genre>pluralise
+    | optional-opinion "reality TV"
+    | "food shows"
+    | "period dramas"
+    | "romantic comedies"
+    | "feel-good movies"
+    | optional-opinion "holiday movies"
+    | "something neither of you has seen"
+    | "whatever " [ genre " " | ""] "Netflix recommends"
+    | "that one show you always rewatch"
+    | "a random " genre
+;
+
+optional-decade: "" | "" | "" | decade;
+decade:
+     " from the " ["5" | "6" | "7" | "8" | "9"] "0s";
+
+
+generic-watch-adjective:
+    "with lots of kissing"
+    | "where everyone smokes"
+    | "with dramatic gestures"
+    | "with beautiful people"
+    | "that make you cry"
+    | "with slow-burn tension"
+    | "with longing stares"
+    | "with wild plot twists"
+    | "with intense eye contact"
+    | "that feel very serious"
+    | "that feel sexy and emotional"
+    | "with forbidden romances"
+    | "with complicated love triangles"
+;
+
+optional-opinion:
+    "" | opinion " "
+;
+opinion:
+    "bad" | "classic" | "trashy" | "comforting"
+;
+genre:
+    "documentary" | "rom-com" | "romance" | "drama" | "love story"
+;
+country-adjective:
+    "French" | "Italian" | "Japanese" | "Korean"
+    | "Spanish" | "Brazilian" | "Ugandan"
+    | "dubbed" | "foreign" | "subtitled"
+;
+optional-snuggle:
+    ""
+    | ""
+    | " " snuggle-spot
+;
+
+snuggle-spot:
+    "on the couch under a blanket"
+    | "in bed"
+    | "by the fire"
+    | "with snacks"
+    | "with wine"
+    | "with popcorn"
+    | "with takeout"
+    | "in your pajamas"
+    | "all cozy"
+    | "like it is a date night"
+    | "while arguing about what to watch"
+;
+
+// DRINKS
+drink-phrase:
+    drink-verb " " optional-drink-expensive drink [ optional-together | optional-snuggle | optional-tone-hint ]
+;
+drink-verb: "drink " | "drink " | "sip " | "taste ";
+drink:
+    "scotch"
+    | "whiskey"
+    | "champagne"
+    | "bubby"
+    | ["" | weird-adjective " " ] unusual-drink
+    | "something that makes you " remember-phrase
+;
+
+// slightly different than collection expensive
+optional-drink-expensive:
+    "" | "" | expensive " " | drink-only-expensive " "
+;
+
+expensive:
+    "vintage" | "treasured" | "expensive"
+    | "costly"
+    | "rare"
+;
+drink-only-expensive:
+    "aged" | "limited-edition" | "small-batch" | "artisanal" | "handcrafted" | "luxury"
+;
+
+weird-adjective:
+    "expired" | "lukewarm" | "room-temperature" | "tepid" | "cheap"
+;
+unusual-drink:
+    "rum"
+    | "chocolate milk"
+    | "fizzy water"
+    | "pickle juice" | "tomato juice" | "grape soda"
+    | "flat cola" | "coffee" | "iced tea with milk"
+    | weird-adjective " beer"
+
+    | "protein shakes"
+    | "boxed wine"
+    | "sangria"
+    | "tap water in a fancy glass"
+    | "kombucha"
+;
 
 optional-conditional-suffix: "" | "" | "" | " " conditional-suffix;
 conditional-suffix:
@@ -308,10 +466,7 @@ self-neglect:
 ignores: "ignores" | "is too busy to appreciate";
 optional-flattery: "" | "" | "beautiful " | "amazing " | "cute " | "brilliant ";
 
-drink:
-    "scotch" | "whiskey" | "champagne" | "bubby" | "rum"
-    | "chocolate milk" | "fizzy water"
-    | "something that makes you remember " memory;
+remember-phrase: "remember " memory>trim-space;
 memory: "your first " nice-thing | $them>possessive " best qualities ";
 nice-thing: "date" | "kiss";
 
