@@ -9,16 +9,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Source+Code+Pro&display=swap" rel="stylesheet">
     <script type="module" src="/src/app.ts"></script>
+    <style>
+        .hide-while-loading { visibility: hidden }
+    </style>
 </head>
-<body>
+<body class="hide-while-loading">
     <header>
         <h1>Dada Typescript Generator</h1>
         <p class="subtitle">A browser-based edition tool for PB grammars</p>
     </header>
     <main>
         <div id="output-container">
-            <p>Loading...</p>
+            <p>There was a problem while loading...</p>
         </div>
     </main>
 </body>
+<script>
+    // show the text if nothing works.
+    setTimeout(() => document.body.classList.remove('hide-while-loading'), 5000);
+</script>
 </html>

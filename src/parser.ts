@@ -116,7 +116,11 @@ export function parse(tokens: Token[]): Statement[] {
     function expect(type: Token['type'], value?: string): Token {
         const token = next();
         if (token.type !== type || (value !== undefined && token.value !== value)) {
-            throw new Error(`Expected ${type}${value ? ` ${value}` : ''}, got ${token.type} ${token.value}${currentRuleName ? ` (in rule: ${currentRuleName})` : ''}`);
+            throw new Error(
+                `Parser: Expected ${type}${value ? ` ${value}` : ''}, `
+                + `got ${token.type} ${token.value}`
+                + `${currentRuleName ? ` (in rule: ${currentRuleName})` : ''}`
+            );
         }
         return token;
     }
@@ -211,14 +215,14 @@ export function parse(tokens: Token[]): Statement[] {
             } else if (peek().type === 'identifier') {
                 repeatOption = { kind: 'repeat', value: leftAtom, variable: peek().value, kleene: Kleene.None };
             } else {
-                throw new Error(`Unexpected second parameter in %repeat: ${peek().value}`);
+                throw new Error(`Parser: Unexpected second parameter in %repeat: ${peek().value}`);
             }
             next();
             expect('symbol', ')');
             return repeatOption;
         }
 
-        throw new Error(`Unexpected token in option: ${token.type} ${token.value}`);
+        throw new Error(`Parser: Unexpected token in option: ${token.type} ${token.value}`);
     }
 
     function parseAnonymousRule(): Ref {
@@ -271,7 +275,7 @@ export function parse(tokens: Token[]): Statement[] {
                 break;
             } else if (token.type === 'kleene') {
                 if (!currentOption.length) {
-                    throw new Error(`Kleene token ${token.value} found at beginning of option${ruleError()}.`);
+                    throw new Error(`Parser: Kleene token ${token.value} found at beginning of option${ruleError()}.`);
                 }
                 // .at(-1) after updating to Library to 2022
                 let lastOption = currentOption[currentOption.length - 1];
@@ -289,7 +293,7 @@ export function parse(tokens: Token[]): Statement[] {
                         // but this allows for ?var="hello"+
                         lastOption = lastOption.value.value;
                     } else {
-                        throw new Error(`Kleene token ${token.value} cannot be used in this position${ruleError()}.`);
+                        throw new Error(`Parser: Kleene token ${token.value} cannot be used in this position${ruleError()}.`);
                     }
                 }
                 const kleeneType = (token.value === '+' ? Kleene.Plus : Kleene.Star);
@@ -297,11 +301,11 @@ export function parse(tokens: Token[]): Statement[] {
                 next()
             } else {
                 if (!isAnonymous && token.type === 'symbol' && token.value === ':') {
-                    throw new Error(`Unexpected second colon${ruleError()}: missing semicolon?`)
+                    throw new Error(`Parser: Unexpected second colon${ruleError()}: missing semicolon?`)
                 } else if (isAnonymous) {
-                    throw new Error(`Unexpected token for anonymous rule${ruleError()}: ${token.type} ${token.value}`);
+                    throw new Error(`Parser: Unexpected token for anonymous rule${ruleError()}: ${token.type} ${token.value}`);
                 } else {
-                    throw new Error(`Unexpected token ${token.type} ${token.value}${ruleError()}`);
+                    throw new Error(`Parser: Unexpected token ${token.type} ${token.value}${ruleError()}`);
                 }
             }
         }
@@ -336,7 +340,7 @@ export function parse(tokens: Token[]): Statement[] {
         const rules = [];
 
         if (peek().type !== 'string') {
-            throw new Error(`Empty mapping ${name} -- must begin with string not ${peek().type}`);
+            throw new Error(`Parser: Empty mapping ${name} -- must begin with string not ${peek().type}`);
         }
 
         // until ';'
@@ -360,7 +364,7 @@ export function parse(tokens: Token[]): Statement[] {
             }
             if (mapping_type.value !== '->') {
                 // should not be possible.
-                throw new Error(`Unexpected mapping ${mapping_type.value} in mapping ${name}`);
+                throw new Error(`Parser: Unexpected mapping ${mapping_type.value} in mapping ${name}`);
             }
 
             // type one and type 3 mappings use the same mapping type, so need to look two ahead
@@ -417,7 +421,7 @@ export function parse(tokens: Token[]): Statement[] {
                 next_rule_is_resource = true;
                 next();
             } else {
-                throw new Error(`Unexpected token: ${token.type} ${token.value}`);
+                throw new Error(`Parser: Unexpected token: ${token.type} ${token.value}`);
             }
         }
 

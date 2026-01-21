@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "tsc -b",
+    "dev": "vite dev",
+    "build": "npm run lint; vite build",
     "lint": "eslint .",
     "start": "tsx src/cli.ts",
     "debug": "node --inspect ./node_modules/.bin/tsx src/cli.ts"

@@ -6,7 +6,7 @@ start: { point_num = 1 } { max_point=6..14 } ?me=pronoun ?them=@$me>make_partner
        $point_num ". Be the first to say, I’m sorry.";
 
 title: steps " for a " good " " marriage;
-steps: "Steps" | "Rules";
+steps: "Steps" | "Rules" | "Tips" | "Sayings";
 good: "Good" | "Long" | "Peaceful" | "Happy" | "Great";
 marriage: "Marriage" | "Marriage" | "Partnership" | "Life";
 

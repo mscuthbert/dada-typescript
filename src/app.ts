@@ -61,6 +61,7 @@ async function loadAndRender(fileUrl: string) {
   if (titleElement) {
       document.title = titleElement.textContent + ' -- ' + titleSuffix;
   }
+  document.body.classList.remove('hide-while-loading');
 }
 
 loadAndRender(file).catch(console.error);

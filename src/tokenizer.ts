@@ -122,7 +122,7 @@ export function tokenize(input: string): Token[] {
             advance();
             return str;
         } else {
-            throw new Error(`Unterminated string at line ${line}, column ${column}`);
+            throw new Error(`Tokenizer: Unterminated string at line ${line}, column ${column}`);
         }
     }
 
@@ -242,12 +242,11 @@ export function tokenize(input: string): Token[] {
             advance();
             const name = match(/^[\p{L}_][\p{L}0-9_-]*/u);
             if (!name) {
-                throw new Error(`Invalid variable name after $ at line ${line}, column ${column}`);
+                throw new Error(`Tokenizer: Invalid variable name after $ at line ${line}, column ${column}`);
             }
             tokens.push({ type: 'get-var', value: name });
             continue;
         }
-
         const setVar = match(/^[\p{L}_][\p{L}0-9_-]*(=|<<)/u);
         if (setVar) {
             const name = setVar.endsWith('=')
@@ -271,7 +270,7 @@ export function tokenize(input: string): Token[] {
             tokens.push({ type: 'symbol', value: symbol });
             continue;
         }
-        throw new Error(`Unexpected character at line ${line}, column ${column}: '${input[i]}'`);
+        throw new Error(`Tokenizer: Unexpected character at line ${line}, column ${column}: '${input[i]}'`);
     }
 
     tokens.push({ type: 'eof', value: '<eof>' });
