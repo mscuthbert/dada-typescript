@@ -271,7 +271,6 @@ export function tokenize(input: string): Token[] {
             tokens.push({ type: 'symbol', value: symbol });
             continue;
         }
-
         throw new Error(`Unexpected character at line ${line}, column ${column}: '${input[i]}'`);
     }
 

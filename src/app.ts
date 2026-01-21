@@ -41,6 +41,7 @@ async function loadAndRender(fileUrl: string) {
     const res = await fetch(fileUrl);
     const text = await res.text();
     if (text.trim().startsWith('<')) {
+      // noinspection ExceptionCaughtLocallyJS
       throw new Error(`Expected .pb file, got HTML instead (from ${fileUrl})`);
     }
     const tokens = tokenize(text);

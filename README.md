@@ -19,6 +19,10 @@ After running `npm install` once, after this run
 
 for instance `npm start scripts/pomo.pb`.
 
+## Building for web
+
+Run `npx vite` for dev and `npx vite build` for distributing (from dist)
+
 ## Supported
 (in order of manual-1.0)
 
