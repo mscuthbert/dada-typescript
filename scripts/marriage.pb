@@ -1,6 +1,6 @@
 start: { point_num = 1 } { max_point=6..14 } ?me=pronoun ?them=@$me>make_partner
        TITLE([{= max_point + 1 } " " title]) PBRK
-       CENTER(ITALIC(gendered)) PBRK
+       HUG_TOP(CENTER(ITALIC(gendered))) PBRK
        BODY
        %repeat(point, max_point)
        $point_num ". Be the first to say, I’m sorry.";
