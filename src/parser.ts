@@ -11,7 +11,7 @@ export interface Rule {
     name: string;
     parameters: string[];
     options: Option[][];
-    lastChoice: number;
+    lastChoice: number;  // if more than one choice, should not be choosen in immediate succession.
     resource: boolean;
 }
 
@@ -248,7 +248,9 @@ export function parse(tokens: Token[]): Statement[] {
         const options: Option[][] = [];
         let currentOption: Option[] = [];
 
-        const ruleError: () => string = () => currentRuleName ? ` in rule "${currentRuleName}"` : '';
+        const ruleError: () => string = () => currentRuleName
+            ? ` in rule "${currentRuleName}"`
+            : ` at token ${i}\nContext:\n${tokens.slice(i-2, i+2).map(t => t.value + "\n")}.`;
 
         while (true) {
             const token = peek();
@@ -421,7 +423,10 @@ export function parse(tokens: Token[]): Statement[] {
                 next_rule_is_resource = true;
                 next();
             } else {
-                throw new Error(`Parser: Unexpected token: ${token.type} ${token.value}`);
+                throw new Error(
+                    `Parser: Unexpected token: ${token.type} ${token.value}\n`
+                    + `Context:\n${tokens.slice(i-2, i+2).map(t => t.value + "\n")}.`
+                );
             }
         }
 

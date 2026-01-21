@@ -21,7 +21,7 @@ for instance `npm start scripts/pomo.pb`.
 
 ## Building for web
 
-Run `npx vite` for dev and `npx vite build` for distributing (from dist)
+Run `npm run dev` for dev and `npm run build` for distributing (from dist)
 
 ## Supported
 (in order of manual-1.0)
@@ -52,7 +52,7 @@ Run `npx vite` for dev and `npx vite build` for distributing (from dist)
 * `%repeat(token, times)` (undocumented but used in crackpot and test/repeattest).
 
 ## Not Supported
-* Arbitrary %trans mappings (however, %upcase and %upcase-first are provided by the system)
+* Arbitrary %trans mappings (however, %upcase and %upcase-first are provided by the system) - use code instead
 * C-Processor User Parameters (-DNAME="Henry")
 * C-style #define statements
 * C-language #includes
@@ -84,11 +84,11 @@ Run `npx vite` for dev and `npx vite build` for distributing (from dist)
     - `$var>trans` is treated as `($var)>trans` and not `$(var>trans)`
     - Because parentheses are not actually allowed, silenced temporary variables may be needed for cases where other operator precedence is desired.
     - For instance, musicology.pb uses `?ac=@$cc>make_cite $ac>strip_the` to retrieve variable `$cc`, make a citation from it, then (with `@` indirection) call the rule.  That output is stored as the silenced variable `ac` which is then retrieved to have any `the` removed from the front.
-* `%repeat(..., -1)` will not parse on JavaScript (equal to repeat(..., 0) in C).  `%repeat(..., var)` where var is negative does "work" (prints nothing).
-* Note that there is a bug in the C dada engine where + and * use `rand()` not `random()` and thus do
-    not obey the random seed of `srandom()`. There are random cases in C where + will always give 5
+* `%repeat(..., -1)` will not parse on JavaScript (equal to `%repeat(..., 0)` in C).  `%repeat(..., var)` where var is negative does "work" (prints nothing).
+* Note that there is a bug in the C dada engine where `+` and `*` use `rand()` not `random()` and thus do
+    not obey the random seed of `srandom()`. There are random cases in C where `+` will always give 5
     repetitions, etc. Obviously this bug is not duplicated in the JavaScript version.
-* In JavaScript, Variables assigned in a local context can be used without $
+* In JavaScript, Variables assigned in a local context can be used without `$`
 
 ### Embedded Code Expression Differences and Clarification
 Since Embedded Code in pb was designed to be evaluated by C, some differences were
@@ -124,15 +124,17 @@ bound to arise with a JavaScript parser.
 * In a deliberate difference w/ the C version, strings with spaces used for `@indirections` have their
     spaces replaced with hyphens in JavaScript.  This allows for artists with spaces in their official
     names, like "Chappell Roan" to be used in indirections.
-* Currently, there is no access inside code to JavaScript functions except Math (masqueraded as __Math),
-    but this should still not be considered secure not used in high security places. Parsing a string
+* Currently, there is no access inside code to JavaScript functions except Math (masqueraded as `__Math`),
+    but this should still not be considered secure nor used in high security places. Parsing a string
     as a number can be done with `+var`; the reverse can be done with `''+var`.
 
 ## License
-The software here is released under the BSD 3-clause license.  The pb scripts--
-except musicology.pb, securities.pb and sample.pb and a few tests--are by Andrew C. Bulhak and
+The software here is released under the BSD 3-clause license.  The pb scripts
+brag, crackpot, eqn, exam, legal, loop, manifesto, pomo, silly-work, and spout
+along with many tests are by Andrew C. Bulhak and
 therefore follow his original BSD Old (4-clause) license w/ his copyright.
 The script musicology.pb is a hybrid of his pomo.pb and substantial new work by MSAC.
+Scripts securities.pb, sample.pb, marriage.pb, and mykeExcuses are by MSAC.
 
 ## Author
 
