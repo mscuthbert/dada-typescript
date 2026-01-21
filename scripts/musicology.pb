@@ -1303,7 +1303,7 @@ promotes-or-rejects: promotes | promotes | rejects;  // more work done on promot
 // 2025 [promotes] the use of the term. -- must be trim-s to use as "not that we should [promote] them"
 promotes: "promotes" | "promotes" | "suggests" | "encourages" | "demands" | "requires"
     // this line w/ AI help
-    | "advocates" | "endorses" | "valorizes" | privileges" | "foregrounds" | "champions"
+    | "advocates" | "endorses" | "valorizes" | "privileges" | "foregrounds" | "champions"
     | "normalizes" | "recommends" | "necessitates" | "legitimizes" | "supports"
     | "elevates" | "sanctions" | "installs"
 ;
@@ -1340,7 +1340,7 @@ use-of-verb-compound:
     | "application"
     | "utilization"
     | "adoption"
-    | "mobilization",
+    | "mobilization"
     | "instrumentalization"
     | "operation"
     | "activating"
