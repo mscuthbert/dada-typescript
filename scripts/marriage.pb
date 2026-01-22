@@ -355,8 +355,8 @@ generic-watch-adjective:
     | "with intense eye contact"
     | "that feel very serious"
     | "that feel sexy and emotional"
-    | "with forbidden romances"
-    | "with complicated love triangles"
+    | "about forbidden romances"
+    | "about complicated love triangles"
 ;
 
 optional-opinion:
