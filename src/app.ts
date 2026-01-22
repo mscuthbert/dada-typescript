@@ -15,7 +15,7 @@ const sources: [string, string][] = [
     ['sample', 'Testing File'],
 ];
 
-const titleSuffix = 'New Musicology Essay Generator (Javascript) - MSAC'
+const titleSuffix = '-- (Automatically Generated Parody)'
 
 const select = document.createElement('select');
 select.id = 'source-select';

@@ -2,7 +2,7 @@
  *  A sample file that uses every syntax we support -- made by MSAC 2025 for typescript
  */
 
-// ensuring that resource rules are not before others.
+// ensuring that resource rules are not started with even when appearing before others.
 %resource animal: "cat" | "dog" | "fish";
 
 
