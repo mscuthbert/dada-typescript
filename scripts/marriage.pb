@@ -60,7 +60,7 @@ union:
 
 dedication: dedication2>anti-creep;
 dedication2: "(" dedicated>upcase-first " " [$me>make_affectionate_youth "s" | @$me>adult-plural] " " gendered2 ".)";
-dedicated: "for"| "for" | "dedicated to" | "tips for" | "written for";
+dedicated: "for"| "for" | "dedicated to" | "tips for" | "written for" | "collected for";
 
 // anti-creep -- remove "men who love boys" -- creepy!
 anti-creep: " men.* boys" -> " boys"/" men";
@@ -80,7 +80,7 @@ make_partner:
     ".*" -> "$"/"-partner"
 ;
 
-he-partner: "she" | "she" | "she" | "he";
+he-partner: "she" | "she" | "she" | "she" | "he";
 she-partner: "he" | "he" | "he" | "she";
 
 make_affectionate_youth:
@@ -113,10 +113,23 @@ prefix-time:
     "before " deadline ", "
     | "prior to " deadline ", "
     | "as soon as possible, "
-    | "every hour, on the hour, "
-    | "when the mood strikes, "
-    | "occasionally ";
-deadline: "midnight" | "next week" | "getting dressed";
+    | "every hour, " ["" | "on the hour, "]
+    | "when " when-time ", "
+    | "occasionally "
+    | "from time to time "
+;
+when-time:
+    "the mood strikes"
+    | "everything feels right"
+    | "you're in sync"
+    | "no one's has their period"
+;
+
+deadline:
+    "midnight"
+    | "next " ["week" | "month" | "year" | "Yom Kippur" | "Christmas"]
+    | "getting " [ "dressed" | "drunk" | "out the door" | "coffee"]
+;
 punctuation: "." | "." | "." | "." | "." | "." | "." | "!";
 
 verb-phrase:
@@ -206,7 +219,7 @@ noun-phrase(n): n | adjective " " n;
 
 adjective: "old standby" | "new" | "quick" | "long" | "passionate" | adjective " " adjective;
 generic-noun: play-noun | make-noun | food-noun;
-play-noun: "piano" | "hookey" | "games" | scare-quote(play-noun);
+play-noun: "piano" | "hooky" | "games" | scare-quote(play-noun);
 
 make-noun:
     "movies"
@@ -215,7 +228,7 @@ make-noun:
     | "a " new " plan"
     | "a playlist"
     | "a garden bed"
-    | "a photo album"
+    | "a photo " [ "album" | "album" | "board" | "Pinterest" | "montage" ]
     | "a budget check-in"
     | "a calendar reset"
     | "a " new " tradition"
@@ -283,8 +296,8 @@ food-noun:
     | food-noun " " tone-hint  // take advantage of same rule cannot be chosen twice in succession
 ;
 
-food-kind: "Japanese" | "Chinese" | "Mexican" | "Italian";
-food: "food" | "food" | "cuisine";
+food-kind: "Japanese" | "Chinese" | "Mexican" | "Italian" | "French";
+food: "food" | "food" | "cuisine" | "dishes";
 
 the-kind-of: "the kind of" | "a type of " | "the " | "a ";
 fell-for: "first fell for" | "goes gaga for" | ["always " | ""] "dreamt of";
@@ -461,13 +474,13 @@ partner-problem-phrase-1:
 sucks: "sucks" | "is stressful" | "needs addressing first";
 
 partner-problems: "works " excessive  | specific-problems " " excessive | self-neglect;
-specific-problems: "smokes" | "drinks" | "shouts";
-until: "we’re exhausted" | "we can’t move on" | "2am";
-excessive: "too much" | "excessively" | "like a narcissist";
+specific-problems: "smokes" | "drinks" | "shouts" | "wheezes";
+until: "we’re exhausted" | "we can’t move on" | "2am" | "it's late";
+excessive: "too much" | "excessively" | "like a narcissist" | "until it hurts";
 self-neglect:
     ignores " " optional-flattery $me>make_affectionate_youth "s" [ "" | " like you"];
-ignores: "ignores" | "is too busy to appreciate";
-optional-flattery: "" | "" | "beautiful " | "amazing " | "cute " | "brilliant ";
+ignores: "ignores" | "is too busy to " ["appreciate" | "care for" | "admire"];
+optional-flattery: "" | "" | "beautiful " | "amazing " | "cute " | "brilliant " | "pretty ";
 
 remember-phrase: "remember " memory>trim-space;
 memory: "your first " nice-thing | $them>possessive " best qualities ";
@@ -475,7 +488,7 @@ nice-thing: "date" | "kiss";
 
 therapy-sentence: get " " therapy " for " [ "your" | $them>possessive | $them>possessive ] " " problems;
 get: "get" | "seek" | "ask for";
-therapy: "therapy" | "counseling" | "help";
+therapy: "therapy" | "counseling" | "help" | "advice";
 problems: "narcissism" | "insecurity" | "problems" | "current situation";
 
 tired-of: "sick of" | "tired of" | "over";
@@ -519,7 +532,7 @@ gerund-activity2:
     | "volunteering" | "stargazing"
     | "birdwatching" | "picnicking"
     | "painting" | "scrapbooking"
-    | "puzzling" | "board-gaming"
+    | "puzzling" | "board gaming"
 ;
 
 
@@ -529,7 +542,7 @@ optional-together: "" | "" | " " together;
 optional-together-or-with-others: "" | "" | " " together | " " with-others;
 together:
     "together" | "together" | "as a " couple
-    | "with each other" | "side by side" | "hand in hand"
+    | "with each other" | "side-by-side" | "hand-in-hand"
     | "just the two of you" | "in sync"
 ;
 couple:
