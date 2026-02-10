@@ -15,7 +15,7 @@ start: set-vars
 set-vars:
     { point_num = 1 }
     { max_point=6..14 }
-    ?me=pronoun
+    ?me=magazine-reading-pronoun
     ?them=@$me>make_partner;
 
 article:
@@ -68,6 +68,7 @@ anti-creep: " men.* boys" -> " boys"/" men";
 gendered2:
     "who love " $them>make_affectionate_youth "s"
     | "and the " @$them>adult-plural " they " adore
+    | "and their loves"
 ;
 
 point: @{= point_num === 5 ? "point5" : "point2"} PBRK { point_num += 1 };
@@ -78,6 +79,9 @@ point5: "5. Laugh ... often!";
 make_partner:
     ".*" -> "$"/"-partner"
 ;
+
+he-partner: "she" | "she" | "she" | "he";
+she-partner: "he" | "he" | "he" | "she";
 
 make_affectionate_youth:
     "^she$" -> "girl"
@@ -95,9 +99,8 @@ possessive:
     "^she" -> "her"
     "^he" -> "his"
 ;
+magazine-reading-pronoun: "she" | "she" | "he";
 pronoun: "he" | "she";
-he-partner: "she" | "she" | "she" | "he";
-she-partner: "he" | "he" | "he" | "she";
 
 
 // SENTENCES BEGIN HERE
